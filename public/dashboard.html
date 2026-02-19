@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Glovbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --blue: #0B3D91;
+            --orange: #FF6B35;
+            --green: #10B981;
+            --red: #EF4444;
+            --bg: #F8FAFC;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --text: #1E293B;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); }
+        
+        /* Navigation */
+        nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 32px; }
+        .nav-container { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--blue); text-decoration: none; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-link { color: var(--text); text-decoration: none; font-weight: 500; }
+        .user-menu { position: relative; cursor: pointer; }
+        .user-name { font-weight: 600; color: var(--text); }
+        
+        /* Main Content */
+        .container { max-width: 1280px; margin: 0 auto; padding: 40px 32px; }
+        h1 { font-size: 32px; color: var(--blue); margin-bottom: 8px; }
+        .subtitle { color: #64748B; margin-bottom: 40px; }
+        
+        /* Vehicle Cards */
+        .vehicles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .vehicle-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+        .vehicle-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px; }
+        .vehicle-reg { font-size: 24px; font-weight: 700; color: var(--blue); }
+        .vehicle-details { font-size: 16px; color: var(--text); margin-bottom: 4px; }
+        
+        /* Status Sections */
+        .status-section { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .status-section:last-of-type { border-bottom: none; }
+        .status-title { font-size: 14px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .status-label { font-weight: 500; color: var(--text); }
+        .status-value { font-weight: 700; }
+        .status-valid { color: var(--green); }
+        .status-warning { color: var(--orange); }
+        .status-expired { color: var(--red); }
+        
+        /* Action Buttons */
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; text-decoration: none; display: inline-block; text-align: center; transition: all 0.2s; }
+        .btn-primary { background: var(--orange); color: white; }
+        .btn-primary:hover { background: #E85A2A; }
+        .btn-secondary { background: var(--blue); color: white; }
+        .btn-secondary:hover { background: #0A2F6F; }
+        .btn-outline { background: white; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+        
+        /* Add Vehicle Button */
+        .add-vehicle { background: var(--white); border: 2px dashed var(--border); border-radius: 16px; padding: 48px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .add-vehicle:hover { border-color: var(--blue); background: #F1F5F9; }
+        .add-icon { font-size: 48px; color: var(--blue); margin-bottom: 16px; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; border-radius: 16px; padding: 40px; max-width: 500px; width: 100%; }
+        .modal-header { font-size: 24px; font-weight: 700; color: var(--blue); margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        input { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif; }
+        
+        /* Empty State */
+        .empty-state { text-align: center; padding: 80px 20px; }
+        .empty-icon { font-size: 64px; margin-bottom: 24px; opacity: 0.3; }
+        
+        @media (max-width: 768px) {
+            .vehicles-grid { grid-template-columns: 1fr; }
+            .actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Glovbox</a>
+            <div class="nav-links">
+                <a href="/dashboard.html" class="nav-link">Dashboard</a>
+                <a href="/mot-search.html" class="nav-link">Find MOT</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <div style="font-size: 12px; color: #64748B; margin-top: 4px; cursor: pointer;" onclick="signOut()">Sign Out</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>My Vehicles</h1>
+        <p class="subtitle">Track MOT dates, road tax renewals, and never miss a deadline</p>
+
+        <div id="vehiclesContainer" class="vehicles-grid">
+            <!-- Vehicles will load here -->
+        </div>
+
+        <div class="add-vehicle" onclick="showAddVehicle()">
+            <div class="add-icon">+</div>
+            <h3 style="color: var(--blue); margin-bottom: 8px;">Add Vehicle</h3>
+            <p style="color: #64748B; font-size: 14px;">Track another vehicle's MOT and tax</p>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div id="addVehicleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Vehicle</div>
+            <form id="addVehicleForm">
+                <div class="form-group">
+                    <label>Registration Number</label>
+                    <input type="text" id="regInput" placeholder="e.g. AB12 CDE" required maxlength="8">
+                </div>
+                <div class="form-group">
+                    <label>Nickname (Optional)</label>
+                    <input type="text" id="nicknameInput" placeholder="e.g. My Car, Work Van">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Add Vehicle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('glovbox_token');
+        const user = JSON.parse(localStorage.getItem('glovbox_user') || '{}');
+
+        if (!token) {
+            window.location.href = '/signin.html';
+        }
+
+        document.getElementById('userName').textContent = user.name || 'User';
+
+        // Load user's vehicles
+        let vehicles = JSON.parse(localStorage.getItem('glovbox_vehicles') || '[]');
+
+        function renderVehicles() {
+            const container = document.getElementById('vehiclesContainer');
+            
+            if (vehicles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-icon">🚗</div>
+                        <h2 style="color: var(--blue); margin-bottom: 12px;">No Vehicles Yet</h2>
+                        <p style="color: #64748B; margin-bottom: 24px;">Add your first vehicle to start tracking MOT and tax dates</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = vehicles.map(vehicle => {
+                const motDays = calculateDaysUntil(vehicle.motExpiryDate);
+                const taxDays = calculateDaysUntil(vehicle.taxDueDate);
+
+                return `
+                    <div class="vehicle-card">
+                        <div class="vehicle-header">
+                            <div>
+                                <div class="vehicle-reg">${vehicle.registrationNumber}</div>
+                                <div class="vehicle-details">${vehicle.make} ${vehicle.model}</div>
+                                ${vehicle.nickname ? `<div style="color: #64748B; font-size: 14px; margin-top: 4px;">${vehicle.nickname}</div>` : ''}
+                            </div>
+                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="removeVehicle('${vehicle.registrationNumber}')">Remove</button>
+                        </div>
+
+                        <div class="status-section">
+                            <div class="status-title">🔧 MOT Status</div>
+                            <div class="status-row">
+                                <span class="status-label">Status</span>
+                                <span class="status-value ${getStatusClass(motDays)}">${getStatusText(motDays, vehicle.motStatus)}</span>
+                            </div>
+                            <div class="status-row">
+                                <span class="status-label">Expires</span>
+                                <span>${vehicle.motExpiryDate || 'Unknown'}</span>
+                            </div>
+                        </div>
+
+                        <div class="status-section">
+                            <div class="status-title">💷 Road Tax Status</div>
+                            <div class="status-row">
+                                <span class="status-label">Status</span>
+                                <span class="status-value ${getStatusClass(taxDays)}">${getStatusText(taxDays, vehicle.taxStatus)}</span>
+                            </div>
+                            <div class="status-row">
+                                <span class="status-label">Due Date</span>
+                                <span>${vehicle.taxDueDate || 'Unknown'}</span>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <a href="https://www.gov.uk/vehicle-tax" target="_blank" class="btn btn-primary">Pay Tax on GOV.UK</a>
+                            <a href="/mot-search.html?reg=${vehicle.registrationNumber}" class="btn btn-secondary">Find MOT Centre</a>
+                            <a href="/insurance.html?reg=${vehicle.registrationNumber}" class="btn btn-outline" style="grid-column: 1 / -1;">Compare Insurance</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateDaysUntil(dateString) {
+            if (!dateString) return null;
+            const date = new Date(dateString);
+            const today = new Date();
+            const diff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+            return diff;
+        }
+
+        function getStatusClass(days) {
+            if (days === null) return '';
+            if (days < 0) return 'status-expired';
+            if (days <= 30) return 'status-warning';
+            return 'status-valid';
+        }
+
+        function getStatusText(days, originalStatus) {
+            if (days === null) return originalStatus || 'Unknown';
+            if (days < 0) return 'Expired';
+            if (days <= 7) return `Due in ${days} days ⚠️`;
+            if (days <= 30) return `Due in ${days} days`;
+            return `Valid (${days} days)`;
+        }
+
+        function showAddVehicle() {
+            document.getElementById('addVehicleModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('addVehicleModal').style.display = 'none';
+            document.getElementById('addVehicleForm').reset();
+        }
+
+        document.getElementById('addVehicleModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.getElementById('addVehicleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const reg = document.getElementById('regInput').value.toUpperCase().replace(/\s/g, '');
+            const nickname = document.getElementById('nicknameInput').value;
+
+            try {
+                const response = await fetch(`/api/vehicle/${reg}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const vehicle = {
+                        ...data,
+                        nickname: nickname,
+                        addedAt: new Date().toISOString()
+                    };
+
+                    vehicles.push(vehicle);
+                    localStorage.setItem('glovbox_vehicles', JSON.stringify(vehicles));
+                    renderVehicles();
+                    closeModal();
+                } else {
+                    alert(data.error || 'Vehicle not found');
+                }
+            } catch (error) {
+                alert('Error adding vehicle. Please try again.');
+            }
+        });
+
+        function removeVehicle(reg) {
+            if (confirm('Remove this vehicle from your dashboard?')) {
+                vehicles = vehicles.filter(v => v.registrationNumber !== reg);
+                localStorage.setItem('glovbox_vehicles', JSON.stringify(vehicles));
+                renderVehicles();
+            }
+        }
+
+        function signOut() {
+            if (confirm('Sign out of Glovbox?')) {
+                localStorage.removeItem('glovbox_token');
+                localStorage.removeItem('glovbox_user');
+                window.location.href = '/signin.html';
+            }
+        }
+
+        renderVehicles();
+    </script>
+</body>
+</html>
