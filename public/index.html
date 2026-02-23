@@ -11,8 +11,12 @@
 </style>
 </head>
 <body>
-<nav>
+<nav style="display:flex;justify-content:space-between;align-items:center;">
 <a href="/" class="logo">Glovbox</a>
+<div style="display:flex;gap:8px;">
+<a href="/signin.html" style="color:var(--blue);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;">Sign In</a>
+<a href="/signin.html" style="background:var(--orange);color:white;text-decoration:none;font-size:14px;font-weight:700;padding:8px 16px;border-radius:6px;">Sign Up</a>
+</div>
 </nav>
 
 <section class="hero">
@@ -118,15 +122,12 @@
 <div class="footer-section">
 <h4>Support</h4>
 <ul class="footer-links">
-<li><a href="mailto:support@glovbox.net">support@glovbox.net</a></li>
+<li><a href="/cdn-cgi/l/email-protection#5e2d2b2e2e312c2a1e393231283c312670303b2a"><span class="__cf_email__" data-cfemail="cfbcbabfbfa0bdbb8fa8a3a0b9ada0b7e1a1aabb">[email&#160;protected]</span></a></li>
 <li><a href="/contact.html">Contact</a></li>
 </ul>
 </div>
 <p style="text-align:center;margin-top:24px;opacity:0.7;font-size:12px">© 2026 Glovbox</p>
 </footer>
 
-<script>
-document.getElementById('checkBtn').addEventListener('click',async function(){const regNumber=document.getElementById('regNumber').value.toUpperCase().replace(/\s/g,'');if(!regNumber||regNumber.length<2){alert('Please enter a valid registration');return}document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';try{const response=await fetch(`/api/vehicle/${regNumber}`);const data=await response.json();document.getElementById('loading').style.display='none';if(!response.ok){alert(data.error||'Error checking vehicle');return}const resultsDiv=document.getElementById('results');resultsDiv.innerHTML=`<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">Vehicle Details</h3><div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div><div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div><div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div></div><div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">🔧 MOT</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus==='Valid'?'status-valid':'status-expired'}">${data.motStatus}</span></div><div class="result-row"><span class="result-label">Expires</span><span>${data.motExpiryDate||'N/A'}</span></div></div><div><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">💷 Road Tax</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus==='Taxed'?'status-valid':'status-expired'}">${data.taxStatus}</span></div><div class="result-row"><span class="result-label">Due</span><span>${data.taxDueDate||'N/A'}</span></div></div><div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:8px;color:white;text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:8px">🎉 Want Free Reminders?</div><div style="margin-bottom:16px;font-size:13px">Never miss a deadline again!</div><a href="/signin.html" style="background:var(--orange);color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:700;font-size:14px">Sign Up Free</a><div style="margin-top:8px;font-size:11px;opacity:0.9">No credit card required</div></div>`;resultsDiv.style.display='block'}catch(error){document.getElementById('loading').style.display='none';alert('Error checking vehicle')}});
-</script>
-</body>
-</html>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.getElementById('checkBtn').addEventListener('click',async function(){const regNumber=document.getElementById('regNumber').value.toUpperCase().replace(/\s/g,'');if(!regNumber||regNumber.length<2){alert('Please enter a valid registration');return}document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';try{const response=await fetch(`/api/vehicle/${regNumber}`);const data=await response.json();document.getElementById('loading').style.display='none';if(!response.ok){alert(data.error||'Error checking vehicle');return}const resultsDiv=document.getElementById('results');resultsDiv.innerHTML=`<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">Vehicle Details</h3><div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div><div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div><div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div></div><div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">🔧 MOT</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus==='Valid'?'status-valid':'status-expired'}">${data.motStatus}</span></div><div class="result-row"><span class="result-label">Expires</span><span>${data.motExpiryDate||'N/A'}</span></div></div><div><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">💷 Road Tax</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus==='Taxed'?'status-valid':'status-expired'}">${data.taxStatus}</span></div><div class="result-row"><span class="result-label">Due</span><span>${data.taxDueDate||'N/A'}</span></div></div><div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:8px;color:white;text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:8px">🎉 Want Free Reminders?</div><div style="margin-bottom:16px;font-size:13px">Never miss a deadline again!</div><a href="/signin.html" style="background:var(--orange);color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:700;font-size:14px">Sign Up Free</a><div style="m
