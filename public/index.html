@@ -28,7 +28,7 @@
 <section class="check-section">
 <div class="card">
 <h2>Check Your Vehicle</h2>
-<p class="card-subtitle">Free DVLA lookup</p>
+<p class="card-subtitle">Free DVLA lookup - No sign up required</p>
 <input type="text" id="regNumber" placeholder="e.g. AB12 CDE" maxlength="8">
 <button class="btn-check" id="checkBtn">Check Status</button>
 <div class="loading" id="loading"><div class="spinner"></div><p>Checking...</p></div>
@@ -122,12 +122,77 @@
 <div class="footer-section">
 <h4>Support</h4>
 <ul class="footer-links">
-<li><a href="/cdn-cgi/l/email-protection#5e2d2b2e2e312c2a1e393231283c312670303b2a"><span class="__cf_email__" data-cfemail="cfbcbabfbfa0bdbb8fa8a3a0b9ada0b7e1a1aabb">[email&#160;protected]</span></a></li>
+<li><a href="mailto:support@glovbox.net">support@glovbox.net</a></li>
 <li><a href="/contact.html">Contact</a></li>
 </ul>
 </div>
 <p style="text-align:center;margin-top:24px;opacity:0.7;font-size:12px">© 2026 Glovbox</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-document.getElementById('checkBtn').addEventListener('click',async function(){const regNumber=document.getElementById('regNumber').value.toUpperCase().replace(/\s/g,'');if(!regNumber||regNumber.length<2){alert('Please enter a valid registration');return}document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';try{const response=await fetch(`/api/vehicle/${regNumber}`);const data=await response.json();document.getElementById('loading').style.display='none';if(!response.ok){alert(data.error||'Error checking vehicle');return}const resultsDiv=document.getElementById('results');resultsDiv.innerHTML=`<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">Vehicle Details</h3><div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div><div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div><div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div></div><div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">🔧 MOT</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus==='Valid'?'status-valid':'status-expired'}">${data.motStatus}</span></div><div class="result-row"><span class="result-label">Expires</span><span>${data.motExpiryDate||'N/A'}</span></div></div><div><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">💷 Road Tax</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus==='Taxed'?'status-valid':'status-expired'}">${data.taxStatus}</span></div><div class="result-row"><span class="result-label">Due</span><span>${data.taxDueDate||'N/A'}</span></div></div><div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:8px;color:white;text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:8px">🎉 Want Free Reminders?</div><div style="margin-bottom:16px;font-size:13px">Never miss a deadline again!</div><a href="/signin.html" style="background:var(--orange);color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:700;font-size:14px">Sign Up Free</a><div style="m
+<script>
+document.getElementById('checkBtn').addEventListener('click', async function() {
+  const regNumber = document.getElementById('regNumber').value.toUpperCase().replace(/\s/g, '');
+  
+  if (!regNumber || regNumber.length < 2) {
+    alert('Please enter a valid registration number');
+    return;
+  }
+  
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  
+  try {
+    const response = await fetch('/api/vehicle/' + regNumber);
+    
+    // Check if response is actually JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      document.getElementById('loading').style.display = 'none';
+      alert('Server error - Please make sure the server is running with the latest code. The vehicle lookup API is not responding correctly.');
+      return;
+    }
+    
+    const data = await response.json();
+    
+    document.getElementById('loading').style.display = 'none';
+    
+    if (!response.ok) {
+      alert(data.error || 'Vehicle not found in DVLA database');
+      return;
+    }
+    
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = `
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)">
+        <h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">Vehicle Details</h3>
+        <div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div>
+        <div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div>
+        <div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div>
+      </div>
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)">
+        <h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">🔧 MOT</h3>
+        <div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus === 'Valid' ? 'status-valid' : 'status-expired'}">${data.motStatus}</span></div>
+        <div class="result-row"><span class="result-label">Expires</span><span>${data.motExpiryDate || 'N/A'}</span></div>
+      </div>
+      <div>
+        <h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">💷 Road Tax</h3>
+        <div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus === 'Taxed' ? 'status-valid' : 'status-expired'}">${data.taxStatus}</span></div>
+        <div class="result-row"><span class="result-label">Due</span><span>${data.taxDueDate || 'N/A'}</span></div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:8px;color:white;text-align:center">
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">🎉 Want Free Reminders?</div>
+        <div style="margin-bottom:16px;font-size:13px">Sign up to track this vehicle and never miss MOT or tax deadlines!</div>
+        <a href="/signin.html" style="background:var(--orange);color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:700;font-size:14px">Sign Up Free</a>
+        <div style="margin-top:8px;font-size:11px;opacity:0.9">No credit card required • Takes 30 seconds</div>
+      </div>
+    `;
+    resultsDiv.style.display = 'block';
+  } catch (error) {
+    document.getElementById('loading').style.display = 'none';
+    console.error('Error:', error);
+    alert('Error checking vehicle. Please try again or check your internet connection.');
+  }
+});
+</script>
+</body>
+</html>
