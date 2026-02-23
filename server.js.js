@@ -164,13 +164,31 @@ app.get('/api/mot-centres', async (req, res) => {
 
 app.post('/api/signup', async (req, res) => {
   const {name,email,password} = req.body;
-  if (users.has(email)) return res.status(400).json({error:'Email already registered'});
-  const hash = await bcrypt.hash(password, 10);
-  const user = {name,email,password:hash,vehicles:[],createdAt:new Date().toISOString()};
-  users.set(email, user);
-  await saveDB(users);
-  const token = jwt.sign({email}, JWT_SECRET);
-  res.json({token, user:{name,email}});
+  
+  // Validation
+  if (!name || !email || !password) {
+    return res.status(400).json({error:'All fields required'});
+  }
+  
+  if (password.length < 8) {
+    return res.status(400).json({error:'Password must be at least 8 characters'});
+  }
+  
+  if (users.has(email)) {
+    return res.status(400).json({error:'Email already registered'});
+  }
+  
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    const user = {name,email,password:hash,vehicles:[],createdAt:new Date().toISOString()};
+    users.set(email, user);
+    await saveDB(users);
+    const token = jwt.sign({email}, JWT_SECRET);
+    res.json({token, user:{name,email}});
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({error:'Error creating account'});
+  }
 });
 
 app.post('/api/signin', async (req, res) => {
