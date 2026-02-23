@@ -3,134 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Glovbox - Your One-Stop Shop for MOT, Insurance & Road Tax</title>
-<meta name="description" content="Never miss your MOT or road tax deadline. Free automated reminders, MOT centre finder, insurance comparison. All in one place.">
+<title>Glovbox - MOT, Insurance & Road Tax in One Place</title>
+<meta name="description" content="Never miss your MOT or road tax deadline. Free automated reminders, MOT centre finder, insurance comparison.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--white:#FFF;--bg:#F8FAFC;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}nav{background:rgba(255,255,255,0.98);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;backdrop-filter:blur(12px)}.nav-container{max-width:1280px;margin:0 auto;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:700;font-size:20px;color:var(--blue);text-decoration:none}.nav-links{display:flex;gap:32px;align-items:center}.nav-link{color:var(--text);text-decoration:none;font-weight:500;transition:color 0.2s}.nav-link:hover{color:var(--blue)}.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;text-decoration:none;display:inline-block;transition:all 0.2s}.btn-primary{background:var(--orange);color:white}.btn-primary:hover{background:#E85A2A;transform:translateY(-2px)}.hero{max-width:1280px;margin:0 auto;padding:60px 32px 20px;text-align:center}.hero h1{font-size:56px;font-weight:700;color:var(--blue);line-height:1.1;margin-bottom:24px}.hero-subtitle{font-size:22px;color:var(--text);font-weight:500;margin-bottom:12px}.hero-tagline{font-size:18px;color:#64748B}.check-section{max-width:600px;margin:40px auto 60px;padding:0 32px}.card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:48px;box-shadow:0 4px 16px rgba(11,61,145,0.08)}.card h2{font-size:28px;color:var(--blue);margin-bottom:8px}.subtitle{color:#64748B;margin-bottom:32px}input{width:100%;padding:16px;border:2px solid var(--border);border-radius:8px;font-size:16px;font-family:'Inter',sans-serif;margin-bottom:16px}input:focus{outline:none;border-color:var(--blue)}.btn-check{width:100%;background:var(--orange);color:white;padding:18px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer}.btn-check:hover{background:#E85A2A}.loading{display:none;text-align:center;padding:32px}.spinner{border:3px solid var(--border);border-top:3px solid var(--blue);border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 16px}@keyframes spin{to{transform:rotate(360deg)}}.results{display:none;margin-top:24px;padding:24px;background:var(--bg);border-radius:12px}.result-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}.result-row:last-child{border-bottom:none}.result-label{font-weight:600;color:var(--blue)}.status-valid{color:var(--green);font-weight:600}.status-expired{color:#EF4444;font-weight:600}.pricing{max-width:800px;margin:60px auto;padding:0 32px;text-align:center}.section-title{font-size:40px;font-weight:700;color:var(--blue);margin-bottom:16px}.section-subtitle{font-size:18px;color:#64748B;margin-bottom:32px}.pricing-simple{background:var(--white);border:2px solid var(--green);border-radius:16px;padding:40px;display:flex;align-items:center;justify-content:space-between;gap:40px}.price-col{flex:1;text-align:left}.price{font-size:64px;font-weight:700;color:var(--green);line-height:1}.price-label{font-size:18px;color:var(--text);margin-top:8px}.features-col{flex:2;text-align:left}.features-simple{display:grid;grid-template-columns:1fr 1fr;gap:12px}.feature-simple{font-size:15px;color:var(--text)}.feature-simple span{color:var(--green);font-weight:700;margin-right:8px}.products{max-width:1280px;margin:80px auto;padding:0 32px}.products-title{text-align:center;margin-bottom:48px}.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px}.products-grid-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.product-card{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:32px;text-align:center;transition:all 0.3s;cursor:pointer;display:flex;flex-direction:column}.product-card:hover{border-color:var(--orange);transform:translateY(-4px);box-shadow:0 8px 24px rgba(11,61,145,0.12)}.product-icon{font-size:48px;margin-bottom:16px}.product-card h3{font-size:22px;color:var(--blue);margin-bottom:12px}.product-card p{color:#64748B;margin-bottom:24px;line-height:1.6;flex-grow:1}.product-btn{background:var(--orange);color:white;padding:14px 24px;border-radius:8px;font-weight:700;text-decoration:none;display:inline-block;transition:all 0.2s}.product-btn:hover{background:#E85A2A;transform:scale(1.05)}.product-btn-secondary{background:var(--blue)}.product-btn-secondary:hover{background:#0A2F6F}footer{background:var(--blue);color:white;padding:60px 32px 32px;margin-top:100px}.footer-container{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px}.footer-links{list-style:none}.footer-links li{margin-bottom:12px}.footer-links a{color:rgba(255,255,255,0.8);text-decoration:none;transition:color 0.2s}.footer-links a:hover{color:white}@media (max-width:1024px){.products-grid,.products-grid-bottom{grid-template-columns:repeat(2,1fr)}}@media (max-width:768px){.hero h1{font-size:36px}.card{padding:32px 24px}.pricing-simple{flex-direction:column;text-align:center}.price-col,.features-col{text-align:center}.features-simple{grid-template-columns:1fr}.products-grid,.products-grid-bottom{grid-template-columns:1fr}}
+*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--white:#FFF;--bg:#F8FAFC;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}nav{background:rgba(255,255,255,0.98);border-bottom:1px solid var(--border);padding:12px 20px}.logo{font-weight:700;font-size:18px;color:var(--blue);text-decoration:none}.hero{padding:24px 20px 16px;text-align:center}.hero h1{font-size:28px;font-weight:700;color:var(--blue);line-height:1.2;margin-bottom:8px}.tagline{font-size:15px;color:#64748B;margin-bottom:4px}.subtitle{font-size:13px;color:#64748B}.check-section{padding:0 20px 24px}.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(11,61,145,0.06)}.card h2{font-size:18px;color:var(--blue);margin-bottom:6px}.card-subtitle{color:#64748B;font-size:13px;margin-bottom:20px}input{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:15px;margin-bottom:12px}input:focus{outline:none;border-color:var(--blue)}.btn-check{width:100%;background:var(--orange);color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:15px;cursor:pointer}.btn-check:hover{background:#E85A2A}.loading{display:none;text-align:center;padding:24px}.spinner{border:3px solid var(--border);border-top:3px solid var(--blue);border-radius:50%;width:32px;height:32px;animation:spin 0.8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.results{display:none;margin-top:16px;padding:16px;background:var(--bg);border-radius:8px}.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}.result-row:last-child{border-bottom:none}.result-label{font-weight:600;color:var(--blue)}.status-valid{color:var(--green);font-weight:600}.status-expired{color:#EF4444;font-weight:600}.pricing{padding:32px 20px;text-align:center}.section-title{font-size:24px;font-weight:700;color:var(--blue);margin-bottom:8px}.section-subtitle{font-size:14px;color:#64748B;margin-bottom:24px}.pricing-box{background:var(--white);border:2px solid var(--green);border-radius:12px;padding:28px 20px}.price{font-size:48px;font-weight:700;color:var(--green);line-height:1}.price-label{font-size:16px;color:var(--text);margin-bottom:20px}.features-list{text-align:left}.feature-item{font-size:14px;color:var(--text);margin-bottom:10px}.feature-item span{color:var(--green);font-weight:700;margin-right:8px}.products{padding:40px 20px}.products-title{text-align:center;margin-bottom:32px}.products-grid{display:grid;gap:16px;margin-bottom:16px}.product-card{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer}.product-card:active{transform:scale(0.98)}.product-icon{font-size:36px;margin-bottom:12px}.product-card h3{font-size:17px;color:var(--blue);margin-bottom:8px}.product-card p{color:#64748B;font-size:13px;margin-bottom:16px;line-height:1.5}.product-btn{background:var(--orange);color:white;padding:12px 20px;border-radius:8px;font-weight:700;text-decoration:none;display:inline-block;font-size:14px}.product-btn-secondary{background:var(--blue)}footer{background:var(--blue);color:white;padding:40px 20px 20px;margin-top:60px}.footer-section{margin-bottom:24px}.footer-section h4{margin-bottom:12px;font-size:15px}.footer-links{list-style:none}.footer-links li{margin-bottom:8px;font-size:13px}.footer-links a{color:rgba(255,255,255,0.8);text-decoration:none}@media (min-width:768px){.hero h1{font-size:48px}.check-section{max-width:600px;margin:0 auto}.pricing{max-width:800px;margin:40px auto}.pricing-box{padding:40px;display:flex;align-items:center;gap:40px}.price-col{flex:1;text-align:left}.features-col{flex:2;text-align:left}.features-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}.products{max-width:1280px;margin:0 auto}.products-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 <nav>
-<div class="nav-container">
 <a href="/" class="logo">Glovbox</a>
-<div class="nav-links">
-<a href="#pricing" class="nav-link">Pricing</a>
-<a href="#products" class="nav-link">Services</a>
-<a href="/contact.html" class="nav-link">Contact</a>
-<a href="/signin.html"><button class="btn btn-primary">Sign Up Free</button></a>
-</div>
-</div>
 </nav>
 
 <section class="hero">
 <h1>Never Miss Your MOT<br>& Road Tax Again</h1>
-<p class="hero-subtitle">Your One-Stop Shop for MOT, Insurance & Road Tax</p>
-<p class="hero-tagline">Everything you need to manage your vehicle in one place</p>
+<p class="tagline">One-Stop Shop for MOT, Insurance & Road Tax</p>
+<p class="subtitle">Everything you need in one place</p>
 </section>
 
 <section class="check-section">
 <div class="card">
 <h2>Check Your Vehicle</h2>
-<p class="subtitle">Free instant lookup using official DVLA records</p>
-<input type="text" id="regNumber" placeholder="Enter registration (e.g. AB12 CDE)" maxlength="8">
-<button class="btn-check" id="checkBtn">Check Vehicle Status</button>
-<div class="loading" id="loading">
-<div class="spinner"></div>
-<p>Checking DVLA database...</p>
-</div>
+<p class="card-subtitle">Free DVLA lookup</p>
+<input type="text" id="regNumber" placeholder="e.g. AB12 CDE" maxlength="8">
+<button class="btn-check" id="checkBtn">Check Status</button>
+<div class="loading" id="loading"><div class="spinner"></div><p>Checking...</p></div>
 <div class="results" id="results"></div>
-<p style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:#64748B">
-<strong>Data from:</strong> UK Driver and Vehicle Licensing Agency (DVLA)
-</p>
 </div>
 </section>
 
-<section class="pricing" id="pricing">
+<section class="pricing">
 <h2 class="section-title">Always Free</h2>
-<p class="section-subtitle">No hidden charges. No credit card. No tricks.</p>
-<div class="pricing-simple">
+<p class="section-subtitle">No charges. No credit card. No tricks.</p>
+<div class="pricing-box">
 <div class="price-col">
 <div class="price">£0</div>
 <div class="price-label">forever</div>
 </div>
 <div class="features-col">
-<div class="features-simple">
-<div class="feature-simple"><span>✓</span> Unlimited vehicles</div>
-<div class="feature-simple"><span>✓</span> MOT & tax reminders</div>
-<div class="feature-simple"><span>✓</span> MOT centre finder</div>
-<div class="feature-simple"><span>✓</span> Insurance comparison</div>
-<div class="feature-simple"><span>✓</span> Email notifications</div>
-<div class="feature-simple"><span>✓</span> No credit card needed</div>
+<div class="features-list">
+<div class="feature-item"><span>✓</span> Unlimited vehicles</div>
+<div class="feature-item"><span>✓</span> MOT & tax reminders</div>
+<div class="feature-item"><span>✓</span> MOT centre finder</div>
+<div class="feature-item"><span>✓</span> Insurance comparison</div>
+<div class="feature-item"><span>✓</span> Email notifications</div>
+<div class="feature-item"><span>✓</span> No credit card</div>
 </div>
 </div>
 </div>
 </section>
 
-<section class="products" id="products">
+<section class="products">
 <div class="products-title">
 <h2 class="section-title">Our Services</h2>
 <p class="section-subtitle">MOT, Insurance & Road Tax - All in One Place</p>
 </div>
-
 <div class="products-grid">
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">🔧</div>
-<h3>MOT Centre Finder</h3>
-<p>Find MOT centres near you with real distances, opening hours, and phone numbers. Book directly with trusted garages.</p>
-<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Find MOT Centre</a>
+<h3>MOT Finder</h3>
+<p>Find centres near you with distances & phone numbers</p>
+<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Find MOT</a>
 </div>
-
-<div class="product-card" onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')">
+<div class="product-card" onclick="window.open('https://www.gov.uk/vehicle-tax','_blank')">
 <div class="product-icon">💷</div>
 <h3>Pay Road Tax</h3>
-<p>Direct link to the official GOV.UK website to pay your road tax securely. Quick and easy online payment.</p>
-<a href="https://www.gov.uk/vehicle-tax" target="_blank" class="product-btn product-btn-secondary" onclick="event.stopPropagation()">Pay Tax on GOV.UK</a>
+<p>Direct link to GOV.UK for secure payment</p>
+<a href="https://www.gov.uk/vehicle-tax" target="_blank" class="product-btn product-btn-secondary" onclick="event.stopPropagation()">Pay Tax</a>
 </div>
-
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">💰</div>
-<h3>Insurance Comparison</h3>
-<p>Free quotes from leading UK insurers. Could save up to £300 per year. Completely free to use.</p>
-<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Compare Insurance</a>
+<h3>Insurance</h3>
+<p>Compare quotes from leading UK insurers</p>
+<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Compare</a>
 </div>
-</div>
-
-<div class="products-grid-bottom">
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">📊</div>
-<h3>Your Dashboard</h3>
-<p>Track unlimited vehicles in one place. See MOT dates, tax renewals, and get quick access to all services.</p>
+<h3>Dashboard</h3>
+<p>Track unlimited vehicles in one place</p>
 <a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">View Dashboard</a>
 </div>
-
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">🔔</div>
-<h3>Automated Reminders</h3>
-<p>Get email alerts 30, 14, and 7 days before your MOT or road tax expires. Never pay late fees again.</p>
-<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Set Up Reminders</a>
+<h3>Reminders</h3>
+<p>Email alerts 30, 14 & 7 days before expiry</p>
+<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Set Up</a>
 </div>
-
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">⚡</div>
 <h3>One-Stop Shop</h3>
-<p>Everything you need for your vehicle in one place. MOT, insurance, and road tax - all managed from a single dashboard.</p>
-<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Get Started Free</a>
+<p>MOT, insurance & tax all in one dashboard</p>
+<a href="/signin.html" class="product-btn" onclick="event.stopPropagation()">Get Started</a>
 </div>
 </div>
 </section>
 
 <footer>
-<div class="footer-container">
-<div>
+<div class="footer-section">
 <h4>Services</h4>
 <ul class="footer-links">
-<li><a href="#products">MOT Finder</a></li>
+<li><a href="/signin.html">MOT Finder</a></li>
 <li><a href="/signin.html">Insurance</a></li>
-<li><a href="https://www.gov.uk/vehicle-tax" target="_blank">Road Tax</a></li>
+<li><a href="https://www.gov.uk/vehicle-tax">Road Tax</a></li>
 </ul>
 </div>
-<div>
+<div class="footer-section">
 <h4>Legal</h4>
 <ul class="footer-links">
 <li><a href="/privacy.html">Privacy</a></li>
@@ -138,66 +115,18 @@
 <li><a href="/cookies.html">Cookies</a></li>
 </ul>
 </div>
-<div>
+<div class="footer-section">
 <h4>Support</h4>
 <ul class="footer-links">
 <li><a href="mailto:support@glovbox.net">support@glovbox.net</a></li>
-<li><a href="/contact.html">Contact Us</a></li>
+<li><a href="/contact.html">Contact</a></li>
 </ul>
 </div>
-</div>
-<p style="text-align:center;margin-top:40px;opacity:0.7;font-size:14px">© 2026 Glovbox. All rights reserved.</p>
+<p style="text-align:center;margin-top:24px;opacity:0.7;font-size:12px">© 2026 Glovbox</p>
 </footer>
 
 <script>
-document.getElementById('checkBtn').addEventListener('click',async function(){
-const regNumber=document.getElementById('regNumber').value.toUpperCase().replace(/\s/g,'');
-if(!regNumber||regNumber.length<2){
-alert('Please enter a valid registration number');
-return;
-}
-document.getElementById('loading').style.display='block';
-document.getElementById('results').style.display='none';
-try{
-const response=await fetch(`/api/vehicle/${regNumber}`);
-const data=await response.json();
-document.getElementById('loading').style.display='none';
-if(!response.ok){
-alert(data.error||'Error checking vehicle');
-return;
-}
-const resultsDiv=document.getElementById('results');
-resultsDiv.innerHTML=`
-<div style="margin-bottom:24px;padding-bottom:24px;border-bottom:2px solid var(--border)">
-<h3 style="color:var(--blue);font-size:20px;margin-bottom:16px">Vehicle Details</h3>
-<div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div>
-<div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div>
-<div class="result-row"><span class="result-label">Colour</span><span>${data.colour}</span></div>
-<div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div>
-</div>
-<div style="margin-bottom:24px;padding-bottom:24px;border-bottom:2px solid var(--border)">
-<h3 style="color:var(--blue);font-size:20px;margin-bottom:16px">🔧 MOT Status</h3>
-<div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus==='Valid'?'status-valid':'status-expired'}" style="font-size:18px;font-weight:700">${data.motStatus}</span></div>
-<div class="result-row"><span class="result-label">Expires</span><span style="font-weight:600">${data.motExpiryDate||'N/A'}</span></div>
-</div>
-<div>
-<h3 style="color:var(--blue);font-size:20px;margin-bottom:16px">💷 Road Tax Status</h3>
-<div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus==='Taxed'?'status-valid':'status-expired'}" style="font-size:18px;font-weight:700">${data.taxStatus}</span></div>
-<div class="result-row"><span class="result-label">Due Date</span><span style="font-weight:600">${data.taxDueDate||'N/A'}</span></div>
-</div>
-<div style="margin-top:32px;padding:24px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:12px;color:white;text-align:center">
-<div style="font-size:20px;font-weight:700;margin-bottom:12px">🎉 Want Free Reminders?</div>
-<div style="margin-bottom:20px;opacity:0.9">Sign up free to never miss this deadline again!</div>
-<a href="/signin.html" style="background:var(--orange);color:white;padding:12px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700">Sign Up Free - 30 Seconds</a>
-<div style="margin-top:12px;font-size:13px;opacity:0.8">No credit card required</div>
-</div>
-`;
-resultsDiv.style.display='block';
-}catch(error){
-document.getElementById('loading').style.display='none';
-alert('Error checking vehicle. Please try again.');
-}
-});
+document.getElementById('checkBtn').addEventListener('click',async function(){const regNumber=document.getElementById('regNumber').value.toUpperCase().replace(/\s/g,'');if(!regNumber||regNumber.length<2){alert('Please enter a valid registration');return}document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';try{const response=await fetch(`/api/vehicle/${regNumber}`);const data=await response.json();document.getElementById('loading').style.display='none';if(!response.ok){alert(data.error||'Error checking vehicle');return}const resultsDiv=document.getElementById('results');resultsDiv.innerHTML=`<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">Vehicle Details</h3><div class="result-row"><span class="result-label">Make</span><span>${data.make}</span></div><div class="result-row"><span class="result-label">Model</span><span>${data.model}</span></div><div class="result-row"><span class="result-label">Year</span><span>${data.yearOfManufacture}</span></div></div><div style="margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid var(--border)"><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">🔧 MOT</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.motStatus==='Valid'?'status-valid':'status-expired'}">${data.motStatus}</span></div><div class="result-row"><span class="result-label">Expires</span><span>${data.motExpiryDate||'N/A'}</span></div></div><div><h3 style="color:var(--blue);font-size:16px;margin-bottom:12px">💷 Road Tax</h3><div class="result-row"><span class="result-label">Status</span><span class="${data.taxStatus==='Taxed'?'status-valid':'status-expired'}">${data.taxStatus}</span></div><div class="result-row"><span class="result-label">Due</span><span>${data.taxDueDate||'N/A'}</span></div></div><div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);border-radius:8px;color:white;text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:8px">🎉 Want Free Reminders?</div><div style="margin-bottom:16px;font-size:13px">Never miss a deadline again!</div><a href="/signin.html" style="background:var(--orange);color:white;padding:10px 24px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:700;font-size:14px">Sign Up Free</a><div style="margin-top:8px;font-size:11px;opacity:0.9">No credit card required</div></div>`;resultsDiv.style.display='block'}catch(error){document.getElementById('loading').style.display='none';alert('Error checking vehicle')}});
 </script>
 </body>
 </html>
