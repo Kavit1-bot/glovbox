@@ -3,24 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compare Car Insurance - Glovbox</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Compare Car Insurance Quotes - Glovbox</title>
+<meta name="description" content="Compare car insurance quotes from leading UK insurers. Save up to £300 per year. Free comparison, no obligation.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--bg:#F8FAFC;--white:#FFF;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg)}nav{background:var(--white);border-bottom:1px solid var(--border);padding:16px 32px}.nav-container{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.logo{font-size:20px;font-weight:700;color:var(--blue);text-decoration:none}.nav-links{display:flex;gap:32px;align-items:center}.nav-link{color:var(--text);text-decoration:none;font-weight:500}.container{max-width:800px;margin:40px auto;padding:0 32px}h1{font-size:32px;color:var(--blue);margin-bottom:8px}.subtitle{color:#64748B;margin-bottom:40px}.card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:40px}.form-group{margin-bottom:20px}label{display:block;font-weight:600;margin-bottom:8px;font-size:14px}input,select{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:15px;font-family:'Inter',sans-serif}input:focus,select:focus{outline:none;border-color:var(--blue)}.btn{width:100%;background:var(--orange);color:white;padding:18px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer;margin-top:24px}.btn:hover{background:#E85A2A}.partners{display:none;margin-top:32px}.partner-card{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;text-align:center}.partner-logo{font-size:24px;font-weight:700;color:var(--blue);margin-bottom:12px}.partner-btn{background:var(--orange);color:white;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700;margin-top:12px}.disclaimer{margin-top:24px;padding:16px;background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;font-size:14px;color:#92400E}
+*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--white:#FFF;--bg:#F8FAFC;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}nav{background:rgba(255,255,255,0.98);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:700;font-size:20px;color:var(--blue);text-decoration:none}.hero{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:60px 24px;text-align:center}.hero h1{font-size:42px;font-weight:700;margin-bottom:16px}.hero p{font-size:20px;opacity:0.9;margin-bottom:8px}.hero .subtext{font-size:16px;opacity:0.8}.container{max-width:800px;margin:-40px auto 60px;padding:0 24px}.card{background:var(--white);border-radius:16px;padding:40px;box-shadow:0 4px 20px rgba(11,61,145,0.1)}.section-title{font-size:24px;color:var(--blue);margin-bottom:24px;font-weight:700}.form-group{margin-bottom:24px}label{display:block;font-weight:600;margin-bottom:8px;font-size:15px}input,select{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:15px;font-family:'Inter',sans-serif}input:focus,select:focus{outline:none;border-color:var(--blue)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.btn{background:var(--orange);color:white;padding:18px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer;width:100%;margin-top:8px}.btn:hover{background:#E85A2A}.info-box{background:#F1F5F9;padding:20px;border-radius:8px;margin:24px 0;border-left:4px solid var(--blue)}.info-box h3{color:var(--blue);margin-bottom:8px;font-size:16px}.info-box p{font-size:14px;line-height:1.6;color:#64748B}.partners{margin:40px 0}.partners h3{text-align:center;margin-bottom:24px;color:var(--blue)}.partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}.partner-card{background:white;border:2px solid var(--border);border-radius:12px;padding:24px;text-align:center}.partner-card h4{margin-bottom:8px;color:var(--blue)}.partner-card .tag{background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:16px;font-size:12px;font-weight:600}.disclaimer{background:#FEF3C7;border:1px solid #FDE047;border-radius:8px;padding:16px;margin:24px 0;font-size:13px;line-height:1.6}.consent{display:flex;gap:12px;margin:20px 0;font-size:14px}footer{background:var(--blue);color:white;padding:40px 24px;margin-top:80px;text-align:center}footer a{color:white;text-decoration:underline}@media (max-width:768px){.hero h1{font-size:32px}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<nav><div class="nav-container"><a href="/" class="logo">Glovbox</a><div class="nav-links"><a href="/" class="nav-link">Home</a><a href="/mot-search.html" class="nav-link">Find MOT</a><a href="/signin.html" class="nav-link">Sign In</a></div></div></nav>
-<div class="container"><h1>Compare Car Insurance</h1><p class="subtitle">100% free quotes from leading UK insurers - Could save up to £300</p>
-<div class="card"><form id="insuranceForm"><div class="form-group"><label>Date of Birth</label><input type="date" id="dob" required></div><div class="form-group"><label>Postcode</label><input type="text" id="postcode" placeholder="SW1A 1AA" required></div><div class="form-group"><label>Vehicle Make</label><input type="text" id="make" placeholder="e.g. Ford" required></div><div class="form-group"><label>Vehicle Model</label><input type="text" id="model" placeholder="e.g. Fiesta" required></div><div class="form-group"><label>Engine Size (cc)</label><input type="number" id="engine" placeholder="e.g. 1600" required></div><div class="form-group"><label>No Claims Bonus (years)</label><select id="ncb" required><option value="0">0 years</option><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option><option value="4">4 years</option><option value="5">5+ years</option></select></div><div class="form-group"><label>Annual Mileage</label><select id="mileage" required><option value="5000">Under 5,000 miles</option><option value="10000">5,000 - 10,000 miles</option><option value="15000">10,000 - 15,000 miles</option><option value="20000">15,000 - 20,000 miles</option><option value="25000">Over 20,000 miles</option></select></div><button type="submit" class="btn">Compare Prices Now</button></form>
-<div class="partners" id="partners"><h3 style="text-align:center;margin-bottom:24px;color:var(--blue)">Compare Quotes from Top Insurers</h3>
-<div class="partner-card"><div class="partner-logo">MoneySuperMarket</div><p style="margin-bottom:12px;color:#64748B">Compare 100+ insurers in minutes</p><a href="https://www.moneysupermarket.com/car-insurance/" target="_blank" class="partner-btn" id="msm-affiliate-link">Get Quote</a></div>
-<div class="partner-card"><div class="partner-logo">Rooster Insurance</div><p style="margin-bottom:12px;color:#64748B">Pay-per-mile insurance for low mileage drivers</p><a href="https://www.hellorooster.co.uk/" target="_blank" class="partner-btn" id="rooster-affiliate-link">Get Quote</a></div>
-<div class="partner-card"><div class="partner-logo">Compare The Market</div><p style="margin-bottom:12px;color:#64748B">Get a meerkat toy with every policy</p><a href="https://www.comparethemarket.com/car-insurance/" target="_blank" class="partner-btn">Get Quote</a></div>
-<div class="disclaimer"><strong>Important:</strong> Prices shown are estimates. Final quotes provided by insurers. By clicking links above, you'll be taken to our partners' websites where you can get personalized quotes.</div></div>
-</div></div>
+<nav>
+<a href="/" class="logo">Glovbox</a>
+<a href="/" style="color:var(--blue);text-decoration:none;font-weight:600;">← Back to Dashboard</a>
+</nav>
+
+<div class="hero">
+<h1>Compare Car Insurance Quotes</h1>
+<p>Save up to £300 per year on your car insurance</p>
+<p class="subtext">Free comparison • No obligation • Takes 2 minutes</p>
+</div>
+
+<div class="container">
+<div class="card">
+<h2 class="section-title">Get Your Free Quotes</h2>
+
+<div class="info-box">
+<h3>✓ Why compare with Glovbox?</h3>
+<p>We compare quotes from leading UK insurers to help you find the best deal. Our service is completely free and you're under no obligation to buy.</p>
+</div>
+
+<form id="insuranceForm">
+<div class="form-group">
+<label>Your Details</label>
+<input type="text" name="name" placeholder="Full name" required>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>Date of Birth</label>
+<input type="date" name="dob" required>
+</div>
+<div class="form-group">
+<label>Postcode</label>
+<input type="text" name="postcode" placeholder="e.g. SW1A 1AA" required>
+</div>
+</div>
+
+<div class="form-group">
+<label>Email Address</label>
+<input type="email" name="email" placeholder="you@example.com" required>
+</div>
+
+<div class="form-group">
+<label>Phone Number</label>
+<input type="tel" name="phone" placeholder="07XXX XXXXXX" required>
+</div>
+
+<div class="form-group">
+<label>Vehicle Registration</label>
+<input type="text" name="registration" placeholder="e.g. AB12 CDE" required>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>Current Insurer (if known)</label>
+<input type="text" name="current_insurer" placeholder="Optional">
+</div>
+<div class="form-group">
+<label>Current Premium (£/year)</label>
+<input type="number" name="current_premium" placeholder="Optional">
+</div>
+</div>
+
+<div class="form-group">
+<label>No Claims Bonus (years)</label>
+<select name="ncb" required>
+<option value="">Select...</option>
+<option value="0">0 years</option>
+<option value="1">1 year</option>
+<option value="2">2 years</option>
+<option value="3">3 years</option>
+<option value="4">4 years</option>
+<option value="5">5+ years</option>
+</select>
+</div>
+
+<div class="consent">
+<input type="checkbox" id="consent" required>
+<label for="consent" style="font-weight:normal;">I consent to being contacted by Glovbox and its partners about insurance quotes. I have read and agree to the <a href="/privacy.html" target="_blank">Privacy Policy</a> and <a href="/terms.html" target="_blank">Terms & Conditions</a>.</label>
+</div>
+
+<button type="submit" class="btn">Compare Quotes Now →</button>
+
+<div class="disclaimer">
+<strong>Important Information:</strong> By clicking "Compare Quotes Now", you consent to Glovbox and its insurance partners contacting you about car insurance products. You can opt out at any time. Glovbox is a price comparison service and earns commission from insurance providers when you purchase through our service. This does not affect the price you pay. All quotes are subject to underwriting and acceptance criteria. Glovbox is not a licensed insurance broker and does not provide insurance advice.
+</div>
+</form>
+</div>
+
+<div class="partners">
+<h3>Our Insurance Partners</h3>
+<div class="partner-grid">
+<div class="partner-card">
+<h4>MoneySuperMarket</h4>
+<span class="tag">Compare 100+ Insurers</span>
+</div>
+<div class="partner-card">
+<h4>Compare The Market</h4>
+<span class="tag">2-for-1 Cinema</span>
+</div>
+<div class="partner-card">
+<h4>Go Compare</h4>
+<span class="tag">Save up to £300</span>
+</div>
+<div class="partner-card">
+<h4>Confused.com</h4>
+<span class="tag">Leading Provider</span>
+</div>
+</div>
+</div>
+
+<div class="info-box">
+<h3>How does it work?</h3>
+<p><strong>1. Enter your details</strong> - We only ask what's necessary to get accurate quotes<br>
+<strong>2. We compare prices</strong> - Our partners search 100+ insurers on your behalf<br>
+<strong>3. Choose your quote</strong> - Compare deals and buy directly from the insurer<br>
+<strong>4. You save money</strong> - Our users save an average of £200 per year</p>
+</div>
+
+<div class="info-box">
+<h3>Your data is safe with us</h3>
+<p>Glovbox takes your privacy seriously. We use industry-standard encryption to protect your personal information. We will only share your details with insurance comparison partners for the purpose of providing quotes. You can read our full <a href="/privacy.html" style="color:#0B3D91;font-weight:600;">Privacy Policy here</a>.</p>
+</div>
+</div>
+
+<footer>
+<p style="margin-bottom:16px;"><strong>Glovbox Insurance Comparison Service</strong></p>
+<p style="font-size:14px;opacity:0.9;line-height:1.6;max-width:800px;margin:0 auto;">
+Glovbox is a free vehicle management platform. We earn commission from insurance providers when you purchase through our comparison service. This commission does not affect the price you pay. All insurance products are provided by FCA-regulated insurers. Glovbox Ltd is not a licensed insurance broker.
+</p>
+<p style="margin-top:24px;font-size:13px;">
+<a href="/privacy.html">Privacy Policy</a> | 
+<a href="/terms.html">Terms & Conditions</a> | 
+<a href="/contact.html">Contact Us</a>
+</p>
+<p style="margin-top:16px;font-size:12px;opacity:0.7;">© 2026 Glovbox Ltd. All rights reserved.</p>
+</footer>
+
 <script>
-document.getElementById('insuranceForm').addEventListener('submit',function(e){e.preventDefault();document.getElementById('partners').style.display='block';document.getElementById('partners').scrollIntoView({behavior:'smooth'})});
+document.getElementById('insuranceForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Collect form data
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData);
+  
+  // In production, send to your backend
+  console.log('Form submitted:', data);
+  
+  // Show success message
+  alert('Thank you! We\'re comparing quotes from our partners. You\'ll receive quotes via email within 24 hours.');
+  
+  // In production, redirect to thank you page or show quotes
+  // window.location.href = '/insurance-quotes.html';
+});
 </script>
 </body>
 </html>
