@@ -1,0 +1,115 @@
+// Glovbox Complete Database Schema
+// This is a full schema that works with your existing users Map
+// For Railway deployment with PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Existing User model (matches your current structure)
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  vehicles  Vehicle[]
+  
+  @@index([email])
+}
+
+// Enhanced Vehicle model with service tracking
+model Vehicle {
+  id                 String          @id @default(cuid())
+  userId             String
+  registrationNumber String
+  make               String
+  model              String
+  yearOfManufacture  Int?
+  colour             String?
+  motExpiryDate      String?
+  taxDueDate         String?
+  
+  // Service tracking fields
+  currentMileage     Int?            @default(0)
+  lastServiceMileage Int?            @default(0)
+  nextServiceDue     Int?            // Calculated: lastServiceMileage + 12000
+  
+  // MOT reminder tracking
+  lastMotReminder    String?
+  lastTaxReminder    String?
+  
+  addedAt            DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceRecords     ServiceRecord[]
+  
+  @@index([userId])
+  @@index([registrationNumber])
+}
+
+// Service Record model - core of the logbook
+model ServiceRecord {
+  id                String   @id @default(cuid())
+  vehicleId         String
+  
+  // Basic service info
+  serviceDate       DateTime
+  mileageAtService  Int
+  
+  // Garage information
+  garageName        String?
+  garageAddress     String?
+  garagePhone       String?
+  garageEmail       String?
+  
+  // Service details
+  serviceType       String   // "Major Service", "Minor Service", "MOT", "Repair", "Tyres", "Brake Service", "Oil Change", "Other"
+  description       String?  @db.Text // What work was done
+  partsCost         Float?   // Cost of parts
+  labourCost        Float?   // Cost of labour
+  totalCost         Float?   // Total cost
+  vatAmount         Float?   // VAT amount
+  
+  // Receipt & documentation
+  receiptImageUrl   String?  // S3/Cloudinary URL
+  receiptPdfUrl     String?  // If PDF receipt uploaded
+  ocrData           Json?    // Parsed OCR data from receipt
+  
+  // Additional info
+  notes             String?  @db.Text
+  warrantyUntil     DateTime?
+  nextServiceDue    Int?     // Recommended mileage for next service
+  
+  // Metadata
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  vehicle           Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  
+  @@index([vehicleId])
+  @@index([serviceDate])
+  @@index([serviceType])
+}
+
+// Optional: Service reminders based on mileage
+model ServiceReminder {
+  id              String   @id @default(cuid())
+  vehicleId       String
+  reminderType    String   // "service", "mot", "tax"
+  triggerMileage  Int      // Send reminder at this mileage
+  message         String
+  sent            Boolean  @default(false)
+  sentAt          DateTime?
+  createdAt       DateTime @default(now())
+  
+  @@index([vehicleId])
+  @@index([sent])
+}
