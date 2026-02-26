@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up - Glovbox</title>
+<title>Sign In - Glovbox</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--bg:#F8FAFC;--white:#FFF;--border:#E2E8F0;--text:#1E293B;--red:#EF4444}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.container{max-width:450px;width:100%}.logo{text-align:center;margin-bottom:32px}.logo a{font-size:28px;font-weight:700;color:var(--blue);text-decoration:none}.card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:40px;box-shadow:0 4px 16px rgba(11,61,145,0.08)}.tabs{display:flex;gap:16px;margin-bottom:32px;border-bottom:2px solid var(--border)}.tab{flex:1;padding:12px;border:none;background:none;font-size:16px;font-weight:600;color:#64748B;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.form-group{margin-bottom:20px}label{display:block;font-weight:600;margin-bottom:8px;font-size:14px;color:var(--text)}input{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:15px;font-family:'Inter',sans-serif;transition:border-color 0.2s}input:focus{outline:none;border-color:var(--blue)}input.error{border-color:var(--red)}.error-msg{color:var(--red);font-size:13px;margin-top:6px;display:none}.error-msg.show{display:block}.password-hint{font-size:12px;color:#64748B;margin-top:4px}.btn{width:100%;background:var(--orange);color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer;transition:all 0.2s}.btn:hover{background:#E85A2A}.btn:disabled{background:#94A3B8;cursor:not-allowed}.divider{text-align:center;margin:24px 0;color:#64748B;font-size:14px}.alert{padding:12px 16px;border-radius:8px;margin-bottom:20px;font-size:14px;display:none}.alert.show{display:block}.alert-error{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5}.alert-success{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7}@media (max-width:480px){.card{padding:28px 24px}}
@@ -57,6 +57,12 @@
 </div>
 
 <script>
+// Check if already logged in
+const token = localStorage.getItem('glovbox_token');
+if (token) {
+  window.location.href = '/dashboard.html';
+}
+
 function showTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
@@ -100,7 +106,6 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   const email = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPassword').value;
   
-  // Validation
   if (!name) {
     showError('Please enter your name');
     return;
@@ -136,11 +141,11 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
       return;
     }
     
-    // Success!
+    // Success - Save and redirect to dashboard
     localStorage.setItem('glovbox_token', data.token);
     localStorage.setItem('glovbox_user', JSON.stringify(data.user));
     
-    showSuccess('Account created! Redirecting...');
+    showSuccess('Account created! Redirecting to dashboard...');
     setTimeout(() => {
       window.location.href = '/dashboard.html';
     }, 1000);
@@ -185,11 +190,11 @@ document.getElementById('signinForm').addEventListener('submit', async (e) => {
       return;
     }
     
-    // Success!
+    // Success - Save and redirect to dashboard
     localStorage.setItem('glovbox_token', data.token);
     localStorage.setItem('glovbox_user', JSON.stringify(data.user));
     
-    showSuccess('Signed in! Redirecting...');
+    showSuccess('Signed in! Redirecting to dashboard...');
     setTimeout(() => {
       window.location.href = '/dashboard.html';
     }, 1000);

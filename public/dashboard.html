@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Inter', sans-serif; }
+.modal-backdrop { background: rgba(0,0,0,0.5); }
 </style>
 </head>
 <body class="bg-gray-50">
@@ -23,33 +24,40 @@ const { useState, useEffect } = React;
 function Dashboard() {
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [view, setView] = useState('overview'); // 'overview' or 'logbook'
+  const [view, setView] = useState('overview');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAddVehicle, setShowAddVehicle] = useState(false);
 
   useEffect(() => {
+    checkAuth();
+  }, []);
+
+  async function checkAuth() {
+    const token = localStorage.getItem('glovbox_token');
     const userData = localStorage.getItem('glovbox_user');
+    
+    if (!token) {
+      window.location.href = '/signin.html';
+      return;
+    }
+    
     if (userData) {
       setUser(JSON.parse(userData));
     }
     
-    // Check URL for view parameter
     const params = new URLSearchParams(window.location.search);
     const urlView = params.get('view');
     if (urlView === 'logbook') {
       setView('logbook');
     }
     
-    loadVehicles();
-  }, []);
+    await loadVehicles();
+  }
 
   async function loadVehicles() {
     const token = localStorage.getItem('glovbox_token');
-    if (!token) {
-      window.location.href = '/signin.html';
-      return;
-    }
-
+    
     try {
       const response = await fetch('/api/user/vehicles', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -83,32 +91,6 @@ function Dashboard() {
     );
   }
 
-  if (!selectedVehicle) {
-    return (
-      <div className="min-h-screen">
-        <nav className="bg-white border-b border-gray-200 px-6 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-blue-900">Glovbox Dashboard</h1>
-            <button onClick={signOut} className="text-gray-600 hover:text-gray-900">
-              Sign Out
-            </button>
-          </div>
-        </nav>
-        <div className="max-w-2xl mx-auto mt-20 text-center px-4">
-          <div className="text-6xl mb-4">🚗</div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">No Vehicles Yet</h2>
-          <p className="text-gray-600 mb-8">Add your first vehicle to start tracking MOT, tax, and service history</p>
-          <button 
-            onClick={() => window.location.href = '/'}
-            className="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600"
-          >
-            Add Vehicle
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen">
       {/* Navigation */}
@@ -116,66 +98,288 @@ function Dashboard() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-blue-900">Glovbox Dashboard</h1>
-            <p className="text-sm text-gray-600 mt-1">
-              {selectedVehicle.make} {selectedVehicle.model} • {selectedVehicle.registrationNumber}
-            </p>
+            {selectedVehicle && (
+              <p className="text-sm text-gray-600 mt-1">
+                {selectedVehicle.make} {selectedVehicle.model} • {selectedVehicle.registrationNumber}
+              </p>
+            )}
           </div>
           <button 
             onClick={signOut} 
-            className="text-gray-600 hover:text-gray-900 text-sm md:text-base"
+            className="text-gray-600 hover:text-gray-900 text-sm md:text-base font-semibold"
           >
             Sign Out
           </button>
         </div>
       </nav>
 
-      {/* Tab Navigation */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setView('overview')}
-              className={`py-4 px-2 border-b-2 font-semibold transition-colors ${
-                view === 'overview' 
-                  ? 'border-blue-600 text-blue-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setView('logbook')}
-              className={`py-4 px-2 border-b-2 font-semibold transition-colors ${
-                view === 'logbook' 
-                  ? 'border-blue-600 text-blue-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              📖 Service Logbook
-            </button>
+      {/* No Vehicles - Welcome Screen */}
+      {vehicles.length === 0 ? (
+        <WelcomeScreen onAddVehicle={() => setShowAddVehicle(true)} />
+      ) : (
+        <>
+          {/* Tab Navigation */}
+          <div className="bg-white border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 md:px-6">
+              <div className="flex gap-8">
+                <button
+                  onClick={() => setView('overview')}
+                  className={`py-4 px-2 border-b-2 font-semibold transition-colors ${
+                    view === 'overview' 
+                      ? 'border-blue-600 text-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => setView('logbook')}
+                  className={`py-4 px-2 border-b-2 font-semibold transition-colors ${
+                    view === 'logbook' 
+                      ? 'border-blue-600 text-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  📖 Service Logbook
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="max-w-7xl mx-auto p-4 md:p-6">
+            {view === 'overview' ? (
+              <VehicleOverview 
+                vehicle={selectedVehicle} 
+                onAddVehicle={() => setShowAddVehicle(true)}
+              />
+            ) : (
+              <ServiceLogbook vehicle={selectedVehicle} user={user} />
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Add Vehicle Modal */}
+      {showAddVehicle && (
+        <AddVehicleModal 
+          onClose={() => setShowAddVehicle(false)}
+          onSuccess={() => {
+            setShowAddVehicle(false);
+            loadVehicles();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// Welcome Screen for New Users
+function WelcomeScreen({ onAddVehicle }) {
+  return (
+    <div className="max-w-3xl mx-auto mt-20 px-4">
+      <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
+        <div className="text-7xl mb-6">🚗</div>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Welcome to Glovbox!
+        </h2>
+        <p className="text-lg text-gray-600 mb-8">
+          Add your first vehicle to start tracking MOT dates, road tax, and service history
+        </p>
+        
+        <button 
+          onClick={onAddVehicle}
+          className="bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600 inline-flex items-center gap-2 shadow-lg"
+        >
+          <span className="text-2xl">+</span>
+          Add Your First Vehicle
+        </button>
+        
+        <div className="grid md:grid-cols-3 gap-6 mt-12 text-left">
+          <div className="p-4">
+            <div className="text-3xl mb-2">🔔</div>
+            <h3 className="font-bold text-blue-900 mb-2">Never Miss Deadlines</h3>
+            <p className="text-sm text-gray-600">Get email reminders before MOT and tax expire</p>
+          </div>
+          <div className="p-4">
+            <div className="text-3xl mb-2">📖</div>
+            <h3 className="font-bold text-blue-900 mb-2">Track Service History</h3>
+            <p className="text-sm text-gray-600">Digital logbook increases resale value</p>
+          </div>
+          <div className="p-4">
+            <div className="text-3xl mb-2">💰</div>
+            <h3 className="font-bold text-blue-900 mb-2">Save Money</h3>
+            <p className="text-sm text-gray-600">Compare insurance and find cheap MOT centres</p>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
-        {view === 'overview' ? (
-          <VehicleOverview vehicle={selectedVehicle} />
-        ) : (
-          <ServiceLogbook vehicle={selectedVehicle} user={user} />
-        )}
+// Add Vehicle Modal
+function AddVehicleModal({ onClose, onSuccess }) {
+  const [reg, setReg] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [vehicleData, setVehicleData] = useState(null);
+
+  async function searchVehicle() {
+    if (!reg || reg.length < 2) {
+      setError('Please enter a valid registration');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`/api/vehicle/${reg.toUpperCase().replace(/\s/g, '')}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Vehicle not found');
+        setVehicleData(null);
+      } else {
+        setVehicleData(data);
+        setError('');
+      }
+    } catch (error) {
+      setError('Error looking up vehicle');
+      setVehicleData(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function addVehicle() {
+    setLoading(true);
+    const token = localStorage.getItem('glovbox_token');
+
+    try {
+      const response = await fetch('/api/user/vehicles', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ registrationNumber: reg.toUpperCase().replace(/\s/g, '') })
+      });
+
+      if (response.ok) {
+        onSuccess();
+      } else {
+        setError('Failed to add vehicle');
+      }
+    } catch (error) {
+      setError('Error adding vehicle');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 modal-backdrop flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6 md:p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-blue-900">Add Vehicle</h2>
+            <button 
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 text-3xl leading-none"
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Vehicle Registration Number
+              </label>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={reg}
+                  onChange={(e) => setReg(e.target.value.toUpperCase())}
+                  placeholder="e.g. AB12 CDE"
+                  maxLength="8"
+                  className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg font-semibold"
+                  onKeyPress={(e) => e.key === 'Enter' && searchVehicle()}
+                />
+                <button
+                  onClick={searchVehicle}
+                  disabled={loading}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300"
+                >
+                  {loading ? 'Searching...' : 'Search'}
+                </button>
+              </div>
+              {error && (
+                <p className="text-red-600 text-sm mt-2">⚠️ {error}</p>
+              )}
+            </div>
+
+            {vehicleData && (
+              <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
+                <h3 className="font-bold text-lg text-green-900 mb-4">✓ Vehicle Found</h3>
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p className="text-sm text-gray-600">Make & Model</p>
+                    <p className="font-bold text-lg">{vehicleData.make} {vehicleData.model}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Year</p>
+                    <p className="font-bold text-lg">{vehicleData.yearOfManufacture}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">MOT Expires</p>
+                    <p className={`font-bold ${vehicleData.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}`}>
+                      {vehicleData.motExpiryDate || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Tax Due</p>
+                    <p className={`font-bold ${vehicleData.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}`}>
+                      {vehicleData.taxDueDate || 'N/A'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={addVehicle}
+                  disabled={loading}
+                  className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 disabled:bg-gray-300"
+                >
+                  {loading ? 'Adding Vehicle...' : '✓ Add to Dashboard'}
+                </button>
+              </div>
+            )}
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+              <strong>💡 Tip:</strong> We'll automatically track your MOT and tax dates and send you email reminders!
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 // Vehicle Overview Component
-function VehicleOverview({ vehicle }) {
+function VehicleOverview({ vehicle, onAddVehicle }) {
   return (
     <div className="space-y-6">
       {/* Vehicle Details Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-xl font-bold text-blue-900 mb-4">🚗 Vehicle Details</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold text-blue-900">🚗 Vehicle Details</h3>
+          <button
+            onClick={onAddVehicle}
+            className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1"
+          >
+            <span className="text-lg">+</span> Add Another Vehicle
+          </button>
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           <div>
             <p className="text-sm text-gray-600">Registration</p>
@@ -259,29 +463,32 @@ function VehicleOverview({ vehicle }) {
         <div className="grid md:grid-cols-3 gap-4">
           <a 
             href="/mot-search.html"
-            className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
+            className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all"
           >
             <div className="text-3xl mb-2">🔧</div>
             <h4 className="font-bold text-blue-900 mb-1">MOT Finder</h4>
-            <p className="text-sm text-gray-600">Find centres near you with phone numbers</p>
+            <p className="text-sm text-gray-600">Find centres with phone numbers</p>
           </a>
           
           <a 
             href="/insurance.html"
-            className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
+            className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all"
           >
             <div className="text-3xl mb-2">💰</div>
             <h4 className="font-bold text-blue-900 mb-1">Insurance</h4>
-            <p className="text-sm text-gray-600">Compare quotes from leading insurers</p>
+            <p className="text-sm text-gray-600">Compare quotes from insurers</p>
           </a>
           
           <a 
             href="/dashboard.html?view=logbook"
-            className="border-2 border-green-200 bg-green-50 rounded-lg p-4 hover:border-green-500 hover:shadow-md transition-all cursor-pointer"
+            className="border-2 border-green-200 bg-green-50 rounded-lg p-4 hover:border-green-500 hover:shadow-md transition-all"
           >
             <div className="text-3xl mb-2">📖</div>
-            <h4 className="font-bold text-blue-900 mb-1">Service Logbook <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">NEW</span></h4>
-            <p className="text-sm text-gray-600">Track all maintenance history</p>
+            <h4 className="font-bold text-blue-900 mb-1">
+              Service Logbook 
+              <span className="text-xs bg-green-600 text-white px-2 py-1 rounded ml-2">NEW</span>
+            </h4>
+            <p className="text-sm text-gray-600">Track maintenance history</p>
           </a>
         </div>
       </div>
@@ -290,7 +497,7 @@ function VehicleOverview({ vehicle }) {
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
         <h3 className="text-xl font-bold mb-2">✨ New: Digital Service Logbook</h3>
         <p className="mb-4 text-blue-100">
-          Track all your maintenance history, upload receipts, and export professional reports. Increase your vehicle's resale value!
+          Track all maintenance, upload receipts, and increase your vehicle's resale value
         </p>
         <button 
           onClick={() => window.location.href = '/dashboard.html?view=logbook'}
@@ -303,10 +510,9 @@ function VehicleOverview({ vehicle }) {
   );
 }
 
-// Service Logbook Component (simplified for dashboard)
+// Service Logbook Component (same as before)
 function ServiceLogbook({ vehicle, user }) {
   const [services, setServices] = useState([]);
-  const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -336,21 +542,8 @@ function ServiceLogbook({ vehicle, user }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-blue-900 mb-2">Service History</h2>
-            <p className="text-gray-600">
-              Track all maintenance and increase your vehicle's resale value
-            </p>
-          </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 flex items-center justify-center gap-2"
-          >
-            <span className="text-xl">+</span>
-            Add Service Record
-          </button>
-        </div>
+        <h2 className="text-2xl font-bold text-blue-900 mb-2">Service History</h2>
+        <p className="text-gray-600">Track all maintenance and increase resale value</p>
       </div>
 
       {/* Stats */}
@@ -379,66 +572,22 @@ function ServiceLogbook({ vehicle, user }) {
         </div>
       </div>
 
-      {/* Service Records */}
-      {services.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <div className="text-gray-400 mb-4">
-            <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <h3 className="text-2xl font-semibold text-gray-700 mb-2">No Service Records Yet</h3>
-          <p className="text-gray-500 mb-4">Start tracking your vehicle's maintenance history</p>
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600"
-          >
-            Add First Service
-          </button>
-        </div>
-      ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-xl font-bold text-blue-900 mb-6">Recent Services</h3>
-          <div className="space-y-4">
-            {services.slice(0, 5).map((service) => (
-              <div key={service.id} className="border-l-4 border-blue-500 pl-4 py-3 bg-gray-50 rounded-r-lg">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className="font-bold text-lg text-blue-900">{service.serviceType}</h4>
-                    <p className="text-sm text-gray-600">
-                      {new Date(service.serviceDate).toLocaleDateString('en-GB')} • {service.mileageAtService?.toLocaleString()} miles
-                    </p>
-                  </div>
-                  {service.totalCost && (
-                    <div className="text-xl font-bold text-green-600">£{service.totalCost.toFixed(2)}</div>
-                  )}
-                </div>
-                {service.garageName && (
-                  <p className="text-sm text-gray-600">🔧 {service.garageName}</p>
-                )}
-                {service.description && (
-                  <p className="text-sm text-gray-700 mt-2">{service.description}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Coming Soon Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-        <p className="text-blue-900 font-semibold">
-          🚀 Full service logbook with photo uploads, OCR scanning, and PDF export coming soon!
+      {/* Coming Soon */}
+      <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 text-center">
+        <div className="text-5xl mb-4">📖</div>
+        <h3 className="text-2xl font-bold text-blue-900 mb-2">Service Logbook Coming Soon!</h3>
+        <p className="text-blue-700 mb-4">
+          We're finalizing the complete interface with photo uploads, OCR scanning, and PDF export
         </p>
-        <p className="text-blue-700 text-sm mt-1">
-          We're finalizing the complete interface. Stay tuned!
+        <p className="text-sm text-blue-600">
+          For now, you can track your MOT, tax, and get email reminders. Full logbook launching soon! 🚀
         </p>
       </div>
     </div>
   );
 }
 
-// Render the app
+// Render
 ReactDOM.render(<Dashboard />, document.getElementById('root'));
 </script>
 </body>
