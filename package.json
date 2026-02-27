@@ -1,23 +1,16 @@
 {
   "name": "glovbox-api",
   "version": "1.0.0",
-  "description": "Glovbox API - Vehicle Management Platform",
+  "description": "Glovbox - Vehicle Management Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npx prisma generate && npx prisma migrate deploy",
     "dev": "nodemon server.js"
   },
-  "keywords": [
-    "vehicle",
-    "mot",
-    "tax",
-    "reminder"
-  ],
+  "keywords": ["vehicle", "mot", "tax"],
   "author": "Glovbox",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -26,12 +19,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "node-cron": "^3.0.3",
-    "pg": "^8.19.0",
-    "prisma": "^5.22.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "node-cron": "^3.0.3"
   },
   "engines": {
     "node": ">=18.0.0"
