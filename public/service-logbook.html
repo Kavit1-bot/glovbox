@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Logbook - Glovbox</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+.modal-backdrop { background: rgba(0,0,0,0.5); }
+</style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Navigation -->
+<nav class="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div>
+      <a href="/dashboard.html" class="text-xl md:text-2xl font-bold text-blue-900">Glovbox</a>
+      <p class="text-sm text-gray-600 mt-1">Service Logbook</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/dashboard.html" class="text-gray-600 hover:text-gray-900 font-semibold">Dashboard</a>
+      <a href="/my-account.html" class="text-gray-600 hover:text-gray-900 font-semibold">My Account</a>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto p-4 md:p-6">
+  
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 md:p-8 text-white mb-6">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">📖 Digital Service Logbook</h1>
+        <p class="text-blue-100">Track all maintenance and increase your vehicle's resale value by £200-500</p>
+      </div>
+      <button onclick="showAddModal()" class="bg-white text-blue-700 px-6 py-3 rounded-lg font-bold hover:bg-blue-50 flex items-center gap-2">
+        <span class="text-2xl">+</span> Add Service Record
+      </button>
+    </div>
+  </div>
+
+  <!-- Vehicle Selector -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Vehicle</label>
+    <select id="vehicleSelect" onchange="loadRecords()" class="w-full md:w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none font-semibold">
+      <option value="">Loading vehicles...</option>
+    </select>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-blue-50 rounded-lg p-4 text-center">
+      <div class="text-3xl font-bold text-blue-900" id="statServices">0</div>
+      <div class="text-sm text-gray-600 mt-1">Services</div>
+    </div>
+    <div class="bg-green-50 rounded-lg p-4 text-center">
+      <div class="text-3xl font-bold text-green-900" id="statCost">£0</div>
+      <div class="text-sm text-gray-600 mt-1">Total Spent</div>
+    </div>
+    <div class="bg-purple-50 rounded-lg p-4 text-center">
+      <div class="text-3xl font-bold text-purple-900" id="statAvg">£0</div>
+      <div class="text-sm text-gray-600 mt-1">Avg Cost</div>
+    </div>
+    <div class="bg-orange-50 rounded-lg p-4 text-center">
+      <div class="text-3xl font-bold text-orange-900" id="statMiles">0</div>
+      <div class="text-sm text-gray-600 mt-1">Miles</div>
+    </div>
+  </div>
+
+  <!-- Records List -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-2xl font-bold text-blue-900 mb-6">Service History</h2>
+    <div id="recordsList">
+      <!-- Records loaded here -->
+    </div>
+  </div>
+
+</div>
+
+<!-- Add Service Modal -->
+<div id="addModal" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="p-6 md:p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-900">Add Service Record</h2>
+        <button onclick="hideAddModal()" class="text-gray-400 hover:text-gray-600 text-3xl">×</button>
+      </div>
+
+      <form onsubmit="addRecord(event)" class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Service Date *</label>
+            <input type="date" id="serviceDate" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Mileage *</label>
+            <input type="number" id="serviceMileage" required placeholder="50000" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Service Type *</label>
+          <select id="serviceType" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+            <option value="">Select type...</option>
+            <option value="Full Service">Full Service</option>
+            <option value="Interim Service">Interim Service</option>
+            <option value="Oil Change">Oil Change</option>
+            <option value="MOT">MOT</option>
+            <option value="Brake Service">Brake Service</option>
+            <option value="Tyre Replacement">Tyre Replacement</option>
+            <option value="Battery">Battery</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Garage Name</label>
+          <input type="text" id="garageInput" placeholder="e.g. Halfords, Kwik Fit" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Total Cost (£)</label>
+          <input type="number" id="costInput" step="0.01" placeholder="45.00" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Notes</label>
+          <textarea id="descInput" rows="3" placeholder="What was done?" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+          💡 <strong>Tip:</strong> Keep all service receipts! Upload feature coming soon.
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-700">
+          💾 Save Service Record
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+let vehicles = [];
+let currentRecords = [];
+
+async function loadVehicles() {
+  const token = localStorage.getItem('glovbox_token');
+  if (!token) {
+    window.location.href = '/signin.html';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    vehicles = data.vehicles || [];
+    
+    const select = document.getElementById('vehicleSelect');
+    
+    if (vehicles.length === 0) {
+      select.innerHTML = '<option value="">No vehicles added - Go to Dashboard to add</option>';
+      return;
+    }
+    
+    select.innerHTML = vehicles.map(v => 
+      `<option value="${v.registrationNumber}">${v.make} ${v.model} (${v.registrationNumber})</option>`
+    ).join('');
+    
+    loadRecords();
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+async function loadRecords() {
+  const select = document.getElementById('vehicleSelect');
+  const vehicleReg = select.value;
+  
+  if (!vehicleReg) {
+    document.getElementById('recordsList').innerHTML = '<p class="text-gray-500 text-center py-8">Please select a vehicle</p>';
+    return;
+  }
+  
+  const token = localStorage.getItem('glovbox_token');
+  
+  try {
+    const response = await fetch(`/api/user/service-records?vehicleReg=${vehicleReg}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    currentRecords = data.records || [];
+    
+    updateStats();
+    displayRecords();
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+function updateStats() {
+  const totalCost = currentRecords.reduce((sum, r) => sum + (r.cost || 0), 0);
+  const avgCost = currentRecords.length > 0 ? totalCost / currentRecords.length : 0;
+  const maxMileage = currentRecords.length > 0 ? Math.max(...currentRecords.map(r => r.mileage)) : 0;
+  
+  document.getElementById('statServices').textContent = currentRecords.length;
+  document.getElementById('statCost').textContent = '£' + totalCost.toFixed(0);
+  document.getElementById('statAvg').textContent = '£' + avgCost.toFixed(0);
+  document.getElementById('statMiles').textContent = maxMileage.toLocaleString();
+}
+
+function displayRecords() {
+  const list = document.getElementById('recordsList');
+  
+  if (currentRecords.length === 0) {
+    list.innerHTML = `
+      <div class="text-center py-12">
+        <div class="text-gray-400 mb-4">
+          <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Service Records Yet</h3>
+        <p class="text-gray-500 mb-4">Start tracking your vehicle's maintenance history</p>
+        <button onclick="showAddModal()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600">
+          + Add First Service
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  // Sort by date (newest first)
+  const sorted = [...currentRecords].sort((a,b) => new Date(b.date) - new Date(a.date));
+  
+  list.innerHTML = sorted.map(record => `
+    <div class="border-l-4 border-blue-500 pl-4 py-4 mb-4 bg-gray-50 rounded-r-lg">
+      <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+        <div>
+          <h3 class="font-bold text-lg text-blue-900">${record.type}</h3>
+          <p class="text-sm text-gray-600">
+            ${new Date(record.date).toLocaleDateString('en-GB')} • ${record.mileage.toLocaleString()} miles
+          </p>
+        </div>
+        ${record.cost ? `<div class="text-xl font-bold text-green-600">£${record.cost.toFixed(2)}</div>` : ''}
+      </div>
+      ${record.garage ? `<p class="text-sm text-gray-600 mb-1">🔧 ${record.garage}</p>` : ''}
+      ${record.description ? `<p class="text-sm text-gray-700 mt-2">${record.description}</p>` : ''}
+      <button onclick="deleteRecord('${record.id}')" class="text-red-600 hover:text-red-700 text-sm font-semibold mt-2">
+        🗑️ Delete
+      </button>
+    </div>
+  `).join('');
+}
+
+function showAddModal() {
+  // Set today's date as default
+  document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('addModal').classList.remove('hidden');
+}
+
+function hideAddModal() {
+  document.getElementById('addModal').classList.add('hidden');
+  document.querySelector('form').reset();
+}
+
+async function addRecord(event) {
+  event.preventDefault();
+  
+  const vehicleReg = document.getElementById('vehicleSelect').value;
+  if (!vehicleReg) {
+    alert('Please select a vehicle');
+    return;
+  }
+  
+  const data = {
+    vehicleReg,
+    date: document.getElementById('serviceDate').value,
+    mileage: document.getElementById('serviceMileage').value,
+    type: document.getElementById('serviceType').value,
+    garage: document.getElementById('garageInput').value,
+    cost: document.getElementById('costInput').value,
+    description: document.getElementById('descInput').value
+  };
+  
+  const token = localStorage.getItem('glovbox_token');
+  
+  try {
+    const response = await fetch('/api/user/service-records', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) throw new Error('Failed to save');
+    
+    hideAddModal();
+    loadRecords();
+    alert('✅ Service record added!');
+    
+  } catch (error) {
+    alert('Failed to add record');
+  }
+}
+
+async function deleteRecord(id) {
+  if (!confirm('Delete this service record?')) return;
+  
+  const vehicleReg = document.getElementById('vehicleSelect').value;
+  const token = localStorage.getItem('glovbox_token');
+  
+  try {
+    const response = await fetch(`/api/user/service-records/${id}?vehicleReg=${vehicleReg}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (!response.ok) throw new Error('Failed to delete');
+    
+    loadRecords();
+    alert('✅ Record deleted');
+    
+  } catch (error) {
+    alert('Failed to delete record');
+  }
+}
+
+// Load on page load
+loadVehicles();
+</script>
+
+</body>
+</html>
