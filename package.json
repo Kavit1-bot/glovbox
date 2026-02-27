@@ -8,7 +8,12 @@
     "build": "npx prisma generate && npx prisma migrate deploy",
     "dev": "nodemon server.js"
   },
-  "keywords": ["vehicle", "mot", "tax", "reminder"],
+  "keywords": [
+    "vehicle",
+    "mot",
+    "tax",
+    "reminder"
+  ],
   "author": "Glovbox",
   "license": "MIT",
   "dependencies": {
@@ -22,6 +27,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
+    "pg": "^8.19.0",
     "prisma": "^5.22.0"
   },
   "devDependencies": {
