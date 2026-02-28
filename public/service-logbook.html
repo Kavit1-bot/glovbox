@@ -5,10 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Service Logbook - Glovbox</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Inter', sans-serif; }
 .modal-backdrop { background: rgba(0,0,0,0.5); }
+.dropzone {
+  border: 3px dashed #cbd5e1;
+  transition: all 0.3s;
+}
+.dropzone.dragover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+.receipt-preview {
+  max-height: 200px;
+  object-fit: contain;
+}
+.ocr-progress {
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+}
 </style>
 </head>
 <body class="bg-gray-50">
@@ -18,7 +34,7 @@ body { font-family: 'Inter', sans-serif; }
   <div class="max-w-7xl mx-auto flex justify-between items-center">
     <div>
       <a href="/dashboard.html" class="text-xl md:text-2xl font-bold text-blue-900">Glovbox</a>
-      <p class="text-sm text-gray-600 mt-1">Service Logbook</p>
+      <p class="text-sm text-gray-600 mt-1">🤖 AI-Powered Service Logbook</p>
     </div>
     <div class="flex items-center gap-4">
       <a href="/dashboard.html" class="text-gray-600 hover:text-gray-900 font-semibold">Dashboard</a>
@@ -30,14 +46,17 @@ body { font-family: 'Inter', sans-serif; }
 <div class="max-w-7xl mx-auto p-4 md:p-6">
   
   <!-- Header -->
-  <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 md:p-8 text-white mb-6">
+  <div class="bg-gradient-to-r from-purple-600 via-blue-600 to-blue-700 rounded-xl shadow-lg p-6 md:p-8 text-white mb-6">
     <div class="flex items-center justify-between flex-wrap gap-4">
       <div>
-        <h1 class="text-3xl font-bold mb-2">📖 Digital Service Logbook</h1>
-        <p class="text-blue-100">Track all maintenance and increase your vehicle's resale value by £200-500</p>
+        <h1 class="text-3xl font-bold mb-2">🤖 AI Service Logbook</h1>
+        <p class="text-blue-100 flex items-center gap-2">
+          <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">NEW</span>
+          Snap receipt → AI extracts data → Done in 10 seconds
+        </p>
       </div>
       <button onclick="showAddModal()" class="bg-white text-blue-700 px-6 py-3 rounded-lg font-bold hover:bg-blue-50 flex items-center gap-2">
-        <span class="text-2xl">+</span> Add Service Record
+        <span class="text-2xl">+</span> Add Service
       </button>
     </div>
   </div>
@@ -66,7 +85,7 @@ body { font-family: 'Inter', sans-serif; }
     </div>
     <div class="bg-orange-50 rounded-lg p-4 text-center">
       <div class="text-3xl font-bold text-orange-900" id="statMiles">0</div>
-      <div class="text-sm text-gray-600 mt-1">Miles</div>
+      <div class="text-sm text-gray-600 mt-1">Total Miles</div>
     </div>
   </div>
 
@@ -82,60 +101,127 @@ body { font-family: 'Inter', sans-serif; }
 
 <!-- Add Service Modal -->
 <div id="addModal" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
     <div class="p-6 md:p-8">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-blue-900">Add Service Record</h2>
+        <div>
+          <h2 class="text-2xl font-bold text-blue-900">Add Service Record</h2>
+          <p class="text-sm text-gray-600 mt-1">Upload receipt for instant data extraction</p>
+        </div>
         <button onclick="hideAddModal()" class="text-gray-400 hover:text-gray-600 text-3xl">×</button>
       </div>
 
-      <form onsubmit="addRecord(event)" class="space-y-4">
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Service Date *</label>
-            <input type="date" id="serviceDate" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+      <form onsubmit="addRecord(event)" class="space-y-6">
+        
+        <!-- Photo Upload + OCR Section -->
+        <div class="bg-gradient-to-br from-purple-50 via-blue-50 to-blue-50 rounded-xl p-6 border-2 border-purple-200">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg text-purple-900">📸 Upload Receipt</h3>
+            <span class="bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full">AI POWERED</span>
           </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Mileage *</label>
-            <input type="number" id="serviceMileage" required placeholder="50000" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          
+          <!-- Dropzone -->
+          <div id="dropzone" class="dropzone rounded-lg p-8 text-center cursor-pointer bg-white">
+            <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+            <div id="dropzoneContent">
+              <div class="text-6xl mb-3">📷</div>
+              <p class="font-bold text-gray-900 mb-2 text-lg">Click or Drag Receipt Here</p>
+              <p class="text-sm text-gray-500 mb-3">PNG, JPG up to 10MB</p>
+              <div class="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-3 inline-block">
+                <p class="text-xs font-semibold text-purple-900">🤖 AI will automatically extract garage, cost & date!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- OCR Progress -->
+          <div id="ocrProgress" class="hidden mt-4 bg-white rounded-lg p-6 border-2 border-purple-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="animate-spin w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full"></div>
+              <div class="flex-1">
+                <h4 class="font-bold text-purple-900 mb-1">🤖 AI Scanning Receipt...</h4>
+                <p class="text-sm text-gray-600" id="ocrStatusText">Analyzing image...</p>
+              </div>
+            </div>
+            <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div id="ocrProgressBar" class="ocr-progress h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- OCR Result -->
+          <div id="ocrResult" class="hidden mt-4 bg-green-50 rounded-lg p-4 border-2 border-green-300">
+            <div class="flex items-start gap-3">
+              <div class="text-3xl">✓</div>
+              <div class="flex-1">
+                <h4 class="font-bold text-green-900 mb-2">Receipt Scanned Successfully!</h4>
+                <div id="extractedData" class="text-sm space-y-1 mb-3">
+                  <!-- Extracted data shown here -->
+                </div>
+                <p class="text-xs text-green-700">Review the form below and adjust if needed</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div id="previewContainer" class="hidden mt-4">
+            <div class="relative bg-white rounded-lg p-4 border-2 border-blue-200">
+              <img id="previewImage" src="" alt="Receipt" class="receipt-preview mx-auto rounded">
+              <button type="button" onclick="removePhoto()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full hover:bg-red-600 font-bold">
+                ×
+              </button>
+            </div>
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Service Type *</label>
-          <select id="serviceType" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
-            <option value="">Select type...</option>
-            <option value="Full Service">Full Service</option>
-            <option value="Interim Service">Interim Service</option>
-            <option value="Oil Change">Oil Change</option>
-            <option value="MOT">MOT</option>
-            <option value="Brake Service">Brake Service</option>
-            <option value="Tyre Replacement">Tyre Replacement</option>
-            <option value="Battery">Battery</option>
-            <option value="Other">Other</option>
-          </select>
+        <!-- Manual Entry Form (Auto-filled by OCR) -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-lg text-blue-900">📝 Service Details</h3>
+            <span class="text-xs text-gray-500">Auto-filled from receipt ✨</span>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Service Date *</label>
+              <input type="date" id="serviceDate" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Mileage *</label>
+              <input type="number" id="serviceMileage" required placeholder="50000" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Service Type *</label>
+            <select id="serviceType" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+              <option value="">Select type...</option>
+              <option value="Full Service">Full Service</option>
+              <option value="Interim Service">Interim Service</option>
+              <option value="Oil Change">Oil Change</option>
+              <option value="MOT">MOT</option>
+              <option value="Brake Service">Brake Service</option>
+              <option value="Tyre Replacement">Tyre Replacement</option>
+              <option value="Battery">Battery</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Garage Name</label>
+            <input type="text" id="garageInput" placeholder="Auto-filled from receipt" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Total Cost (£)</label>
+            <input type="number" id="costInput" step="0.01" placeholder="Auto-filled from receipt" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Notes</label>
+            <textarea id="descInput" rows="3" placeholder="What was done?" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"></textarea>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Garage Name</label>
-          <input type="text" id="garageInput" placeholder="e.g. Halfords, Kwik Fit" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Total Cost (£)</label>
-          <input type="number" id="costInput" step="0.01" placeholder="45.00" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Description / Notes</label>
-          <textarea id="descInput" rows="3" placeholder="What was done?" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"></textarea>
-        </div>
-
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
-          💡 <strong>Tip:</strong> Keep all service receipts! Upload feature coming soon.
-        </div>
-
-        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-700">
+        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-blue-700 shadow-lg">
           💾 Save Service Record
         </button>
       </form>
@@ -146,6 +232,250 @@ body { font-family: 'Inter', sans-serif; }
 <script>
 let vehicles = [];
 let currentRecords = [];
+let uploadedReceiptUrl = null;
+let ocrData = null;
+
+// Dropzone setup
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+
+dropzone.addEventListener('click', () => fileInput.click());
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    processReceipt(files[0]);
+  }
+});
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) {
+    processReceipt(file);
+  }
+}
+
+async function processReceipt(file) {
+  // Hide dropzone, show progress
+  document.getElementById('dropzoneContent').classList.add('hidden');
+  document.getElementById('ocrProgress').classList.remove('hidden');
+  
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('previewImage').src = e.target.result;
+    document.getElementById('previewContainer').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+  
+  // Run OCR
+  try {
+    await runOCR(file);
+  } catch (error) {
+    console.error('OCR error:', error);
+    document.getElementById('ocrProgress').classList.add('hidden');
+    alert('OCR failed. Please enter details manually.');
+    resetDropzone();
+  }
+}
+
+async function runOCR(file) {
+  const progressBar = document.getElementById('ocrProgressBar');
+  const statusText = document.getElementById('ocrStatusText');
+  
+  // Initialize Tesseract
+  const worker = await Tesseract.createWorker('eng');
+  
+  // Progress tracking
+  await worker.setParameters({
+    tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+  });
+  
+  // Recognize text
+  statusText.textContent = 'Reading receipt text...';
+  progressBar.style.width = '30%';
+  
+  const { data } = await worker.recognize(file);
+  const text = data.text;
+  
+  progressBar.style.width = '60%';
+  statusText.textContent = 'Extracting data...';
+  
+  // Parse the text
+  const extracted = parseReceiptText(text);
+  ocrData = extracted;
+  
+  progressBar.style.width = '100%';
+  statusText.textContent = 'Complete!';
+  
+  // Clean up
+  await worker.terminate();
+  
+  // Show results
+  setTimeout(() => {
+    document.getElementById('ocrProgress').classList.add('hidden');
+    displayOCRResults(extracted);
+    autoFillForm(extracted);
+  }, 500);
+}
+
+function parseReceiptText(text) {
+  console.log('OCR Text:', text);
+  
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+  
+  const extracted = {
+    garageName: null,
+    totalCost: null,
+    serviceDate: null,
+    items: []
+  };
+  
+  // Find garage name (usually in first 5 lines)
+  const topLines = lines.slice(0, 5);
+  for (const line of topLines) {
+    if (line.match(/garage|motors|tyres|auto|service|centre/i) && line.length > 3 && line.length < 50) {
+      extracted.garageName = line;
+      break;
+    }
+  }
+  
+  // Find total cost
+  const costPatterns = [
+    /(?:total|amount|balance|grand\s+total)[:\s]*£?\s*(\d+\.?\d{0,2})/i,
+    /£\s*(\d+\.?\d{2})\s*(?:total|amount)/i,
+    /(\d+\.\d{2})\s*(?:total|amount|balance)/i
+  ];
+  
+  for (const pattern of costPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      extracted.totalCost = parseFloat(match[1]);
+      break;
+    }
+  }
+  
+  // Find date
+  const datePatterns = [
+    /(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/,
+    /(\d{2}\/\d{2}\/\d{4})/,
+    /(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4})/i
+  ];
+  
+  for (const pattern of datePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      extracted.serviceDate = match[1];
+      break;
+    }
+  }
+  
+  // Find service items
+  const serviceKeywords = ['oil', 'filter', 'brake', 'tyre', 'tire', 'fluid', 'coolant', 'service', 'mot', 'labour', 'labor', 'spark'];
+  lines.forEach(line => {
+    const lowerLine = line.toLowerCase();
+    if (serviceKeywords.some(keyword => lowerLine.includes(keyword)) && line.length > 5 && line.length < 100) {
+      extracted.items.push(line);
+    }
+  });
+  
+  return extracted;
+}
+
+function displayOCRResults(data) {
+  const container = document.getElementById('extractedData');
+  const results = [];
+  
+  if (data.garageName) {
+    results.push(`<p class="text-gray-700"><strong>Garage:</strong> ${data.garageName}</p>`);
+  }
+  if (data.totalCost) {
+    results.push(`<p class="text-gray-700"><strong>Cost:</strong> £${data.totalCost.toFixed(2)}</p>`);
+  }
+  if (data.serviceDate) {
+    results.push(`<p class="text-gray-700"><strong>Date:</strong> ${data.serviceDate}</p>`);
+  }
+  if (data.items.length > 0) {
+    results.push(`<p class="text-gray-700"><strong>Items:</strong> ${data.items.slice(0, 3).join(', ')}</p>`);
+  }
+  
+  container.innerHTML = results.join('');
+  document.getElementById('ocrResult').classList.remove('hidden');
+}
+
+function autoFillForm(data) {
+  // Fill garage name
+  if (data.garageName) {
+    document.getElementById('garageInput').value = data.garageName;
+  }
+  
+  // Fill cost
+  if (data.totalCost) {
+    document.getElementById('costInput').value = data.totalCost.toFixed(2);
+  }
+  
+  // Fill date
+  if (data.serviceDate) {
+    try {
+      // Try to convert to ISO format
+      const date = new Date(data.serviceDate);
+      if (!isNaN(date.getTime())) {
+        document.getElementById('serviceDate').value = date.toISOString().split('T')[0];
+      }
+    } catch (e) {
+      // If conversion fails, just set today's date
+      document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+    }
+  } else {
+    document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+  }
+  
+  // Fill description with items
+  if (data.items.length > 0) {
+    document.getElementById('descInput').value = data.items.join('\n');
+  }
+  
+  // Try to guess service type
+  const description = data.items.join(' ').toLowerCase();
+  if (description.includes('mot')) {
+    document.getElementById('serviceType').value = 'MOT';
+  } else if (description.includes('full service') || description.includes('major service')) {
+    document.getElementById('serviceType').value = 'Full Service';
+  } else if (description.includes('oil') && description.includes('filter')) {
+    document.getElementById('serviceType').value = 'Oil Change';
+  } else if (description.includes('brake')) {
+    document.getElementById('serviceType').value = 'Brake Service';
+  } else if (description.includes('tyre') || description.includes('tire')) {
+    document.getElementById('serviceType').value = 'Tyre Replacement';
+  }
+}
+
+function removePhoto() {
+  uploadedReceiptUrl = null;
+  ocrData = null;
+  document.getElementById('previewContainer').classList.add('hidden');
+  document.getElementById('ocrResult').classList.add('hidden');
+  document.getElementById('ocrProgress').classList.add('hidden');
+  resetDropzone();
+}
+
+function resetDropzone() {
+  document.getElementById('dropzoneContent').classList.remove('hidden');
+  fileInput.value = '';
+}
+
+// [REST OF THE CODE - loadVehicles, loadRecords, etc. - SAME AS BEFORE]
 
 async function loadVehicles() {
   const token = localStorage.getItem('glovbox_token');
@@ -164,7 +494,7 @@ async function loadVehicles() {
     const select = document.getElementById('vehicleSelect');
     
     if (vehicles.length === 0) {
-      select.innerHTML = '<option value="">No vehicles added - Go to Dashboard to add</option>';
+      select.innerHTML = '<option value="">No vehicles - Go to Dashboard</option>';
       return;
     }
     
@@ -222,14 +552,10 @@ function displayRecords() {
   if (currentRecords.length === 0) {
     list.innerHTML = `
       <div class="text-center py-12">
-        <div class="text-gray-400 mb-4">
-          <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-        </div>
-        <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Service Records Yet</h3>
-        <p class="text-gray-500 mb-4">Start tracking your vehicle's maintenance history</p>
-        <button onclick="showAddModal()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600">
+        <div class="text-7xl mb-4">🤖</div>
+        <h3 class="text-2xl font-semibold text-gray-700 mb-2">Start Your AI Service Log</h3>
+        <p class="text-gray-500 mb-4">Upload a receipt and watch the magic happen</p>
+        <button onclick="showAddModal()" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-purple-600 hover:to-blue-600 shadow-lg">
           + Add First Service
         </button>
       </div>
@@ -237,11 +563,10 @@ function displayRecords() {
     return;
   }
   
-  // Sort by date (newest first)
   const sorted = [...currentRecords].sort((a,b) => new Date(b.date) - new Date(a.date));
   
   list.innerHTML = sorted.map(record => `
-    <div class="border-l-4 border-blue-500 pl-4 py-4 mb-4 bg-gray-50 rounded-r-lg">
+    <div class="border-l-4 border-blue-500 pl-4 py-4 mb-4 bg-gradient-to-r from-blue-50 to-white rounded-r-lg hover:shadow-md transition-shadow">
       <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
           <h3 class="font-bold text-lg text-blue-900">${record.type}</h3>
@@ -252,7 +577,12 @@ function displayRecords() {
         ${record.cost ? `<div class="text-xl font-bold text-green-600">£${record.cost.toFixed(2)}</div>` : ''}
       </div>
       ${record.garage ? `<p class="text-sm text-gray-600 mb-1">🔧 ${record.garage}</p>` : ''}
-      ${record.description ? `<p class="text-sm text-gray-700 mt-2">${record.description}</p>` : ''}
+      ${record.description ? `<p class="text-sm text-gray-700 mt-2 bg-gray-50 p-2 rounded">${record.description}</p>` : ''}
+      ${record.receiptUrl ? `
+        <div class="mt-3 bg-purple-50 p-2 rounded flex items-center gap-2">
+          <span class="text-purple-700 font-semibold text-sm">🤖 AI Scanned Receipt</span>
+        </div>
+      ` : ''}
       <button onclick="deleteRecord('${record.id}')" class="text-red-600 hover:text-red-700 text-sm font-semibold mt-2">
         🗑️ Delete
       </button>
@@ -261,14 +591,13 @@ function displayRecords() {
 }
 
 function showAddModal() {
-  // Set today's date as default
-  document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('addModal').classList.remove('hidden');
 }
 
 function hideAddModal() {
   document.getElementById('addModal').classList.add('hidden');
   document.querySelector('form').reset();
+  removePhoto();
 }
 
 async function addRecord(event) {
@@ -287,7 +616,9 @@ async function addRecord(event) {
     type: document.getElementById('serviceType').value,
     garage: document.getElementById('garageInput').value,
     cost: document.getElementById('costInput').value,
-    description: document.getElementById('descInput').value
+    description: document.getElementById('descInput').value,
+    receiptUrl: uploadedReceiptUrl,
+    ocrExtracted: ocrData ? true : false
   };
   
   const token = localStorage.getItem('glovbox_token');
@@ -335,7 +666,6 @@ async function deleteRecord(id) {
   }
 }
 
-// Load on page load
 loadVehicles();
 </script>
 
