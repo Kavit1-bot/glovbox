@@ -356,20 +356,42 @@ async function loadMonthlyCosts() {
     const response = await fetch(`/api/user/costs?month=${month}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    
+    if (!response.ok) {
+      console.error('Cost API error:', response.status);
+      document.getElementById('monthlyTotal').textContent = '£0';
+      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
+      return;
+    }
+    
     const data = await response.json();
     
-    document.getElementById('monthlyTotal').textContent = `£${data.total.toFixed(0)}`;
-    document.getElementById('budgetBar').style.width = `${data.percentUsed}%`;
+    // Update total
+    const total = data.total || 0;
+    document.getElementById('monthlyTotal').textContent = `£${total.toFixed(0)}`;
     
-    const breakdownHTML = Object.entries(data.breakdown || {}).map(([cat, amount]) => `
-      <div class="flex justify-between">
-        <span class="text-gray-600">${cat}</span>
-        <span class="font-semibold">£${amount.toFixed(0)}</span>
-      </div>
-    `).join('');
-    document.getElementById('costBreakdown').innerHTML = breakdownHTML || '<p class="text-gray-500 text-sm">No expenses this month</p>';
+    // Update budget bar
+    const percentUsed = data.percentUsed || 0;
+    document.getElementById('budgetBar').style.width = `${Math.min(percentUsed, 100)}%`;
+    
+    // Update breakdown
+    if (data.breakdown && Object.keys(data.breakdown).length > 0) {
+      const breakdownHTML = Object.entries(data.breakdown).map(([cat, amount]) => `
+        <div class="flex justify-between">
+          <span class="text-gray-600 capitalize">${cat}</span>
+          <span class="font-semibold">£${Number(amount).toFixed(0)}</span>
+        </div>
+      `).join('');
+      document.getElementById('costBreakdown').innerHTML = breakdownHTML;
+    } else {
+      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
+    }
   } catch (error) {
     console.error('Cost loading error:', error);
+    // Show default values on error
+    document.getElementById('monthlyTotal').textContent = '£0';
+    document.getElementById('budgetBar').style.width = '0%';
+    document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
   }
 }
 
