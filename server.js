@@ -650,20 +650,54 @@ app.patch('/api/user/settings', authenticateToken, async (req, res) => {
   res.json({success:true});
 });
 
-// MOT CENTRES
+// MOT CENTRES (with phone numbers and opening hours)
 app.get('/api/mot-centres', async (req, res) => {
   const {postcode} = req.query;
   if (!postcode) return res.status(400).json({error:'Postcode required'});
   if (!GOOGLE_MAPS_API_KEY) return res.status(503).json({error:'Maps API unavailable'});
   
   try {
+    // Step 1: Geocode postcode
     const geo = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(postcode)},UK&key=${GOOGLE_MAPS_API_KEY}`);
     if (!geo.data.results.length) return res.status(400).json({error:'Invalid postcode'});
+    
     const loc = geo.data.results[0].geometry.location;
+    
+    // Step 2: Search for MOT centres
     const places = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${loc.lat},${loc.lng}&radius=8000&type=car_repair&keyword=MOT&key=${GOOGLE_MAPS_API_KEY}`);
-    const centres = places.data.results.slice(0,10).map(p=>({name:p.name,address:p.vicinity,rating:p.rating||'N/A',isOpenNow:p.opening_hours?.open_now||false}));
-    res.json({centres});
-  } catch {
+    
+    // Step 3: Get detailed info (phone & hours) for each place
+    const detailedCentres = await Promise.all(
+      places.data.results.slice(0, 10).map(async (place) => {
+        try {
+          // Get place details
+          const details = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_phone_number,opening_hours&key=${GOOGLE_MAPS_API_KEY}`);
+          
+          return {
+            name: place.name,
+            address: place.vicinity,
+            rating: place.rating || 'N/A',
+            isOpenNow: place.opening_hours?.open_now || false,
+            phone: details.data.result?.formatted_phone_number || null,
+            hours: details.data.result?.opening_hours?.weekday_text || null
+          };
+        } catch (error) {
+          // If details fetch fails, return basic info
+          return {
+            name: place.name,
+            address: place.vicinity,
+            rating: place.rating || 'N/A',
+            isOpenNow: place.opening_hours?.open_now || false,
+            phone: null,
+            hours: null
+          };
+        }
+      })
+    );
+    
+    res.json({centres: detailedCentres});
+  } catch (error) {
+    console.error('MOT search error:', error);
     res.status(500).json({error:'Search failed'});
   }
 });
