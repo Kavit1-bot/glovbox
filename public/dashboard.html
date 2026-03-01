@@ -4,448 +4,476 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Glovbox</title>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Inter', sans-serif; }
-.modal-backdrop { background: rgba(0,0,0,0.5); }
+* { font-family: 'Inter', sans-serif; }
 </style>
 </head>
 <body class="bg-gray-50">
-<div id="root"></div>
 
-<script type="text/babel">
-const { useState, useEffect } = React;
-
-function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [vehicles, setVehicles] = useState([]);
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showAddVehicle, setShowAddVehicle] = useState(false);
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  async function checkAuth() {
-    const token = localStorage.getItem('glovbox_token');
-    const userData = localStorage.getItem('glovbox_user');
-    
-    if (!token) {
-      window.location.href = '/signin.html';
-      return;
-    }
-    
-    if (userData) setUser(JSON.parse(userData));
-    await loadVehicles();
-  }
-
-  async function loadVehicles() {
-    const token = localStorage.getItem('glovbox_token');
-    try {
-      const response = await fetch('/api/user/vehicles', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      setVehicles(data.vehicles || []);
-      if (data.vehicles?.length > 0) {
-        setSelectedVehicle(data.vehicles[0]);
-      }
-    } catch (error) {
-      console.error('Error loading vehicles:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function signOut() {
-    localStorage.removeItem('glovbox_token');
-    localStorage.removeItem('glovbox_user');
-    window.location.href = '/';
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold text-blue-900">Glovbox Dashboard</h1>
-            {selectedVehicle && (
-              <p className="text-sm text-gray-600 mt-1">
-                {selectedVehicle.make} {selectedVehicle.model} • {selectedVehicle.registrationNumber}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
-            <a href="/my-account.html" className="text-gray-600 hover:text-gray-900 font-semibold">
-              My Account
-            </a>
-            <button onClick={signOut} className="text-gray-600 hover:text-gray-900 font-semibold">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
-        {vehicles.length === 0 ? (
-          <WelcomeScreen onAddVehicle={() => setShowAddVehicle(true)} />
-        ) : (
-          <>
-            <VehicleOverview 
-              vehicle={selectedVehicle} 
-              onAddVehicle={() => setShowAddVehicle(true)}
-            />
-            <AllServices vehicle={selectedVehicle} />
-          </>
-        )}
-      </div>
-
-      {showAddVehicle && (
-        <AddVehicleModal 
-          onClose={() => setShowAddVehicle(false)}
-          onSuccess={() => {
-            setShowAddVehicle(false);
-            loadVehicles();
-          }}
-        />
-      )}
+<nav class="bg-white border-b sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl">🚗</span>
+      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
     </div>
-  );
-}
+    <div class="flex items-center gap-4">
+      <button onclick="loadNotifications()" class="relative">
+        <span class="text-2xl">🔔</span>
+        <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"></span>
+      </button>
+      <a href="/my-account.html" class="text-gray-700 hover:text-blue-900 font-semibold">My Account</a>
+      <button onclick="signOut()" class="text-gray-700 hover:text-blue-900 font-semibold">Sign Out</button>
+    </div>
+  </div>
+</nav>
 
-function WelcomeScreen({ onAddVehicle }) {
-  return (
-    <div className="max-w-3xl mx-auto mt-10">
-      <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
-        <div className="text-7xl mb-6">🚗</div>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Welcome to Glovbox!
-        </h2>
-        <p className="text-lg text-gray-600 mb-8">
-          Your all-in-one vehicle management platform
-        </p>
-        
-        <button 
-          onClick={onAddVehicle}
-          className="bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600 shadow-lg mb-8"
-        >
-          + Add Your First Vehicle
+<div class="max-w-7xl mx-auto px-6 py-8">
+  
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+    <p class="text-gray-600">Manage your vehicles</p>
+  </div>
+
+  <div id="loading" class="text-center py-12">
+    <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+    <p class="text-gray-600">Loading...</p>
+  </div>
+
+  <div id="content" class="hidden">
+    
+    <!-- AI Insights Banner -->
+    <div id="aiBanner" class="hidden bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 mb-6 text-white shadow-lg">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">🤖</span>
+            <h3 class="font-bold text-lg">AI Insights</h3>
+          </div>
+          <div id="aiContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Selector -->
+    <div id="vehicleSelector" class="mb-8 flex gap-3 overflow-x-auto pb-2"></div>
+
+    <!-- No Vehicles -->
+    <div id="noVehicles" class="hidden max-w-3xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+        <div class="text-7xl mb-6">🚗</div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Add Your First Vehicle</h2>
+        <p class="text-lg text-gray-600 mb-8">Track MOT, tax, service history and get smart reminders</p>
+        <button onclick="showAddVehicle()" class="bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600">
+          + Add Vehicle
         </button>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="vehicleDashboard" class="hidden grid md:grid-cols-3 gap-6">
+      
+      <!-- Main Column -->
+      <div class="md:col-span-2 space-y-6">
         
-        <div className="grid md:grid-cols-3 gap-6 mt-12 text-left">
-          <div className="p-4">
-            <div className="text-3xl mb-2">🔔</div>
-            <h3 className="font-bold text-blue-900 mb-2">Never Miss Deadlines</h3>
-            <p className="text-sm text-gray-600">Get email reminders before MOT and tax expire</p>
+        <!-- Health Score Card -->
+        <div id="healthCard" class="bg-white rounded-xl shadow-sm border p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-blue-900">Vehicle Health</h3>
+            <div class="flex items-center gap-3">
+              <div>
+                <div id="healthScore" class="text-4xl font-bold">-</div>
+                <div id="healthGrade" class="text-sm text-gray-600 text-center">-</div>
+              </div>
+            </div>
           </div>
-          <div className="p-4">
-            <div className="text-3xl mb-2">📖</div>
-            <h3 className="font-bold text-blue-900 mb-2">Track Service History</h3>
-            <p className="text-sm text-gray-600">Digital logbook increases resale value</p>
+          <div id="healthIssues" class="space-y-2"></div>
+        </div>
+
+        <!-- Vehicle Status -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <h3 class="text-xl font-bold text-blue-900 mb-4">Vehicle Status</h3>
+          <div id="vehicleStatus" class="space-y-4"></div>
+        </div>
+
+        <!-- Service History -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-blue-900">Recent Services</h3>
+            <a href="/service-logbook.html" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All →</a>
           </div>
-          <div className="p-4">
-            <div className="text-3xl mb-2">💰</div>
-            <h3 className="font-bold text-blue-900 mb-2">Save Money</h3>
-            <p className="text-sm text-gray-600">Compare insurance and find cheap MOT centres</p>
+          <div id="serviceHistory">
+            <p class="text-gray-500 text-center py-8">No service records yet</p>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function AddVehicleModal({ onClose, onSuccess }) {
-  const [reg, setReg] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [vehicleData, setVehicleData] = useState(null);
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        
+        <!-- Monthly Spending -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <h3 class="text-lg font-bold text-blue-900 mb-4">This Month</h3>
+          <div id="monthlyCosts">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-gray-600">Spent</span>
+              <span class="font-bold text-2xl" id="monthlyTotal">£0</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div id="budgetBar" class="bg-blue-600 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+            <div id="costBreakdown" class="space-y-2 text-sm"></div>
+            <button onclick="window.location.href='/cost-tracker.html'" class="text-blue-600 text-sm font-semibold mt-3">View Details →</button>
+          </div>
+        </div>
 
-  async function searchVehicle() {
-    if (!reg || reg.length < 2) {
-      setError('Please enter a valid registration');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch(`/api/vehicle/${reg.toUpperCase().replace(/\s/g, '')}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Vehicle not found');
-        setVehicleData(null);
-      } else {
-        setVehicleData(data);
-        setError('');
-      }
-    } catch (error) {
-      setError('Error looking up vehicle');
-      setVehicleData(null);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function addVehicle() {
-    setLoading(true);
-    const token = localStorage.getItem('glovbox_token');
-
-    try {
-      const response = await fetch('/api/user/vehicles', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ registrationNumber: reg.toUpperCase().replace(/\s/g, '') })
-      });
-
-      if (response.ok) {
-        onSuccess();
-      } else {
-        setError('Failed to add vehicle');
-      }
-    } catch (error) {
-      setError('Error adding vehicle');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 modal-backdrop flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 md:p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-blue-900">Add Vehicle</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-3xl leading-none">
-              ×
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
+          <div class="space-y-2">
+            <button onclick="window.location.href='/service-logbook.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">📖</span>
+              <div><div class="font-semibold text-sm">Service Logbook</div></div>
+            </button>
+            <button onclick="window.location.href='/mot-search.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">🔧</span>
+              <div><div class="font-semibold text-sm">Book MOT</div></div>
+            </button>
+            <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">💰</span>
+              <div><div class="font-semibold text-sm">Compare Insurance</div></div>
+            </button>
+            <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">📄</span>
+              <div><div class="font-semibold text-sm">Export PDF</div></div>
             </button>
           </div>
-
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Vehicle Registration Number
-              </label>
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={reg}
-                  onChange={(e) => setReg(e.target.value.toUpperCase())}
-                  placeholder="e.g. AB12 CDE"
-                  maxLength="8"
-                  className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg font-semibold"
-                  onKeyPress={(e) => e.key === 'Enter' && searchVehicle()}
-                />
-                <button
-                  onClick={searchVehicle}
-                  disabled={loading}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300"
-                >
-                  {loading ? 'Searching...' : 'Search'}
-                </button>
-              </div>
-              {error && <p className="text-red-600 text-sm mt-2">⚠️ {error}</p>}
-            </div>
-
-            {vehicleData && (
-              <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
-                <h3 className="font-bold text-lg text-green-900 mb-4">✓ Vehicle Found</h3>
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <p className="text-sm text-gray-600">Make & Model</p>
-                    <p className="font-bold text-lg">{vehicleData.make} {vehicleData.model}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Year</p>
-                    <p className="font-bold text-lg">{vehicleData.yearOfManufacture}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">MOT Expires</p>
-                    <p className={`font-bold ${vehicleData.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}`}>
-                      {vehicleData.motExpiryDate || 'N/A'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Tax Due</p>
-                    <p className={`font-bold ${vehicleData.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}`}>
-                      {vehicleData.taxDueDate || 'N/A'}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={addVehicle}
-                  disabled={loading}
-                  className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 disabled:bg-gray-300"
-                >
-                  {loading ? 'Adding...' : '✓ Add to Dashboard'}
-                </button>
-              </div>
-            )}
-          </div>
         </div>
+
+        <button onclick="showAddVehicle()" class="w-full bg-orange-500 text-white py-4 rounded-xl font-bold hover:bg-orange-600">
+          + Add Another Vehicle
+        </button>
       </div>
     </div>
-  );
-}
+  </div>
+</div>
 
-function VehicleOverview({ vehicle, onAddVehicle }) {
-  if (!vehicle) return null;
-
-  return (
-    <div className="space-y-6 mb-8">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-blue-900">🚗 Vehicle Details</h3>
-          <button
-            onClick={onAddVehicle}
-            className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
-          >
-            + Add Another Vehicle
-          </button>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4">
-          <div>
-            <p className="text-sm text-gray-600">Registration</p>
-            <p className="font-bold text-lg text-blue-900">{vehicle.registrationNumber}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Make & Model</p>
-            <p className="font-bold text-lg">{vehicle.make} {vehicle.model}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Year</p>
-            <p className="font-bold text-lg">{vehicle.yearOfManufacture || 'N/A'}</p>
-          </div>
-        </div>
+<!-- Add Vehicle Modal -->
+<div id="addVehicleModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-blue-900">Add Vehicle</h2>
+      <button onclick="hideAddVehicle()" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+    </div>
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Registration Number</label>
+      <div class="flex gap-3">
+        <input type="text" id="regInput" placeholder="AB12 CDE" maxlength="8" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg uppercase" onkeypress="if(event.key==='Enter') searchVehicle()"/>
+        <button onclick="searchVehicle()" id="searchBtn" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">Search</button>
       </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-bold text-blue-900 mb-4">🔧 MOT Status</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Status:</span>
-              <span className={`font-semibold ${vehicle.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}`}>
-                {vehicle.motStatus || 'Unknown'}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Expires:</span>
-              <span className="font-semibold">{vehicle.motExpiryDate || 'N/A'}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-bold text-blue-900 mb-4">💷 Road Tax</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Status:</span>
-              <span className={`font-semibold ${vehicle.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}`}>
-                {vehicle.taxStatus || 'Unknown'}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Due:</span>
-              <span className="font-semibold">{vehicle.taxDueDate || 'N/A'}</span>
-            </div>
-          </div>
-        </div>
+      <p id="searchError" class="text-red-600 text-sm mt-2 hidden"></p>
+      <div id="vehiclePreview" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-6 mt-4">
+        <h3 class="font-bold text-lg text-green-900 mb-4">✓ Vehicle Found</h3>
+        <div id="vehicleDetails" class="space-y-2 mb-6"></div>
+        <button onclick="addVehicle()" id="addBtn" class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold">Add to Dashboard</button>
       </div>
     </div>
-  );
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div id="notifModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-blue-900">Notifications</h2>
+      <button onclick="hideNotifications()" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+    </div>
+    <div id="notifList"></div>
+  </div>
+</div>
+
+<script>
+let currentVehicle = null;
+let vehicles = [];
+let vehicleData = null;
+
+async function checkAuth() {
+  const token = localStorage.getItem('glovbox_token');
+  if (!token) {
+    window.location.href = '/signin.html';
+    return;
+  }
+  await loadVehicles();
 }
 
-function AllServices({ vehicle }) {
-  const services = [
-    {
-      icon: '🔧',
-      title: 'MOT Search',
-      description: 'Find MOT centres near you with phone numbers and opening hours',
-      link: '/mot-search.html',
-      color: 'border-orange-200 hover:border-orange-500 hover:bg-orange-50'
-    },
-    {
-      icon: '💷',
-      title: 'Pay Road Tax',
-      description: 'Direct link to GOV.UK for secure payment',
-      link: 'https://www.gov.uk/vehicle-tax',
-      color: 'border-blue-200 hover:border-blue-500 hover:bg-blue-50',
-      external: true
-    },
-    {
-      icon: '💰',
-      title: 'Insurance',
-      description: 'Compare quotes from leading UK insurers',
-      link: '/insurance.html',
-      color: 'border-green-200 hover:border-green-500 hover:bg-green-50'
-    },
-    {
-      icon: '🚗',
-      title: 'Breakdown Cover',
-      description: 'Compare AA, RAC, and Green Flag breakdown packages',
-      link: '/breakdown.html',
-      color: 'border-purple-200 hover:border-purple-500 hover:bg-purple-50'
-    },
-    {
-      icon: '📖',
-      title: 'Service Logbook',
-      description: 'Track all maintenance and increase resale value',
-      link: '/service-logbook.html',
-      color: 'border-indigo-200 hover:border-indigo-500 hover:bg-indigo-50'
-    },
-    {
-      icon: '👤',
-      title: 'My Account',
-      description: 'Manage reminders, settings, and account details',
-      link: '/my-account.html',
-      color: 'border-gray-200 hover:border-gray-500 hover:bg-gray-50'
+async function loadVehicles() {
+  const token = localStorage.getItem('glovbox_token');
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    vehicles = data.vehicles || [];
+    
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('content').classList.remove('hidden');
+    
+    if (vehicles.length === 0) {
+      document.getElementById('noVehicles').classList.remove('hidden');
+    } else {
+      displayVehicles();
+      currentVehicle = vehicles[0];
+      await loadAllData();
     }
-  ];
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-2xl font-bold text-blue-900 mb-6">📋 All Services</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {services.map((service, i) => (
-          <a
-            key={i}
-            href={service.link}
-            target={service.external ? '_blank' : '_self'}
-            className={`border-2 rounded-xl p-6 transition-all cursor-pointer ${service.color}`}
-          >
-            <div className="text-4xl mb-3">{service.icon}</div>
-            <h3 className="font-bold text-blue-900 mb-2 text-lg">{service.title}</h3>
-            <p className="text-sm text-gray-600">{service.description}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
-ReactDOM.render(<Dashboard />, document.getElementById('root'));
+function displayVehicles() {
+  const selector = document.getElementById('vehicleSelector');
+  selector.innerHTML = vehicles.map((v, i) => `
+    <button onclick="selectVehicle(${i})" class="flex items-center gap-3 bg-white rounded-xl p-4 min-w-max border-2 ${i === 0 ? 'border-blue-500' : 'border-gray-200'} hover:border-blue-300">
+      <span class="text-3xl">🚗</span>
+      <div class="text-left">
+        <div class="font-bold text-gray-900">${v.make} ${v.model}</div>
+        <div class="text-sm text-gray-600">${v.registrationNumber}</div>
+      </div>
+    </button>
+  `).join('');
+  document.getElementById('vehicleDashboard').classList.remove('hidden');
+}
+
+async function selectVehicle(index) {
+  currentVehicle = vehicles[index];
+  displayVehicles();
+  await loadAllData();
+}
+
+async function loadAllData() {
+  if (!currentVehicle) return;
+  await Promise.all([
+    loadHealthScore(),
+    loadAIInsights(),
+    loadVehicleStatus(),
+    loadMonthlyCosts(),
+    loadNotifications()
+  ]);
+}
+
+async function loadHealthScore() {
+  const token = localStorage.getItem('glovbox_token');
+  try {
+    const response = await fetch(`/api/vehicle/${currentVehicle.registrationNumber}/health-score`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      document.getElementById('healthScore').textContent = data.score;
+      document.getElementById('healthScore').className = `text-4xl font-bold ${
+        data.score > 80 ? 'text-green-600' : data.score > 60 ? 'text-yellow-600' : 'text-red-600'
+      }`;
+      document.getElementById('healthGrade').textContent = `Grade ${data.grade}`;
+      
+      const issuesHTML = data.issues.length > 0 
+        ? data.issues.map(issue => `<div class="text-sm text-orange-600">⚠️ ${issue}</div>`).join('')
+        : '<div class="text-sm text-green-600">✓ No issues detected</div>';
+      document.getElementById('healthIssues').innerHTML = issuesHTML;
+    }
+  } catch (error) {
+    console.error('Health score error:', error);
+  }
+}
+
+async function loadAIInsights() {
+  const token = localStorage.getItem('glovbox_token');
+  try {
+    const response = await fetch('/api/ai/insights', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    
+    if (data.opportunities && data.opportunities.length > 0) {
+      const opp = data.opportunities[0];
+      document.getElementById('aiBanner').classList.remove('hidden');
+      document.getElementById('aiContent').innerHTML = `
+        <h3 class="text-xl font-bold mb-2">${opp.title}</h3>
+        <p class="mb-4">${opp.message}</p>
+        ${opp.potentialSaving > 0 ? `<p class="text-lg font-bold mb-4">💰 Save £${opp.potentialSaving}</p>` : ''}
+        <button onclick="window.location.href='${opp.action}'" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50">
+          Take Action
+        </button>
+      `;
+    }
+  } catch (error) {
+    console.error('AI insights error:', error);
+  }
+}
+
+function loadVehicleStatus() {
+  if (!currentVehicle) return;
+  
+  const statusHTML = `
+    <div class="flex items-center justify-between p-4 ${currentVehicle.motStatus === 'Valid' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} rounded-lg border-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg ${currentVehicle.motStatus === 'Valid' ? 'bg-green-500' : 'bg-red-500'} flex items-center justify-center text-white text-xl">🔧</div>
+        <div>
+          <div class="font-semibold">MOT</div>
+          <div class="text-sm text-gray-600">${currentVehicle.motExpiryDate || 'Unknown'}</div>
+        </div>
+      </div>
+      <div class="text-sm font-semibold ${currentVehicle.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${currentVehicle.motStatus || 'Unknown'}</div>
+    </div>
+
+    <div class="flex items-center justify-between p-4 ${currentVehicle.taxStatus === 'Taxed' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} rounded-lg border-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg ${currentVehicle.taxStatus === 'Taxed' ? 'bg-green-500' : 'bg-red-500'} flex items-center justify-center text-white text-xl">💷</div>
+        <div>
+          <div class="font-semibold">Road Tax</div>
+          <div class="text-sm text-gray-600">${currentVehicle.taxDueDate || 'Unknown'}</div>
+        </div>
+      </div>
+      <div class="text-sm font-semibold ${currentVehicle.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${currentVehicle.taxStatus || 'Unknown'}</div>
+    </div>
+  `;
+  document.getElementById('vehicleStatus').innerHTML = statusHTML;
+}
+
+async function loadMonthlyCosts() {
+  const token = localStorage.getItem('glovbox_token');
+  const month = new Date().toISOString().slice(0, 7);
+  
+  try {
+    const response = await fetch(`/api/user/costs?month=${month}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    
+    document.getElementById('monthlyTotal').textContent = `£${data.total.toFixed(0)}`;
+    document.getElementById('budgetBar').style.width = `${data.percentUsed}%`;
+    
+    const breakdownHTML = Object.entries(data.breakdown || {}).map(([cat, amount]) => `
+      <div class="flex justify-between">
+        <span class="text-gray-600">${cat}</span>
+        <span class="font-semibold">£${amount.toFixed(0)}</span>
+      </div>
+    `).join('');
+    document.getElementById('costBreakdown').innerHTML = breakdownHTML || '<p class="text-gray-500 text-sm">No expenses this month</p>';
+  } catch (error) {
+    console.error('Cost loading error:', error);
+  }
+}
+
+async function loadNotifications() {
+  const token = localStorage.getItem('glovbox_token');
+  try {
+    const response = await fetch('/api/notifications', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    
+    if (data.unread > 0) {
+      document.getElementById('notifBadge').textContent = data.unread;
+      document.getElementById('notifBadge').classList.remove('hidden');
+    }
+  } catch (error) {
+    console.error('Notifications error:', error);
+  }
+}
+
+function exportPDF() {
+  if (!currentVehicle) return;
+  window.open(`/api/documents/export-pdf/${currentVehicle.registrationNumber}`, '_blank');
+}
+
+function showAddVehicle() {
+  document.getElementById('addVehicleModal').classList.remove('hidden');
+}
+
+function hideAddVehicle() {
+  document.getElementById('addVehicleModal').classList.add('hidden');
+  document.getElementById('regInput').value = '';
+  document.getElementById('vehiclePreview').classList.add('hidden');
+}
+
+async function searchVehicle() {
+  const reg = document.getElementById('regInput').value.trim().toUpperCase().replace(/\s/g, '');
+  if (!reg) {
+    document.getElementById('searchError').textContent = 'Please enter a registration';
+    document.getElementById('searchError').classList.remove('hidden');
+    return;
+  }
+
+  document.getElementById('searchBtn').textContent = 'Searching...';
+  document.getElementById('searchBtn').disabled = true;
+
+  try {
+    const response = await fetch(`/api/vehicle/${reg}`);
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error);
+
+    vehicleData = data;
+    const detailsHTML = `
+      <div class="grid md:grid-cols-2 gap-4">
+        <div><p class="text-sm text-gray-600">Make & Model</p><p class="font-bold text-lg">${data.make} ${data.model}</p></div>
+        <div><p class="text-sm text-gray-600">Year</p><p class="font-bold text-lg">${data.yearOfManufacture || 'N/A'}</p></div>
+        <div><p class="text-sm text-gray-600">MOT Expires</p><p class="font-bold ${data.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${data.motExpiryDate || 'N/A'}</p></div>
+        <div><p class="text-sm text-gray-600">Tax Due</p><p class="font-bold ${data.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${data.taxDueDate || 'N/A'}</p></div>
+      </div>
+    `;
+    document.getElementById('vehicleDetails').innerHTML = detailsHTML;
+    document.getElementById('vehiclePreview').classList.remove('hidden');
+  } catch (error) {
+    document.getElementById('searchError').textContent = error.message;
+    document.getElementById('searchError').classList.remove('hidden');
+  } finally {
+    document.getElementById('searchBtn').textContent = 'Search';
+    document.getElementById('searchBtn').disabled = false;
+  }
+}
+
+async function addVehicle() {
+  const token = localStorage.getItem('glovbox_token');
+  const reg = document.getElementById('regInput').value.trim().toUpperCase().replace(/\s/g, '');
+
+  document.getElementById('addBtn').textContent = 'Adding...';
+  document.getElementById('addBtn').disabled = true;
+
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ registrationNumber: reg })
+    });
+
+    if (response.ok) {
+      hideAddVehicle();
+      location.reload();
+    }
+  } catch (error) {
+    alert('Error: ' + error.message);
+  } finally {
+    document.getElementById('addBtn').textContent = 'Add to Dashboard';
+    document.getElementById('addBtn').disabled = false;
+  }
+}
+
+function hideNotifications() {
+  document.getElementById('notifModal').classList.add('hidden');
+}
+
+function signOut() {
+  localStorage.clear();
+  window.location.href = '/';
+}
+
+checkAuth();
 </script>
+
 </body>
 </html>

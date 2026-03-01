@@ -3,20 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find MOT Centre - Glovbox</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--bg:#F8FAFC;--white:#FFF;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg)}nav{background:var(--white);border-bottom:1px solid var(--border);padding:16px 32px}.nav-container{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.logo{font-size:20px;font-weight:700;color:var(--blue);text-decoration:none}.nav-links{display:flex;gap:32px;align-items:center}.nav-link{color:var(--text);text-decoration:none;font-weight:500}.container{max-width:1000px;margin:40px auto;padding:0 32px}h1{font-size:32px;color:var(--blue);margin-bottom:8px}.subtitle{color:#64748B;margin-bottom:40px}.search-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:40px}input{width:100%;padding:16px;border:2px solid var(--border);border-radius:8px;font-size:16px;margin-bottom:16px}button{width:100%;background:var(--orange);color:white;padding:18px;border-radius:8px;border:none;font-weight:700;cursor:pointer}.loading{display:none;text-align:center;padding:40px}.spinner{border:3px solid var(--border);border-top:3px solid var(--blue);border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 16px}@keyframes spin{to{transform:rotate(360deg)}}.results{display:none}.centre-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}.centre-header{display:flex;justify-content:space-between;margin-bottom:16px}.centre-name{font-size:20px;font-weight:700;color:var(--blue)}.centre-distance{background:var(--bg);padding:6px 16px;border-radius:20px;font-weight:700;color:var(--blue)}.centre-info{margin-bottom:8px;font-size:14px}.centre-hours{font-size:13px;color:#64748B;margin:12px 0;padding:12px;background:var(--bg);border-radius:8px}.btn-call{background:var(--blue);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;margin-top:12px;margin-right:8px}.btn-book{background:var(--orange);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;margin-top:12px}.partner-badge{background:#FEF3C7;color:#92400E;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;display:inline-block;margin-bottom:12px}
-</style>
+<title>MOT Centre Search - Glovbox</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<nav><div class="nav-container"><a href="/" class="logo">Glovbox</a><div class="nav-links"><a href="/" class="nav-link">Home</a><a href="/insurance.html" class="nav-link">Insurance</a><a href="/signin.html" class="nav-link">Sign In</a></div></div></nav>
-<div class="container"><h1>Find MOT Centre Near You</h1><p class="subtitle">Real distances, opening hours, and phone numbers from trusted partners</p>
-<div class="search-card"><input type="text" id="postcode" placeholder="Enter your postcode (e.g. SW1A 1AA)"><button onclick="search()">Find MOT Centres</button></div>
-<div class="loading" id="loading"><div class="spinner"></div><p>Searching nearby centres...</p></div>
-<div class="results" id="results"></div></div>
+<body class="bg-gray-50">
+
+<nav class="bg-white border-b sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl">🚗</span>
+      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
+    </div>
+    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-900 font-semibold">← Back to Dashboard</a>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-6 py-12">
+  
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-blue-900 mb-4">🔧 Find MOT Centres</h1>
+    <p class="text-xl text-gray-600">Search for MOT testing centres near you</p>
+  </div>
+
+  <!-- Search Box -->
+  <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+    <label class="block text-lg font-bold text-gray-900 mb-4">Enter Your Postcode</label>
+    <div class="flex gap-4">
+      <input 
+        type="text" 
+        id="postcodeInput" 
+        placeholder="e.g. SW1A 1AA" 
+        class="flex-1 px-6 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg uppercase"
+        onkeypress="if(event.key==='Enter') searchCentres()"
+      />
+      <button 
+        onclick="searchCentres()" 
+        id="searchBtn"
+        class="bg-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-orange-600"
+      >
+        Search
+      </button>
+    </div>
+    <p id="searchError" class="text-red-600 mt-3 hidden"></p>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading" class="hidden text-center py-12">
+    <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+    <p class="text-gray-600">Finding MOT centres near you...</p>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">MOT Centres Near You</h2>
+    <div id="centresList" class="space-y-4"></div>
+  </div>
+
+  <!-- No Results -->
+  <div id="noResults" class="hidden text-center py-12">
+    <div class="text-6xl mb-4">🔍</div>
+    <h3 class="text-2xl font-bold text-gray-700 mb-2">No centres found</h3>
+    <p class="text-gray-600">Try a different postcode</p>
+  </div>
+
+</div>
+
 <script>
-async function search(){const postcode=document.getElementById('postcode').value;if(!postcode){alert('Please enter a postcode');return}document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';try{const response=await fetch(`/api/mot-centres?postcode=${encodeURIComponent(postcode)}`);const data=await response.json();document.getElementById('loading').style.display='none';if(!response.ok){alert(data.error);return}const resultsDiv=document.getElementById('results');if(data.centres.length===0){resultsDiv.innerHTML='<p>No MOT centres found. Try a different postcode.</p>'}else{resultsDiv.innerHTML=data.centres.map(c=>`<div class="centre-card"><div class="centre-header"><div class="centre-name">${c.name}</div><div class="centre-distance">${c.distance}</div></div><div class="centre-info">📍 ${c.address}</div><div class="centre-info">⭐ ${c.rating} (${c.ratingsCount} reviews)</div><div class="centre-info">📞 ${c.phoneNumber}</div>${c.openingHours.length>0?`<div class="centre-hours"><strong>Hours:</strong><br>${c.openingHours.slice(0,3).join('<br>')}</div>`:''}${c.isOpenNow?'<div style="color:var(--green);font-weight:600;margin-top:8px">🟢 Open Now</div>':''}<a href="tel:${c.phoneNumber}" class="btn-call">Call to Book</a></div>`).join('')+'<div style="margin-top:32px;padding:32px;background:var(--white);border:2px solid var(--orange);border-radius:16px;text-align:center"><div class="partner-badge">RECOMMENDED PARTNER</div><h3 style="color:var(--blue);margin-bottom:12px">Book with F1 Autocentres</h3><p style="margin-bottom:20px;color:#64748B">Trusted UK-wide MOT service • Book online in minutes</p><a href="https://www.f1autocentres.co.uk/mot" target="_blank" class="btn-book" id="f1-affiliate-link">Book MOT at F1 Autocentres</a><p style="margin-top:12px;font-size:12px;color:#64748B">Opens in new window</p></div>'}resultsDiv.style.display='block'}catch(error){document.getElementById('loading').style.display='none';alert('Error searching. Please try again.')}}
+async function searchCentres() {
+  const postcode = document.getElementById('postcodeInput').value.trim();
+  
+  if (!postcode) {
+    document.getElementById('searchError').textContent = 'Please enter a postcode';
+    document.getElementById('searchError').classList.remove('hidden');
+    return;
+  }
+
+  // Hide previous results
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('noResults').classList.add('hidden');
+  document.getElementById('searchError').classList.add('hidden');
+  
+  // Show loading
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('searchBtn').textContent = 'Searching...';
+  document.getElementById('searchBtn').disabled = true;
+
+  try {
+    const response = await fetch(`/api/mot-centres?postcode=${encodeURIComponent(postcode)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Search failed');
+    }
+
+    document.getElementById('loading').classList.add('hidden');
+
+    if (data.centres && data.centres.length > 0) {
+      displayResults(data.centres);
+    } else {
+      document.getElementById('noResults').classList.remove('hidden');
+    }
+  } catch (error) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('searchError').textContent = error.message;
+    document.getElementById('searchError').classList.remove('hidden');
+  } finally {
+    document.getElementById('searchBtn').textContent = 'Search';
+    document.getElementById('searchBtn').disabled = false;
+  }
+}
+
+function displayResults(centres) {
+  const html = centres.map((centre, index) => `
+    <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-blue-900 mb-1">${centre.name}</h3>
+          <p class="text-gray-600">${centre.address}</p>
+        </div>
+        ${centre.rating !== 'N/A' ? `<div class="flex items-center gap-1 bg-green-100 px-3 py-1 rounded-full">
+          <span class="text-yellow-500">⭐</span>
+          <span class="font-bold text-green-700">${centre.rating}</span>
+        </div>` : ''}
+      </div>
+      <div class="flex items-center gap-4 text-sm">
+        ${centre.isOpenNow ? 
+          '<span class="text-green-600 font-semibold">✓ Open Now</span>' : 
+          '<span class="text-gray-500">• Currently Closed</span>'
+        }
+      </div>
+      <button 
+        onclick="bookMOT('${centre.name}')" 
+        class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
+      >
+        Contact Centre
+      </button>
+    </div>
+  `).join('');
+
+  document.getElementById('centresList').innerHTML = html;
+  document.getElementById('results').classList.remove('hidden');
+}
+
+function bookMOT(centreName) {
+  alert(`Call ${centreName} to book your MOT appointment`);
+}
 </script>
+
 </body>
 </html>
