@@ -139,9 +139,17 @@
               <span class="text-2xl">🔧</span>
               <div><div class="font-semibold text-sm">Book MOT</div></div>
             </button>
+            <button onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">💷</span>
+              <div><div class="font-semibold text-sm">Pay Road Tax</div></div>
+            </button>
             <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
               <span class="text-2xl">💰</span>
               <div><div class="font-semibold text-sm">Compare Insurance</div></div>
+            </button>
+            <button onclick="window.location.href='/breakdown.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+              <span class="text-2xl">🚗</span>
+              <div><div class="font-semibold text-sm">Breakdown Cover</div></div>
             </button>
             <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
               <span class="text-2xl">📄</span>
@@ -383,8 +391,31 @@ async function loadNotifications() {
 }
 
 function exportPDF() {
-  if (!currentVehicle) return;
-  window.open(`/api/documents/export-pdf/${currentVehicle.registrationNumber}`, '_blank');
+  if (!currentVehicle) {
+    alert('Please select a vehicle first');
+    return;
+  }
+  const token = localStorage.getItem('glovbox_token');
+  if (!token) {
+    alert('Please sign in to export PDF');
+    return;
+  }
+  
+  // Create a temporary form to send token
+  const form = document.createElement('form');
+  form.method = 'GET';
+  form.action = `/api/documents/export-pdf/${currentVehicle.registrationNumber}`;
+  form.target = '_blank';
+  
+  const tokenInput = document.createElement('input');
+  tokenInput.type = 'hidden';
+  tokenInput.name = 'token';
+  tokenInput.value = token;
+  form.appendChild(tokenInput);
+  
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
 }
 
 function showAddVehicle() {

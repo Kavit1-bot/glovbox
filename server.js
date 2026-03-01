@@ -491,8 +491,24 @@ app.get('/api/notifications', authenticateToken, (req, res) => {
 });
 
 // ===== NEW: PDF EXPORT =====
-app.get('/api/documents/export-pdf/:vehicleReg', authenticateToken, async (req, res) => {
-  const user = users.get(req.userEmail);
+app.get('/api/documents/export-pdf/:vehicleReg', async (req, res) => {
+  // Accept token from either header or query parameter (for downloads)
+  const token = req.headers['authorization']?.split(' ')[1] || req.query.token;
+  
+  if (!token) {
+    return res.status(401).json({error: 'No token provided'});
+  }
+  
+  // Verify token
+  let userEmail;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    userEmail = decoded.email;
+  } catch (error) {
+    return res.status(403).json({error: 'Invalid token'});
+  }
+  
+  const user = users.get(userEmail);
   if (!user) return res.status(404).json({error:'User not found'});
   
   const vehicle = user.vehicles?.find(v => v.registrationNumber === req.params.vehicleReg);
