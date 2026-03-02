@@ -5,290 +5,203 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Account - Glovbox</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-body { font-family: 'Inter', sans-serif; }
-</style>
 </head>
 <body class="bg-gray-50">
 
-<!-- Navigation -->
-<nav class="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <div>
-      <a href="/dashboard.html" class="text-xl md:text-2xl font-bold text-blue-900">Glovbox</a>
-      <p class="text-sm text-gray-600 mt-1">My Account</p>
+<nav class="bg-white border-b">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl">🚗</span>
+      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
     </div>
-    <div class="flex items-center gap-4">
-      <a href="/dashboard.html" class="text-gray-600 hover:text-gray-900 font-semibold">Dashboard</a>
-      <button onclick="signOut()" class="text-gray-600 hover:text-gray-900 font-semibold">Sign Out</button>
-    </div>
+    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-900 font-semibold">← Back to Dashboard</a>
   </div>
 </nav>
 
-<div class="max-w-5xl mx-auto p-4 md:p-6">
-  <!-- Loading State -->
-  <div id="loading" class="text-center py-12">
-    <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-    <p class="text-gray-600">Loading account...</p>
+<div class="max-w-4xl mx-auto px-6 py-12">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">My Account</h1>
+
+  <!-- Account Info -->
+  <div class="bg-white rounded-xl shadow-sm border p-8 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Account Information</h2>
+    
+    <div class="space-y-4">
+      <div class="flex justify-between items-center py-3 border-b">
+        <div>
+          <div class="text-sm text-gray-600">Name</div>
+          <div class="font-semibold" id="userName">Loading...</div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center py-3 border-b">
+        <div>
+          <div class="text-sm text-gray-600">Email</div>
+          <div class="font-semibold" id="userEmail">Loading...</div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center py-3">
+        <div>
+          <div class="text-sm text-gray-600">Member Since</div>
+          <div class="font-semibold" id="memberSince">Loading...</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Account Content -->
-  <div id="content" class="hidden space-y-6">
+  <!-- Reminder Settings -->
+  <div class="bg-white rounded-xl shadow-sm border p-8 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Email Reminders</h2>
     
-    <!-- Profile Section -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-blue-900">👤 Profile Information</h2>
-        <button id="editProfile" class="text-blue-600 hover:text-blue-700 font-semibold">Edit</button>
-      </div>
-      
-      <div id="profileView" class="space-y-4">
+    <div class="space-y-4">
+      <label class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg cursor-pointer">
         <div>
-          <label class="text-sm text-gray-600 block mb-1">Full Name</label>
-          <p id="displayName" class="text-lg font-semibold">Loading...</p>
+          <div class="font-semibold">MOT Reminders</div>
+          <div class="text-sm text-gray-600">Get notified 30, 14, and 7 days before MOT expires</div>
         </div>
-        <div>
-          <label class="text-sm text-gray-600 block mb-1">Email Address</label>
-          <p id="displayEmail" class="text-lg font-semibold">Loading...</p>
-        </div>
-        <div>
-          <label class="text-sm text-gray-600 block mb-1">Member Since</label>
-          <p class="text-lg font-semibold" id="memberSince">Loading...</p>
-        </div>
-      </div>
+        <input type="checkbox" id="motReminders" class="w-5 h-5" checked onchange="saveSettings()" />
+      </label>
 
-      <div id="profileEdit" class="hidden space-y-4">
+      <label class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg cursor-pointer">
         <div>
-          <label class="text-sm font-semibold text-gray-700 block mb-2">Full Name</label>
-          <input type="text" id="editName" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          <div class="font-semibold">Tax Reminders</div>
+          <div class="text-sm text-gray-600">Get notified when road tax is due</div>
         </div>
-        <div class="flex gap-3">
-          <button onclick="saveProfile()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Save Changes</button>
-          <button onclick="cancelEdit()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300">Cancel</button>
+        <input type="checkbox" id="taxReminders" class="w-5 h-5" checked onchange="saveSettings()" />
+      </label>
+
+      <label class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <div>
+          <div class="font-semibold">Service Reminders</div>
+          <div class="text-sm text-gray-600">Get notified about upcoming services</div>
         </div>
-      </div>
+        <input type="checkbox" id="serviceReminders" class="w-5 h-5" onchange="saveSettings()" />
+      </label>
     </div>
 
-    <!-- Email Reminders Section -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h2 class="text-2xl font-bold text-blue-900">🔔 Email Reminders</h2>
-          <p class="text-sm text-gray-600 mt-1">Get notified 30, 14, and 7 days before expiry</p>
-        </div>
-      </div>
-      
-      <div class="space-y-4">
-        <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <div class="flex items-center gap-3">
-            <div class="text-3xl">🔧</div>
-            <div>
-              <h3 class="font-bold text-blue-900">MOT Reminders</h3>
-              <p class="text-sm text-gray-600">Never miss your MOT deadline</p>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="motReminder" class="sr-only peer" checked>
-            <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
-          </label>
-        </div>
+    <p id="settingsSaved" class="text-green-600 text-sm mt-4 hidden">✓ Settings saved</p>
+  </div>
 
-        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
-          <div class="flex items-center gap-3">
-            <div class="text-3xl">💷</div>
-            <div>
-              <h3 class="font-bold text-green-900">Road Tax Reminders</h3>
-              <p class="text-sm text-gray-600">Never drive without tax</p>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="taxReminder" class="sr-only peer" checked>
-            <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
-          </label>
-        </div>
-
-        <div class="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <div class="flex items-center gap-3">
-            <div class="text-3xl">📖</div>
-            <div>
-              <h3 class="font-bold text-purple-900">Service Reminders</h3>
-              <p class="text-sm text-gray-600">Based on mileage and time</p>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="serviceReminder" class="sr-only peer">
-            <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
-          </label>
-        </div>
-
-        <button onclick="saveReminders()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 mt-4">
-          💾 Save Reminder Settings
-        </button>
+  <!-- Monthly Budget -->
+  <div class="bg-white rounded-xl shadow-sm border p-8 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Monthly Budget</h2>
+    
+    <div class="flex items-center gap-4">
+      <label class="text-gray-700 font-semibold">Budget:</label>
+      <div class="flex items-center gap-2">
+        <span class="text-gray-600">£</span>
+        <input
+          type="number"
+          id="monthlyBudget"
+          class="w-24 px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500"
+          value="150"
+          onchange="saveSettings()"
+        />
+        <span class="text-gray-600">per month</span>
       </div>
     </div>
+  </div>
 
-    <!-- Vehicles Section -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-blue-900">🚗 My Vehicles</h2>
-        <a href="/dashboard.html" class="text-blue-600 hover:text-blue-700 font-semibold">+ Add Vehicle</a>
-      </div>
-      
-      <div id="vehiclesList" class="space-y-3">
-        <!-- Vehicles loaded here -->
-      </div>
+  <!-- Danger Zone -->
+  <div class="bg-red-50 rounded-xl border-2 border-red-200 p-8">
+    <h2 class="text-xl font-bold text-red-900 mb-4">Danger Zone</h2>
+    <p class="text-gray-700 mb-6">Once you delete your account, there is no going back. This action is permanent and will delete all your data including vehicles, service records, and documents.</p>
+    
+    <button onclick="confirmDelete()" class="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700">
+      Delete Account
+    </button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+    <h3 class="text-2xl font-bold text-red-900 mb-4">Delete Account?</h3>
+    <p class="text-gray-700 mb-6">This will permanently delete your account and all data. This action cannot be undone.</p>
+    
+    <div class="mb-6">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Enter your password to confirm:</label>
+      <input
+        type="password"
+        id="deletePassword"
+        placeholder="Your password"
+        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none"
+      />
+      <p id="deleteError" class="text-red-600 text-sm mt-2 hidden"></p>
     </div>
 
-    <!-- Quick Stats -->
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
-        <div class="text-4xl mb-2">📊</div>
-        <div class="text-3xl font-bold" id="vehicleCount">0</div>
-        <div class="text-blue-100">Vehicles Tracked</div>
-      </div>
-      <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
-        <div class="text-4xl mb-2">🔔</div>
-        <div class="text-3xl font-bold">3</div>
-        <div class="text-green-100">Active Reminders</div>
-      </div>
-      <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
-        <div class="text-4xl mb-2">📅</div>
-        <div class="text-3xl font-bold" id="daysMember">0</div>
-        <div class="text-purple-100">Days as Member</div>
-      </div>
+    <div class="flex gap-3">
+      <button onclick="hideDeleteModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300">
+        Cancel
+      </button>
+      <button onclick="deleteAccount()" id="deleteBtn" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700">
+        Delete Forever
+      </button>
     </div>
-
   </div>
 </div>
 
 <script>
-let userData = null;
-
 async function loadAccount() {
-  const token = localStorage.getItem('glovbox_token');
+  const token = sessionStorage.getItem('glovbox_token');
   if (!token) {
     window.location.href = '/signin.html';
     return;
   }
 
   try {
-    // Load user settings
     const response = await fetch('/api/user/settings', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
-    
+
     if (!response.ok) throw new Error('Failed to load settings');
+
+    const data = await response.json();
     
-    userData = await response.json();
+    document.getElementById('userName').textContent = data.name;
+    document.getElementById('userEmail').textContent = data.email;
     
-    // Update profile
-    document.getElementById('displayName').textContent = userData.name;
-    document.getElementById('displayEmail').textContent = userData.email;
-    document.getElementById('editName').value = userData.name;
-    
-    // Update reminders
-    const settings = userData.reminderSettings || {mot:true, tax:true, service:false};
-    document.getElementById('motReminder').checked = settings.mot;
-    document.getElementById('taxReminder').checked = settings.tax;
-    document.getElementById('serviceReminder').checked = settings.service;
-    
-    // Load vehicles
-    const vehiclesResp = await fetch('/api/user/vehicles', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const vehiclesData = await vehiclesResp.json();
-    
-    displayVehicles(vehiclesData.vehicles || []);
-    document.getElementById('vehicleCount').textContent = (vehiclesData.vehicles || []).length;
-    
-    // Show content
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('content').classList.remove('hidden');
-    
+    // Get user object from storage for createdAt
+    const user = JSON.parse(sessionStorage.getItem('glovbox_user') || '{}');
+    if (user.createdAt) {
+      const memberSince = new Date(user.createdAt).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      document.getElementById('memberSince').textContent = memberSince;
+    } else {
+      document.getElementById('memberSince').textContent = 'Unknown';
+    }
+
+    // Set reminder checkboxes
+    if (data.reminderSettings) {
+      document.getElementById('motReminders').checked = data.reminderSettings.mot !== false;
+      document.getElementById('taxReminders').checked = data.reminderSettings.tax !== false;
+      document.getElementById('serviceReminders').checked = data.reminderSettings.service === true;
+    }
+
+    // Set budget
+    if (data.monthlyBudget) {
+      document.getElementById('monthlyBudget').value = data.monthlyBudget;
+    }
   } catch (error) {
-    console.error('Error:', error);
-    alert('Failed to load account data');
+    console.error('Load error:', error);
   }
 }
 
-function displayVehicles(vehicles) {
-  const list = document.getElementById('vehiclesList');
+async function saveSettings() {
+  const token = sessionStorage.getItem('glovbox_token');
   
-  if (vehicles.length === 0) {
-    list.innerHTML = '<p class="text-gray-500 text-center py-8">No vehicles added yet. <a href="/dashboard.html" class="text-blue-600 hover:underline">Add your first vehicle</a></p>';
-    return;
-  }
-  
-  list.innerHTML = vehicles.map(v => `
-    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <div>
-        <p class="font-bold text-lg">${v.make} ${v.model}</p>
-        <p class="text-sm text-gray-600">${v.registrationNumber} • ${v.yearOfManufacture || 'N/A'}</p>
-      </div>
-      <div class="text-right">
-        <p class="text-sm text-gray-600">MOT: <span class="font-semibold ${v.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${v.motExpiryDate || 'N/A'}</span></p>
-        <p class="text-sm text-gray-600">Tax: <span class="font-semibold ${v.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${v.taxDueDate || 'N/A'}</span></p>
-      </div>
-    </div>
-  `).join('');
-}
-
-document.getElementById('editProfile').addEventListener('click', () => {
-  document.getElementById('profileView').classList.add('hidden');
-  document.getElementById('profileEdit').classList.remove('hidden');
-});
-
-function cancelEdit() {
-  document.getElementById('profileView').classList.remove('hidden');
-  document.getElementById('profileEdit').classList.add('hidden');
-}
-
-async function saveProfile() {
-  const newName = document.getElementById('editName').value.trim();
-  if (!newName) {
-    alert('Name cannot be empty');
-    return;
-  }
-  
-  const token = localStorage.getItem('glovbox_token');
-  
-  try {
-    const response = await fetch('/api/user/settings', {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name: newName })
-    });
-    
-    if (!response.ok) throw new Error('Failed to save');
-    
-    document.getElementById('displayName').textContent = newName;
-    
-    // Update localStorage
-    const user = JSON.parse(localStorage.getItem('glovbox_user'));
-    user.name = newName;
-    localStorage.setItem('glovbox_user', JSON.stringify(user));
-    
-    cancelEdit();
-    alert('✅ Profile updated!');
-    
-  } catch (error) {
-    alert('Failed to save changes');
-  }
-}
-
-async function saveReminders() {
   const settings = {
-    mot: document.getElementById('motReminder').checked,
-    tax: document.getElementById('taxReminder').checked,
-    service: document.getElementById('serviceReminder').checked
+    reminderSettings: {
+      mot: document.getElementById('motReminders').checked,
+      tax: document.getElementById('taxReminders').checked,
+      service: document.getElementById('serviceReminders').checked
+    },
+    monthlyBudget: parseInt(document.getElementById('monthlyBudget').value)
   };
-  
-  const token = localStorage.getItem('glovbox_token');
-  
+
   try {
     const response = await fetch('/api/user/settings', {
       method: 'PATCH',
@@ -296,25 +209,79 @@ async function saveReminders() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ reminderSettings: settings })
+      body: JSON.stringify(settings)
     });
-    
-    if (!response.ok) throw new Error('Failed to save');
-    
-    alert('✅ Reminder settings saved!');
-    
+
+    if (response.ok) {
+      const saved = document.getElementById('settingsSaved');
+      saved.classList.remove('hidden');
+      setTimeout(() => saved.classList.add('hidden'), 2000);
+    }
   } catch (error) {
-    alert('Failed to save reminder settings');
+    console.error('Save error:', error);
   }
 }
 
-function signOut() {
-  localStorage.removeItem('glovbox_token');
-  localStorage.removeItem('glovbox_user');
-  window.location.href = '/';
+function confirmDelete() {
+  document.getElementById('deleteModal').classList.remove('hidden');
 }
 
-// Load on page load
+function hideDeleteModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+  document.getElementById('deletePassword').value = '';
+  document.getElementById('deleteError').classList.add('hidden');
+}
+
+async function deleteAccount() {
+  const password = document.getElementById('deletePassword').value;
+  const error = document.getElementById('deleteError');
+  const btn = document.getElementById('deleteBtn');
+
+  error.classList.add('hidden');
+
+  if (!password) {
+    error.textContent = 'Please enter your password';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  if (!confirm('Are you absolutely sure? This CANNOT be undone!')) {
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Deleting...';
+
+  try {
+    const token = sessionStorage.getItem('glovbox_token');
+    const response = await fetch('/api/user/account', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({password})
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      sessionStorage.clear();
+      alert('Account deleted successfully');
+      window.location.href = '/';
+    } else {
+      error.textContent = data.error || 'Failed to delete account';
+      error.classList.remove('hidden');
+    }
+  } catch (err) {
+    error.textContent = 'Network error. Please try again.';
+    error.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Delete Forever';
+  }
+}
+
 loadAccount();
 </script>
 
