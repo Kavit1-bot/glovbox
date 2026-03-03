@@ -5,376 +5,294 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Glovbox</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-* { font-family: 'Inter', sans-serif; }
-</style>
 </head>
 <body class="bg-gray-50">
 
 <nav class="bg-white border-b sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <span class="text-3xl">🚗</span>
-      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-3xl">🚗</span>
+        <span class="text-2xl font-bold text-blue-900">Glovbox</span>
+      </div>
+      <span id="userName" class="text-gray-600"></span>
     </div>
     <div class="flex items-center gap-4">
-      <button onclick="loadNotifications()" class="relative">
-        <span class="text-2xl">🔔</span>
-        <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"></span>
-      </button>
-      <a href="/my-account.html" class="text-gray-700 hover:text-blue-900 font-semibold">My Account</a>
-      <button onclick="signOut()" class="text-gray-700 hover:text-blue-900 font-semibold">Sign Out</button>
+      <div class="relative">
+        <button class="text-2xl relative">🔔</button>
+        <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
+      </div>
+      <a href="/my-account.html" class="text-gray-700 hover:text-blue-900">⚙️</a>
+      <button onclick="signOut()" class="text-gray-700 hover:text-blue-900">Sign Out</button>
     </div>
   </div>
 </nav>
 
+<div id="aiInsights" class="hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <div id="aiContent"></div>
+  </div>
+</div>
+
 <div class="max-w-7xl mx-auto px-6 py-8">
-  
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-    <p class="text-gray-600">Manage your vehicles</p>
-  </div>
-
-  <div id="loading" class="text-center py-12">
-    <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-    <p class="text-gray-600">Loading...</p>
-  </div>
-
-  <div id="content" class="hidden">
+  <div class="flex gap-6">
     
-    <!-- AI Insights Banner -->
-    <div id="aiBanner" class="hidden bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 mb-6 text-white shadow-lg">
-      <div class="flex items-start justify-between gap-4">
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-2xl">🤖</span>
-            <h3 class="font-bold text-lg">AI Insights</h3>
-          </div>
-          <div id="aiContent"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Vehicle Selector -->
-    <div id="vehicleSelector" class="mb-8 flex gap-3 overflow-x-auto pb-2"></div>
-
-    <!-- No Vehicles -->
-    <div id="noVehicles" class="hidden max-w-3xl mx-auto">
-      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-        <div class="text-7xl mb-6">🚗</div>
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Add Your First Vehicle</h2>
-        <p class="text-lg text-gray-600 mb-8">Track MOT, tax, service history and get smart reminders</p>
-        <button onclick="showAddVehicle()" class="bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600">
+    <div class="flex-1">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">My Vehicles</h1>
+        <button onclick="showAddVehicle()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600">
           + Add Vehicle
         </button>
       </div>
+
+      <div id="vehiclesList" class="space-y-4"></div>
+
+      <div id="addVehicleForm" class="hidden bg-white rounded-xl shadow-sm border p-6 mb-6">
+        <h3 class="text-lg font-bold mb-4">Add Vehicle</h3>
+        <input type="text" id="regInput" placeholder="Registration (e.g. AB12CDE)" class="w-full px-4 py-3 border-2 rounded-lg mb-4" />
+        <p id="addError" class="text-red-600 text-sm mb-4 hidden"></p>
+        <div class="flex gap-3">
+          <button onclick="addVehicle()" id="addBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700">Add</button>
+          <button onclick="hideAddVehicle()" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300">Cancel</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Dashboard -->
-    <div id="vehicleDashboard" class="hidden grid md:grid-cols-3 gap-6">
+    <div class="w-80 space-y-6">
       
-      <!-- Main Column -->
-      <div class="md:col-span-2 space-y-6">
-        
-        <!-- Health Score Card -->
-        <div id="healthCard" class="bg-white rounded-xl shadow-sm border p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-blue-900">Vehicle Health</h3>
-            <div class="flex items-center gap-3">
-              <div>
-                <div id="healthScore" class="text-4xl font-bold">-</div>
-                <div id="healthGrade" class="text-sm text-gray-600 text-center">-</div>
-              </div>
-            </div>
-          </div>
-          <div id="healthIssues" class="space-y-2"></div>
+      <div id="healthScoreCard" class="hidden bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Vehicle Health</h3>
+        <div class="text-center mb-4">
+          <div id="healthScore" class="text-5xl font-bold mb-2">--</div>
+          <div id="healthGrade" class="text-xl font-semibold text-gray-600"></div>
         </div>
-
-        <!-- Vehicle Status -->
-        <div class="bg-white rounded-xl shadow-sm border p-6">
-          <h3 class="text-xl font-bold text-blue-900 mb-4">Vehicle Status</h3>
-          <div id="vehicleStatus" class="space-y-4"></div>
-        </div>
-
-        <!-- Service History -->
-        <div class="bg-white rounded-xl shadow-sm border p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-blue-900">Recent Services</h3>
-            <a href="/service-logbook.html" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All →</a>
-          </div>
-          <div id="serviceHistory">
-            <p class="text-gray-500 text-center py-8">No service records yet</p>
-          </div>
-        </div>
+        <div id="healthIssues" class="text-sm space-y-2"></div>
       </div>
 
-      <!-- Sidebar -->
-      <div class="space-y-6">
-        
-        <!-- Monthly Spending -->
-        <div class="bg-white rounded-xl shadow-sm border p-6">
-          <h3 class="text-lg font-bold text-blue-900 mb-4">This Month</h3>
-          <div id="monthlyCosts">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-600">Spent</span>
-              <span class="font-bold text-2xl" id="monthlyTotal">£0</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-              <div id="budgetBar" class="bg-blue-600 h-3 rounded-full" style="width: 0%"></div>
-            </div>
-            <div id="costBreakdown" class="space-y-2 text-sm"></div>
-            <button onclick="window.location.href='/cost-tracker.html'" class="text-blue-600 text-sm font-semibold mt-3">View Details →</button>
-          </div>
+      <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-bold text-blue-900 mb-4">This Month</h3>
+        <div class="text-3xl font-bold text-gray-900 mb-2">Spent: <span id="monthlyTotal">£0</span></div>
+        <div class="bg-gray-200 rounded-full h-2 mb-3">
+          <div id="budgetBar" class="bg-orange-500 h-2 rounded-full" style="width:0%"></div>
         </div>
+        <div id="costBreakdown" class="space-y-1 text-sm"></div>
+      </div>
 
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-xl shadow-sm border p-6">
-          <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
-          <div class="space-y-2">
-            <button onclick="window.location.href='/service-logbook.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">📖</span>
-              <div><div class="font-semibold text-sm">Service Logbook</div></div>
-            </button>
-            <button onclick="window.location.href='/mot-search.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">🔧</span>
-              <div><div class="font-semibold text-sm">Book MOT</div></div>
-            </button>
-            <button onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">💷</span>
-              <div><div class="font-semibold text-sm">Pay Road Tax</div></div>
-            </button>
-            <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">💰</span>
-              <div><div class="font-semibold text-sm">Compare Insurance</div></div>
-            </button>
-            <button onclick="window.location.href='/breakdown.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">🚗</span>
-              <div><div class="font-semibold text-sm">Breakdown Cover</div></div>
-            </button>
-            <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
-              <span class="text-2xl">📄</span>
-              <div><div class="font-semibold text-sm">Export PDF</div></div>
-            </button>
-          </div>
+      <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
+        <div class="space-y-2">
+          <button onclick="window.location.href='/service-logbook.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">📖</span>
+            <div><div class="font-semibold text-sm">Service Logbook</div></div>
+          </button>
+          <button onclick="window.location.href='/mot-search.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">🔧</span>
+            <div><div class="font-semibold text-sm">Book MOT</div></div>
+          </button>
+          <button onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">💷</span>
+            <div><div class="font-semibold text-sm">Pay Road Tax</div></div>
+          </button>
+          <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">💰</span>
+            <div><div class="font-semibold text-sm">Compare Insurance</div></div>
+          </button>
+          <button onclick="window.location.href='/breakdown.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">🚗</span>
+            <div><div class="font-semibold text-sm">Breakdown Cover</div></div>
+          </button>
+          <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+            <span class="text-2xl">📄</span>
+            <div><div class="font-semibold text-sm">Export PDF</div></div>
+          </button>
         </div>
-
-        <button onclick="showAddVehicle()" class="w-full bg-orange-500 text-white py-4 rounded-xl font-bold hover:bg-orange-600">
-          + Add Another Vehicle
-        </button>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Add Vehicle Modal -->
-<div id="addVehicleModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-blue-900">Add Vehicle</h2>
-      <button onclick="hideAddVehicle()" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
-    </div>
-    <div>
-      <label class="block text-sm font-semibold text-gray-700 mb-2">Registration Number</label>
-      <div class="flex gap-3">
-        <input type="text" id="regInput" placeholder="AB12 CDE" maxlength="8" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg uppercase" onkeypress="if(event.key==='Enter') searchVehicle()"/>
-        <button onclick="searchVehicle()" id="searchBtn" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">Search</button>
-      </div>
-      <p id="searchError" class="text-red-600 text-sm mt-2 hidden"></p>
-      <div id="vehiclePreview" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-6 mt-4">
-        <h3 class="font-bold text-lg text-green-900 mb-4">✓ Vehicle Found</h3>
-        <div id="vehicleDetails" class="space-y-2 mb-6"></div>
-        <button onclick="addVehicle()" id="addBtn" class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold">Add to Dashboard</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Notification Modal -->
-<div id="notifModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-blue-900">Notifications</h2>
-      <button onclick="hideNotifications()" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
-    </div>
-    <div id="notifList"></div>
   </div>
 </div>
 
 <script>
-let currentVehicle = null;
-let vehicles = [];
-let vehicleData = null;
+const token = sessionStorage.getItem('glovbox_token');
+const user = JSON.parse(sessionStorage.getItem('glovbox_user') || '{}');
 
-async function checkAuth() {
-  const token = localStorage.getItem('glovbox_token');
-  if (!token) {
-    window.location.href = '/signin.html';
-    return;
-  }
-  await loadVehicles();
+if (!token) {
+  window.location.href = '/signin.html';
 }
+
+document.getElementById('userName').textContent = `Hi, ${user.name || 'User'}`;
+
+let currentVehicle = null;
 
 async function loadVehicles() {
-  const token = localStorage.getItem('glovbox_token');
   try {
     const response = await fetch('/api/user/vehicles', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
     const data = await response.json();
-    vehicles = data.vehicles || [];
     
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('content').classList.remove('hidden');
-    
-    if (vehicles.length === 0) {
-      document.getElementById('noVehicles').classList.remove('hidden');
+    if (data.vehicles && data.vehicles.length > 0) {
+      currentVehicle = data.vehicles[0];
+      displayVehicles(data.vehicles);
+      loadHealthScore();
+      loadAIInsights();
+      loadMonthlyCosts();
+      loadNotifications();
     } else {
-      displayVehicles();
-      currentVehicle = vehicles[0];
-      await loadAllData();
+      document.getElementById('vehiclesList').innerHTML = '<div class="bg-white rounded-xl p-8 text-center"><p class="text-gray-600">No vehicles added yet. Click "Add Vehicle" to get started!</p></div>';
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Load error:', error);
   }
 }
 
-function displayVehicles() {
-  const selector = document.getElementById('vehicleSelector');
-  selector.innerHTML = vehicles.map((v, i) => `
-    <button onclick="selectVehicle(${i})" class="flex items-center gap-3 bg-white rounded-xl p-4 min-w-max border-2 ${i === 0 ? 'border-blue-500' : 'border-gray-200'} hover:border-blue-300">
-      <span class="text-3xl">🚗</span>
-      <div class="text-left">
-        <div class="font-bold text-gray-900">${v.make} ${v.model}</div>
-        <div class="text-sm text-gray-600">${v.registrationNumber}</div>
+function displayVehicles(vehicles) {
+  const html = vehicles.map(v => `
+    <div class="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-2xl font-bold text-blue-900">${v.make} ${v.model}</h3>
+          <p class="text-gray-600">${v.registrationNumber}</p>
+        </div>
+        <button onclick="deleteVehicle('${v.registrationNumber}')" class="text-red-600 hover:text-red-800">🗑️</button>
       </div>
-    </button>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div><span class="text-gray-600">Year:</span> <span class="font-semibold">${v.yearOfManufacture}</span></div>
+        <div><span class="text-gray-600">Fuel:</span> <span class="font-semibold">${v.fuelType}</span></div>
+        <div><span class="text-gray-600">MOT:</span> <span class="font-semibold ${v.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${v.motExpiryDate || 'N/A'}</span></div>
+        <div><span class="text-gray-600">Tax:</span> <span class="font-semibold ${v.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${v.taxDueDate || 'N/A'}</span></div>
+      </div>
+    </div>
   `).join('');
-  document.getElementById('vehicleDashboard').classList.remove('hidden');
+  document.getElementById('vehiclesList').innerHTML = html;
 }
 
-async function selectVehicle(index) {
-  currentVehicle = vehicles[index];
-  displayVehicles();
-  await loadAllData();
+function showAddVehicle() {
+  document.getElementById('addVehicleForm').classList.remove('hidden');
+  document.getElementById('regInput').focus();
 }
 
-async function loadAllData() {
-  if (!currentVehicle) return;
-  await Promise.all([
-    loadHealthScore(),
-    loadAIInsights(),
-    loadVehicleStatus(),
-    loadMonthlyCosts(),
-    loadNotifications()
-  ]);
+function hideAddVehicle() {
+  document.getElementById('addVehicleForm').classList.add('hidden');
+  document.getElementById('regInput').value = '';
+  document.getElementById('addError').classList.add('hidden');
+}
+
+async function addVehicle() {
+  const reg = document.getElementById('regInput').value.trim().toUpperCase();
+  const error = document.getElementById('addError');
+  const btn = document.getElementById('addBtn');
+  
+  if (!reg) {
+    error.textContent = 'Enter registration';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Adding...';
+  error.classList.add('hidden');
+
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({registrationNumber: reg})
+    });
+
+    if (response.ok) {
+      hideAddVehicle();
+      loadVehicles();
+    } else {
+      const data = await response.json();
+      error.textContent = data.error || 'Failed to add vehicle';
+      error.classList.remove('hidden');
+    }
+  } catch (err) {
+    error.textContent = 'Network error';
+    error.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Add';
+  }
+}
+
+async function deleteVehicle(reg) {
+  if (!confirm('Delete this vehicle?')) return;
+  
+  try {
+    await fetch(`/api/user/vehicles/${reg}`, {
+      method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    loadVehicles();
+  } catch {}
 }
 
 async function loadHealthScore() {
-  const token = localStorage.getItem('glovbox_token');
+  if (!currentVehicle) return;
+  
   try {
     const response = await fetch(`/api/vehicle/${currentVehicle.registrationNumber}/health-score`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
     
     if (response.ok) {
       const data = await response.json();
+      document.getElementById('healthScoreCard').classList.remove('hidden');
       document.getElementById('healthScore').textContent = data.score;
-      document.getElementById('healthScore').className = `text-4xl font-bold ${
-        data.score > 80 ? 'text-green-600' : data.score > 60 ? 'text-yellow-600' : 'text-red-600'
-      }`;
+      document.getElementById('healthScore').className = `text-5xl font-bold mb-2 ${data.score > 80 ? 'text-green-600' : data.score > 60 ? 'text-yellow-600' : 'text-red-600'}`;
       document.getElementById('healthGrade').textContent = `Grade ${data.grade}`;
       
       const issuesHTML = data.issues.length > 0 
-        ? data.issues.map(issue => `<div class="text-sm text-orange-600">⚠️ ${issue}</div>`).join('')
-        : '<div class="text-sm text-green-600">✓ No issues detected</div>';
+        ? data.issues.map(i => `<div class="text-red-600">⚠️ ${i}</div>`).join('')
+        : '<div class="text-green-600">✓ All good!</div>';
       document.getElementById('healthIssues').innerHTML = issuesHTML;
     }
-  } catch (error) {
-    console.error('Health score error:', error);
-  }
+  } catch {}
 }
 
 async function loadAIInsights() {
-  const token = localStorage.getItem('glovbox_token');
   try {
     const response = await fetch('/api/ai/insights', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
     const data = await response.json();
     
     if (data.opportunities && data.opportunities.length > 0) {
       const opp = data.opportunities[0];
-      document.getElementById('aiBanner').classList.remove('hidden');
+      document.getElementById('aiInsights').classList.remove('hidden');
       document.getElementById('aiContent').innerHTML = `
         <h3 class="text-xl font-bold mb-2">${opp.title}</h3>
         <p class="mb-4">${opp.message}</p>
         ${opp.potentialSaving > 0 ? `<p class="text-lg font-bold mb-4">💰 Save £${opp.potentialSaving}</p>` : ''}
-        <button onclick="window.location.href='${opp.action}'" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50">
-          Take Action
-        </button>
+        <button onclick="window.location.href='${opp.action}'" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50">Take Action</button>
       `;
     }
-  } catch (error) {
-    console.error('AI insights error:', error);
-  }
-}
-
-function loadVehicleStatus() {
-  if (!currentVehicle) return;
-  
-  const statusHTML = `
-    <div class="flex items-center justify-between p-4 ${currentVehicle.motStatus === 'Valid' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} rounded-lg border-2">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg ${currentVehicle.motStatus === 'Valid' ? 'bg-green-500' : 'bg-red-500'} flex items-center justify-center text-white text-xl">🔧</div>
-        <div>
-          <div class="font-semibold">MOT</div>
-          <div class="text-sm text-gray-600">${currentVehicle.motExpiryDate || 'Unknown'}</div>
-        </div>
-      </div>
-      <div class="text-sm font-semibold ${currentVehicle.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${currentVehicle.motStatus || 'Unknown'}</div>
-    </div>
-
-    <div class="flex items-center justify-between p-4 ${currentVehicle.taxStatus === 'Taxed' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} rounded-lg border-2">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg ${currentVehicle.taxStatus === 'Taxed' ? 'bg-green-500' : 'bg-red-500'} flex items-center justify-center text-white text-xl">💷</div>
-        <div>
-          <div class="font-semibold">Road Tax</div>
-          <div class="text-sm text-gray-600">${currentVehicle.taxDueDate || 'Unknown'}</div>
-        </div>
-      </div>
-      <div class="text-sm font-semibold ${currentVehicle.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${currentVehicle.taxStatus || 'Unknown'}</div>
-    </div>
-  `;
-  document.getElementById('vehicleStatus').innerHTML = statusHTML;
+  } catch {}
 }
 
 async function loadMonthlyCosts() {
-  const token = localStorage.getItem('glovbox_token');
   const month = new Date().toISOString().slice(0, 7);
   
   try {
     const response = await fetch(`/api/user/costs?month=${month}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
     
     if (!response.ok) {
-      console.error('Cost API error:', response.status);
       document.getElementById('monthlyTotal').textContent = '£0';
-      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
       return;
     }
     
     const data = await response.json();
-    
-    // Update total
     const total = data.total || 0;
     document.getElementById('monthlyTotal').textContent = `£${total.toFixed(0)}`;
-    
-    // Update budget bar
     const percentUsed = data.percentUsed || 0;
     document.getElementById('budgetBar').style.width = `${Math.min(percentUsed, 100)}%`;
     
-    // Update breakdown
     if (data.breakdown && Object.keys(data.breakdown).length > 0) {
       const breakdownHTML = Object.entries(data.breakdown).map(([cat, amount]) => `
         <div class="flex justify-between">
@@ -384,22 +302,15 @@ async function loadMonthlyCosts() {
       `).join('');
       document.getElementById('costBreakdown').innerHTML = breakdownHTML;
     } else {
-      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
+      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses</p>';
     }
-  } catch (error) {
-    console.error('Cost loading error:', error);
-    // Show default values on error
-    document.getElementById('monthlyTotal').textContent = '£0';
-    document.getElementById('budgetBar').style.width = '0%';
-    document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses this month</p>';
-  }
+  } catch {}
 }
 
 async function loadNotifications() {
-  const token = localStorage.getItem('glovbox_token');
   try {
     const response = await fetch('/api/notifications', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: {'Authorization': `Bearer ${token}`}
     });
     const data = await response.json();
     
@@ -407,23 +318,15 @@ async function loadNotifications() {
       document.getElementById('notifBadge').textContent = data.unread;
       document.getElementById('notifBadge').classList.remove('hidden');
     }
-  } catch (error) {
-    console.error('Notifications error:', error);
-  }
+  } catch {}
 }
 
 function exportPDF() {
   if (!currentVehicle) {
-    alert('Please select a vehicle first');
-    return;
-  }
-  const token = localStorage.getItem('glovbox_token');
-  if (!token) {
-    alert('Please sign in to export PDF');
+    alert('Please add a vehicle first');
     return;
   }
   
-  // Create a temporary form to send token
   const form = document.createElement('form');
   form.method = 'GET';
   form.action = `/api/documents/export-pdf/${currentVehicle.registrationNumber}`;
@@ -440,92 +343,12 @@ function exportPDF() {
   document.body.removeChild(form);
 }
 
-function showAddVehicle() {
-  document.getElementById('addVehicleModal').classList.remove('hidden');
-}
-
-function hideAddVehicle() {
-  document.getElementById('addVehicleModal').classList.add('hidden');
-  document.getElementById('regInput').value = '';
-  document.getElementById('vehiclePreview').classList.add('hidden');
-}
-
-async function searchVehicle() {
-  const reg = document.getElementById('regInput').value.trim().toUpperCase().replace(/\s/g, '');
-  if (!reg) {
-    document.getElementById('searchError').textContent = 'Please enter a registration';
-    document.getElementById('searchError').classList.remove('hidden');
-    return;
-  }
-
-  document.getElementById('searchBtn').textContent = 'Searching...';
-  document.getElementById('searchBtn').disabled = true;
-
-  try {
-    const response = await fetch(`/api/vehicle/${reg}`);
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.error);
-
-    vehicleData = data;
-    const detailsHTML = `
-      <div class="grid md:grid-cols-2 gap-4">
-        <div><p class="text-sm text-gray-600">Make & Model</p><p class="font-bold text-lg">${data.make} ${data.model}</p></div>
-        <div><p class="text-sm text-gray-600">Year</p><p class="font-bold text-lg">${data.yearOfManufacture || 'N/A'}</p></div>
-        <div><p class="text-sm text-gray-600">MOT Expires</p><p class="font-bold ${data.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${data.motExpiryDate || 'N/A'}</p></div>
-        <div><p class="text-sm text-gray-600">Tax Due</p><p class="font-bold ${data.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${data.taxDueDate || 'N/A'}</p></div>
-      </div>
-    `;
-    document.getElementById('vehicleDetails').innerHTML = detailsHTML;
-    document.getElementById('vehiclePreview').classList.remove('hidden');
-  } catch (error) {
-    document.getElementById('searchError').textContent = error.message;
-    document.getElementById('searchError').classList.remove('hidden');
-  } finally {
-    document.getElementById('searchBtn').textContent = 'Search';
-    document.getElementById('searchBtn').disabled = false;
-  }
-}
-
-async function addVehicle() {
-  const token = localStorage.getItem('glovbox_token');
-  const reg = document.getElementById('regInput').value.trim().toUpperCase().replace(/\s/g, '');
-
-  document.getElementById('addBtn').textContent = 'Adding...';
-  document.getElementById('addBtn').disabled = true;
-
-  try {
-    const response = await fetch('/api/user/vehicles', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ registrationNumber: reg })
-    });
-
-    if (response.ok) {
-      hideAddVehicle();
-      location.reload();
-    }
-  } catch (error) {
-    alert('Error: ' + error.message);
-  } finally {
-    document.getElementById('addBtn').textContent = 'Add to Dashboard';
-    document.getElementById('addBtn').disabled = false;
-  }
-}
-
-function hideNotifications() {
-  document.getElementById('notifModal').classList.add('hidden');
-}
-
 function signOut() {
-  localStorage.clear();
-  window.location.href = '/';
+  sessionStorage.clear();
+  window.location.href = '/signin.html';
 }
 
-checkAuth();
+loadVehicles();
 </script>
 
 </body>
