@@ -279,8 +279,7 @@ function calculateHealthScore(vehicle, serviceRecords = [], costHistory = []) {
   };
 }
 ```
-
-## Update your health-score endpoint:
+// Update your health-score endpoint:
 
 ```javascript
 app.get('/api/vehicle/:reg/health-score', authenticateToken, (req, res) => {
