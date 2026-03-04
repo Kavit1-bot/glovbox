@@ -165,12 +165,187 @@ function daysUntilDate(dateString) {
 }
 
 function calculateHealthScore(vehicle) {
-  let score = 100;
-  if (vehicle.motStatus !== 'Valid') score -= 30;
-  if (vehicle.taxStatus !== 'Taxed') score -= 30;
+ ```javascript
+function calculateHealthScore(vehicle, serviceRecords = [], costHistory = []) {
+  let score = 0;
+  let breakdown = {};
+  
+  // 1. REGULATORY COMPLIANCE (30 points max)
+  let regulatory = 30;
+  
+  // MOT Status with time-based decay
+  if (vehicle.motStatus !== 'Valid') {
+    regulatory -= 25;
+  } else {
+    const motDays = daysUntilDate(vehicle.motExpiryDate);
+    if (motDays !== null) {
+      if (motDays < 7) regulatory -= 10;  // Urgent
+      else if (motDays < 30) regulatory -= 5; // Soon
+    }
+  }
+  
+  // Tax Status
+  if (vehicle.taxStatus !== 'Taxed') regulatory -= 5;
+  
+  score += regulatory;
+  breakdown.regulatory = regulatory;
+  
+  // 2. SERVICE HISTORY QUALITY (25 points max)
+  let serviceScore = 0;
+  
+  if (serviceRecords && serviceRecords.length > 0) {
+    // Has service records bonus
+    serviceScore += 10;
+    
+    // Recent service (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    const recentService = serviceRecords.find(r => new Date(r.date) > sixMonthsAgo);
+    if (recentService) serviceScore += 10;
+    
+    // Service consistency (3+ records shows pattern)
+    if (serviceRecords.length >= 3) serviceScore += 5;
+  }
+  
+  score += serviceScore;
+  breakdown.service = serviceScore;
+  
+  // 3. AGE & MILEAGE RELATIONSHIP (20 points max)
+  let ageScore = 20;
   const age = new Date().getFullYear() - (vehicle.yearOfManufacture || 2020);
-  score -= Math.min(age * 2, 20);
-  return Math.max(score, 0);
+  
+  // Age penalty
+  ageScore -= Math.min(age * 2, 15); // Max -15 for old cars
+  
+  // Mileage analysis (if tracked in service records)
+  if (serviceRecords && serviceRecords.length > 0) {
+    const latestRecord = serviceRecords.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+    if (latestRecord && latestRecord.mileage) {
+      const milesPerYear = latestRecord.mileage / Math.max(age, 1);
+      // Low mileage per year = well maintained
+      if (milesPerYear < 12000) ageScore += 5; // Excellent
+      else if (milesPerYear < 15000) ageScore += 3; // Good
+    }
+  }
+  
+  score += Math.max(ageScore, 0);
+  breakdown.age = ageScore;
+  
+  // 4. COST TREND ANALYSIS (15 points max) ⭐ UNIQUE
+  let costScore = 10; // Base score
+  
+  if (costHistory && costHistory.length >= 2) {
+    // Compare recent 3 months vs older 3 months
+    const recent = costHistory.slice(0, 3).reduce((sum, c) => sum + (c.amount || 0), 0);
+    const older = costHistory.slice(3, 6).reduce((sum, c) => sum + (c.amount || 0), 0);
+    
+    if (older > 0) {
+      if (recent < older * 0.7) costScore += 5; // Costs decreasing significantly = excellent
+      else if (recent < older) costScore += 3; // Costs decreasing = good
+      else if (recent > older * 1.5) costScore -= 5; // Costs increasing = bad sign
+    }
+  }
+  
+  score += costScore;
+  breakdown.costs = costScore;
+  
+  // 5. PROACTIVITY BONUS (10 points max) ⭐ UNIQUE
+  let proactivity = 0;
+  
+  // Early MOT booking
+  const motDays = daysUntilDate(vehicle.motExpiryDate);
+  if (motDays !== null && motDays > 30 && vehicle.motStatus === 'Valid') {
+    proactivity += 5; // Proactive maintenance
+  }
+  
+  // Good record keeping (5+ service records)
+  if (serviceRecords && serviceRecords.length >= 5) {
+    proactivity += 5;
+  }
+  
+  score += proactivity;
+  breakdown.proactivity = proactivity;
+  
+  return {
+    score: Math.round(Math.min(score, 100)),
+    breakdown,
+    maxScores: {
+      regulatory: 30,
+      service: 25,
+      age: 20,
+      costs: 15,
+      proactivity: 10
+    }
+  };
+}
+```
+
+## Update your health-score endpoint:
+
+```javascript
+app.get('/api/vehicle/:reg/health-score', authenticateToken, (req, res) => {
+  const user = users.get(req.userEmail);
+  const vehicle = user.vehicles?.find(v => v.registrationNumber === req.params.reg);
+  
+  if (!vehicle) return res.status(404).json({error:'Vehicle not found'});
+  
+  // Get service records and cost history for this vehicle
+  const serviceRecords = (user.serviceRecords?.[req.params.reg] || [])
+    .sort((a,b) => new Date(b.date) - new Date(a.date));
+  
+  const costHistory = (user.costTransactions || [])
+    .filter(t => t.vehicleReg === req.params.reg)
+    .sort((a,b) => new Date(b.date) - new Date(a.date));
+  
+  // Calculate enhanced health score
+  const result = calculateHealthScore(vehicle, serviceRecords, costHistory);
+  const score = result.score;
+  
+  // Generate issues list
+  const issues = [];
+  if (vehicle.motStatus !== 'Valid') issues.push('MOT expired or expiring soon');
+  if (vehicle.taxStatus !== 'Taxed') issues.push('Tax not paid');
+  if (serviceRecords.length === 0) issues.push('No service history recorded');
+  const age = new Date().getFullYear() - (vehicle.yearOfManufacture || 2020);
+  if (age > 10) issues.push('Vehicle is over 10 years old');
+  
+  // Generate recommendations
+  const recommendations = [];
+  if (result.breakdown.regulatory < 25) {
+    recommendations.push('Renew MOT and Tax immediately');
+  }
+  if (result.breakdown.service < 15) {
+    recommendations.push('Add service records to track maintenance history');
+  }
+  if (result.breakdown.age < 10) {
+    recommendations.push('Regular maintenance becomes more important as vehicle ages');
+  }
+  if (result.breakdown.costs < 8) {
+    recommendations.push('Consider budgeting for upcoming repairs - costs are trending up');
+  }
+  if (result.breakdown.proactivity < 5) {
+    recommendations.push('Book MOT early and keep detailed service records for bonus points');
+  }
+  if (recommendations.length === 0) {
+    recommendations.push('Excellent maintenance! Keep up the great work!');
+  }
+  
+  res.json({
+    score,
+    grade: score > 80 ? 'A' : score > 60 ? 'B' : score > 40 ? 'C' : 'D',
+    issues,
+    recommendations,
+    breakdown: result.breakdown,
+    maxScores: result.maxScores,
+    // Individual scores for frontend display
+    regulatoryScore: result.breakdown.regulatory,
+    serviceScore: result.breakdown.service,
+    mileageScore: result.breakdown.age,
+    costScore: result.breakdown.costs,
+    proactivityScore: result.breakdown.proactivity
+  });
+});
+```
 }
 
 function generateInsights(user) {
@@ -667,7 +842,122 @@ app.get('/api/mot-centres', async (req, res) => {
     res.status(500).json({error:'Search failed'});
   }
 });
-
+```javascript
+// ===== MARKET VALUE ENDPOINT (Market Check API) =====
+app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) => {
+  const reg = req.params.reg.toUpperCase().replace(/\s/g, '');
+  
+  try {
+    // Check cache first (24 hour cache to save API calls)
+    const user = users.get(req.userEmail);
+    const vehicle = user.vehicles?.find(v => v.registrationNumber === reg);
+    
+    // Return cached data if less than 24 hours old
+    if (vehicle && vehicle.marketValueCache && 
+        vehicle.marketValueCacheTime && 
+        Date.now() - vehicle.marketValueCacheTime < 24*60*60*1000) {
+      console.log('💰 Market value from cache:', reg);
+      return res.json(vehicle.marketValueCache);
+    }
+    
+    console.log('💰 Fetching market value from API:', reg);
+    
+    // Fetch from Market Check API
+    const response = await axios.get(
+      'https://api.marketcheck.com/v2/search/car/active',
+      {
+        params: {
+          api_key: 'QbyFue6ZqVsNtMgRVkLABlwNQu1jPFdE',
+          vin: reg,
+          rows: 1
+        },
+        headers: { 
+          'Accept': 'application/json',
+          'Host': 'api.marketcheck.com'
+        },
+        timeout: 10000
+      }
+    );
+    
+    // Extract valuation data
+    const listings = response.data?.listings || [];
+    
+    if (listings.length > 0) {
+      const listing = listings[0];
+      const basePrice = listing.price || listing.msrp || 0;
+      
+      const valuation = {
+        marketValue: basePrice,
+        tradeIn: Math.round(basePrice * 0.85), // 15% below market
+        privateSale: Math.round(basePrice * 0.95), // 5% below market
+        dealerRetail: Math.round(basePrice * 1.10), // 10% above market
+        trend: {
+          direction: 'stable',
+          percentage: 0
+        },
+        lastUpdated: new Date().toISOString(),
+        source: 'Market Check UK'
+      };
+      
+      // Cache result for 24 hours
+      if (vehicle) {
+        vehicle.marketValueCache = valuation;
+        vehicle.marketValueCacheTime = Date.now();
+        await saveDB(users);
+      }
+      
+      console.log('✅ Market value fetched:', basePrice);
+      return res.json(valuation);
+      
+    } else {
+      // No listings found - return estimated value based on year
+      console.log('⚠️ No market data found, using estimation');
+      
+      const year = vehicle?.yearOfManufacture || 2020;
+      const age = new Date().getFullYear() - year;
+      const estimatedValue = Math.max(15000 - (age * 1500), 3000); // Rough estimate
+      
+      const valuation = {
+        marketValue: estimatedValue,
+        tradeIn: Math.round(estimatedValue * 0.85),
+        privateSale: Math.round(estimatedValue * 0.95),
+        dealerRetail: Math.round(estimatedValue * 1.10),
+        trend: {
+          direction: 'stable',
+          percentage: 0
+        },
+        lastUpdated: new Date().toISOString(),
+        source: 'Estimated (no market data)',
+        isEstimate: true
+      };
+      
+      return res.json(valuation);
+    }
+    
+  } catch (error) {
+    console.error('❌ Market Check API error:', error.message);
+    
+    // Return fallback estimated value
+    const user = users.get(req.userEmail);
+    const vehicle = user?.vehicles?.find(v => v.registrationNumber === reg);
+    const year = vehicle?.yearOfManufacture || 2020;
+    const age = new Date().getFullYear() - year;
+    const estimatedValue = Math.max(15000 - (age * 1500), 3000);
+    
+    res.json({
+      marketValue: estimatedValue,
+      tradeIn: Math.round(estimatedValue * 0.85),
+      privateSale: Math.round(estimatedValue * 0.95),
+      dealerRetail: Math.round(estimatedValue * 1.10),
+      trend: { direction: 'stable', percentage: 0 },
+      lastUpdated: new Date().toISOString(),
+      source: 'Estimated (API unavailable)',
+      isEstimate: true,
+      error: 'Market data temporarily unavailable'
+    });
+  }
+});
+```
 app.listen(port, '0.0.0.0', () => {
   console.log('\n╔══════════════════════════════════════╗');
   console.log('║  GLOVBOX v2.0 SECURE                 ║');

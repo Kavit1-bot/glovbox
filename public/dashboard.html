@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Glovbox</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .dropdown-anim { animation: slideDown 0.2s ease-out; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
+</style>
 </head>
 <body class="bg-gray-50">
 
@@ -18,12 +30,27 @@
       <span id="userName" class="text-gray-600"></span>
     </div>
     <div class="flex items-center gap-4">
+      
+      <!-- Notification Bell with Dropdown -->
       <div class="relative">
-        <button class="text-2xl relative">🔔</button>
-        <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
+        <button onclick="toggleNotifications()" class="text-2xl relative hover:opacity-80 transition">
+          🔔
+        </button>
+        <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"></span>
+        
+        <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border-2 border-gray-200 z-50 dropdown-anim">
+          <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
+            <h3 class="font-bold text-gray-900">Notifications</h3>
+            <button onclick="clearAllNotifications()" class="text-xs text-blue-600 hover:underline font-semibold">Clear all</button>
+          </div>
+          <div id="notifList" class="max-h-96 overflow-y-auto">
+            <p class="p-6 text-gray-500 text-center text-sm">No notifications</p>
+          </div>
+        </div>
       </div>
-      <a href="/my-account.html" class="text-gray-700 hover:text-blue-900">⚙️</a>
-      <button onclick="signOut()" class="text-gray-700 hover:text-blue-900">Sign Out</button>
+      
+      <a href="/my-account.html" class="text-gray-700 hover:text-blue-900 text-xl transition">⚙️</a>
+      <button onclick="signOut()" class="text-gray-700 hover:text-blue-900 font-semibold">Sign Out</button>
     </div>
   </div>
 </nav>
@@ -40,7 +67,7 @@
     <div class="flex-1">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">My Vehicles</h1>
-        <button onclick="showAddVehicle()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600">
+        <button onclick="showAddVehicle()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition shadow-lg hover:shadow-xl">
           + Add Vehicle
         </button>
       </div>
@@ -49,7 +76,7 @@
 
       <div id="addVehicleForm" class="hidden bg-white rounded-xl shadow-sm border p-6 mb-6">
         <h3 class="text-lg font-bold mb-4">Add Vehicle</h3>
-        <input type="text" id="regInput" placeholder="Registration (e.g. AB12CDE)" class="w-full px-4 py-3 border-2 rounded-lg mb-4" />
+        <input type="text" id="regInput" placeholder="Registration (e.g. AB12CDE)" class="w-full px-4 py-3 border-2 rounded-lg mb-4 focus:border-blue-500 focus:outline-none" />
         <p id="addError" class="text-red-600 text-sm mb-4 hidden"></p>
         <div class="flex gap-3">
           <button onclick="addVehicle()" id="addBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700">Add</button>
@@ -60,8 +87,14 @@
 
     <div class="w-80 space-y-6">
       
+      <!-- Health Score with Info Button -->
       <div id="healthScoreCard" class="hidden bg-white rounded-xl shadow-sm border p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Vehicle Health</h3>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-lg font-bold text-gray-900">Vehicle Health</h3>
+          <button onclick="showHealthInfo()" class="text-blue-600 hover:text-blue-700 text-sm font-semibold hover:underline">
+            ℹ️ How?
+          </button>
+        </div>
         <div class="text-center mb-4">
           <div id="healthScore" class="text-5xl font-bold mb-2">--</div>
           <div id="healthGrade" class="text-xl font-semibold text-gray-600"></div>
@@ -71,42 +104,168 @@
 
       <div class="bg-white rounded-xl shadow-sm border p-6">
         <h3 class="text-lg font-bold text-blue-900 mb-4">This Month</h3>
-        <div class="text-3xl font-bold text-gray-900 mb-2">Spent: <span id="monthlyTotal">£0</span></div>
+        <div class="text-3xl font-bold text-gray-900 mb-2">£<span id="monthlyTotal">0</span></div>
         <div class="bg-gray-200 rounded-full h-2 mb-3">
-          <div id="budgetBar" class="bg-orange-500 h-2 rounded-full" style="width:0%"></div>
+          <div id="budgetBar" class="bg-orange-500 h-2 rounded-full transition-all" style="width:0%"></div>
         </div>
         <div id="costBreakdown" class="space-y-1 text-sm"></div>
       </div>
 
+      <!-- Quick Actions -->
       <div class="bg-white rounded-xl shadow-sm border p-6">
         <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
         <div class="space-y-2">
-          <button onclick="window.location.href='/service-logbook.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          <button onclick="window.location.href='/service-logbook.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">📖</span>
             <div><div class="font-semibold text-sm">Service Logbook</div></div>
           </button>
-          <button onclick="window.location.href='/mot-search.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          <button onclick="window.location.href='/mot-search.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">🔧</span>
             <div><div class="font-semibold text-sm">Book MOT</div></div>
           </button>
-          <button onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          <button onclick="window.open('https://www.gov.uk/vehicle-tax', '_blank')" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">💷</span>
             <div><div class="font-semibold text-sm">Pay Road Tax</div></div>
           </button>
-          <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          <button onclick="window.location.href='/insurance.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">💰</span>
             <div><div class="font-semibold text-sm">Compare Insurance</div></div>
           </button>
-          <button onclick="window.location.href='/breakdown.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          <button onclick="window.location.href='/breakdown.html'" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">🚗</span>
             <div><div class="font-semibold text-sm">Breakdown Cover</div></div>
           </button>
-          <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left">
+          
+          <!-- Add Expense Button -->
+          <button onclick="showAddExpense()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition border-t-2 pt-4 mt-4">
+            <span class="text-2xl">💸</span>
+            <div><div class="font-semibold text-sm text-blue-600">Add Expense</div></div>
+          </button>
+          
+          <button onclick="exportPDF()" class="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg text-left transition">
             <span class="text-2xl">📄</span>
             <div><div class="font-semibold text-sm">Export PDF</div></div>
           </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Health Score Info Modal -->
+<div id="healthInfoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl max-w-2xl w-full p-8 max-h-screen overflow-y-auto">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Glovbox Health Score™</h2>
+        <p class="text-sm text-gray-600 mt-1">5-Dimensional Predictive Algorithm</p>
+      </div>
+      <button onclick="hideHealthInfo()" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
+    </div>
+    
+    <div id="healthBreakdown" class="space-y-4 mb-6"></div>
+    
+    <div class="bg-blue-50 rounded-xl p-6">
+      <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2">
+        <span class="text-xl">💡</span>
+        How to Improve Your Score
+      </h3>
+      <ul id="improvements" class="text-sm text-blue-800 space-y-2"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Add Expense Modal -->
+<div id="expenseModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full p-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Add Expense</h2>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+        <select id="expenseCategory" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          <option value="fuel">⛽ Fuel</option>
+          <option value="parking">🅿️ Parking</option>
+          <option value="maintenance">🔧 Maintenance</option>
+          <option value="insurance">🛡️ Insurance</option>
+          <option value="tax">💷 Road Tax</option>
+          <option value="cleaning">🧼 Car Wash</option>
+          <option value="other">📦 Other</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Amount (£)</label>
+        <input type="number" id="expenseAmount" step="0.01" placeholder="45.50" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Date</label>
+        <input type="date" id="expenseDate" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Description (optional)</label>
+        <input type="text" id="expenseDescription" placeholder="e.g., Shell Station" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+      
+      <p id="expenseError" class="text-red-600 text-sm hidden"></p>
+      
+      <div class="flex gap-3">
+        <button onclick="saveExpense()" id="saveExpenseBtn" class="flex-1 bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition">
+          Save Expense
+        </button>
+        <button onclick="hideAddExpense()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-300 transition">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Market Value Modal -->
+<div id="marketValueModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl max-w-lg w-full p-8">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Market Value</h2>
+        <p id="marketValueVehicle" class="text-sm text-gray-600 mt-1"></p>
+      </div>
+      <button onclick="hideMarketValue()" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
+    </div>
+    
+    <div id="marketValueLoading" class="text-center py-8">
+      <div class="inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full loading-pulse"></div>
+      <p class="text-gray-600 mt-4">Fetching market data...</p>
+    </div>
+    
+    <div id="marketValueData" class="hidden">
+      <div class="bg-green-50 rounded-xl p-6 text-center border-2 border-green-200 mb-4">
+        <p class="text-sm text-gray-600 mb-1">Market Value</p>
+        <p id="marketValueAmount" class="text-4xl font-bold text-green-700">£--,---</p>
+      </div>
+      
+      <div class="space-y-3">
+        <div class="flex justify-between p-3 bg-gray-50 rounded-lg border">
+          <span class="text-sm text-gray-600">Trade-in Value</span>
+          <span id="tradeInValue" class="font-bold">£--,---</span>
+        </div>
+        <div class="flex justify-between p-3 bg-gray-50 rounded-lg border">
+          <span class="text-sm text-gray-600">Private Sale</span>
+          <span id="privateSaleValue" class="font-bold">£--,---</span>
+        </div>
+        <div class="flex justify-between p-3 bg-gray-50 rounded-lg border">
+          <span class="text-sm text-gray-600">Dealer Retail</span>
+          <span id="dealerRetailValue" class="font-bold">£--,---</span>
+        </div>
+      </div>
+      
+      <p class="text-xs text-gray-500 text-center mt-4">Powered by Market Check UK</p>
+    </div>
+    
+    <div id="marketValueError" class="hidden text-center py-8">
+      <p class="text-red-600 font-semibold mb-2">Market Data Unavailable</p>
+      <p class="text-gray-600 text-sm">Unable to fetch valuations. Please try again later.</p>
     </div>
   </div>
 </div>
@@ -122,7 +281,267 @@ if (!token) {
 document.getElementById('userName').textContent = `Hi, ${user.name || 'User'}`;
 
 let currentVehicle = null;
+let notificationsData = [];
 
+// ===== NOTIFICATION FUNCTIONS =====
+function toggleNotifications() {
+  const dropdown = document.getElementById('notifDropdown');
+  dropdown.classList.toggle('hidden');
+  if (!dropdown.classList.contains('hidden')) {
+    loadNotificationsList();
+  }
+}
+
+async function loadNotificationsList() {
+  try {
+    const response = await fetch('/api/notifications', {
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    const data = await response.json();
+    notificationsData = data.notifications || [];
+    
+    if (notificationsData.length === 0) {
+      document.getElementById('notifList').innerHTML = '<p class="p-6 text-gray-500 text-center text-sm">No notifications</p>';
+      return;
+    }
+    
+    const html = notificationsData.map(n => `
+      <div class="p-4 border-b hover:bg-gray-50 transition cursor-pointer">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">${n.type === 'urgent' ? '🚨' : '⚠️'}</span>
+          <div class="flex-1">
+            <h4 class="font-semibold text-gray-900 text-sm">${n.title}</h4>
+            <p class="text-xs text-gray-600 mt-1">${n.message}</p>
+            ${n.action ? `
+              <a href="${n.action}" class="inline-block mt-2 text-xs text-blue-600 hover:underline font-semibold">${n.actionText || 'Take Action'} →</a>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('notifList').innerHTML = html;
+  } catch (error) {
+    console.error('Notification error:', error);
+  }
+}
+
+function clearAllNotifications() {
+  document.getElementById('notifBadge').classList.add('hidden');
+  document.getElementById('notifDropdown').classList.add('hidden');
+}
+
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('notifDropdown');
+  const isClickInsideDropdown = dropdown?.contains(event.target);
+  const isClickOnBell = event.target.closest('button')?.onclick === toggleNotifications;
+  
+  if (!isClickInsideDropdown && !isClickOnBell && dropdown) {
+    dropdown.classList.add('hidden');
+  }
+});
+
+// ===== HEALTH SCORE INFO FUNCTIONS =====
+function showHealthInfo() {
+  document.getElementById('healthInfoModal').classList.remove('hidden');
+  displayHealthBreakdown();
+}
+
+function hideHealthInfo() {
+  document.getElementById('healthInfoModal').classList.add('hidden');
+}
+
+async function displayHealthBreakdown() {
+  if (!currentVehicle) return;
+  
+  try {
+    const response = await fetch(`/api/vehicle/${currentVehicle.registrationNumber}/health-score`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    const data = await response.json();
+    
+    const getColor = (score, max) => {
+      const percent = (score / max) * 100;
+      return percent > 80 ? 'text-green-600' : percent > 50 ? 'text-yellow-600' : 'text-red-600';
+    };
+    
+    const breakdown = `
+      <div class="border-b pb-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-900">🛡️ Regulatory Compliance</span>
+          <span class="${getColor(data.regulatoryScore || 0, 30)} font-bold">${data.regulatoryScore || 0}/30</span>
+        </div>
+        <p class="text-xs text-gray-600">MOT validity, Tax status, Time until expiry</p>
+      </div>
+      
+      <div class="border-b pb-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-900">🔧 Service History Quality</span>
+          <span class="${getColor(data.serviceScore || 0, 25)} font-bold">${data.serviceScore || 0}/25</span>
+        </div>
+        <p class="text-xs text-gray-600">Frequency, consistency, and recency of servicing</p>
+      </div>
+      
+      <div class="border-b pb-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-900">📅 Age & Mileage Analysis</span>
+          <span class="${getColor(data.mileageScore || 0, 20)} font-bold">${data.mileageScore || 0}/20</span>
+        </div>
+        <p class="text-xs text-gray-600">Vehicle age, mileage patterns, usage trends</p>
+      </div>
+      
+      <div class="border-b pb-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-900">📊 Cost Trend Analysis</span>
+          <span class="${getColor(data.costScore || 10, 15)} font-bold">${data.costScore || 10}/15</span>
+        </div>
+        <p class="text-xs text-gray-600">Predictive health based on repair cost trends</p>
+      </div>
+      
+      <div class="pb-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-900">⭐ Proactivity Bonus</span>
+          <span class="${getColor(data.proactivityScore || 0, 10)} font-bold">${data.proactivityScore || 0}/10</span>
+        </div>
+        <p class="text-xs text-gray-600">Early MOT booking, maintenance consistency</p>
+      </div>
+      
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mt-4">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-lg text-gray-900">Total Score</span>
+          <span class="text-3xl font-bold ${data.score > 80 ? 'text-green-600' : data.score > 60 ? 'text-yellow-600' : 'text-red-600'}">${data.score}/100</span>
+        </div>
+        <div class="text-center mt-2">
+          <span class="text-sm font-semibold text-gray-700">Grade: ${data.grade}</span>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('healthBreakdown').innerHTML = breakdown;
+    
+    const improvements = (data.recommendations || []).map(r => `<li class="flex items-start gap-2"><span>•</span><span>${r}</span></li>`).join('');
+    document.getElementById('improvements').innerHTML = improvements || '<li>• Excellent! Keep up the great maintenance!</li>';
+    
+  } catch (error) {
+    console.error('Health breakdown error:', error);
+  }
+}
+
+// ===== MARKET VALUE FUNCTIONS =====
+async function showMarketValue(vehicle) {
+  document.getElementById('marketValueModal').classList.remove('hidden');
+  document.getElementById('marketValueVehicle').textContent = `${vehicle.make} ${vehicle.model} (${vehicle.registrationNumber})`;
+  document.getElementById('marketValueLoading').classList.remove('hidden');
+  document.getElementById('marketValueData').classList.add('hidden');
+  document.getElementById('marketValueError').classList.add('hidden');
+  
+  try {
+    const response = await fetch(`/api/vehicle/${vehicle.registrationNumber}/market-value`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      
+      document.getElementById('marketValueAmount').textContent = 
+        data.marketValue ? `£${Math.round(data.marketValue).toLocaleString()}` : 'N/A';
+      document.getElementById('tradeInValue').textContent = 
+        data.tradeIn ? `£${Math.round(data.tradeIn).toLocaleString()}` : 'N/A';
+      document.getElementById('privateSaleValue').textContent = 
+        data.privateSale ? `£${Math.round(data.privateSale).toLocaleString()}` : 'N/A';
+      document.getElementById('dealerRetailValue').textContent = 
+        data.dealerRetail ? `£${Math.round(data.dealerRetail).toLocaleString()}` : 'N/A';
+      
+      document.getElementById('marketValueLoading').classList.add('hidden');
+      document.getElementById('marketValueData').classList.remove('hidden');
+    } else {
+      throw new Error('Failed');
+    }
+  } catch (error) {
+    console.error('Market value error:', error);
+    document.getElementById('marketValueLoading').classList.add('hidden');
+    document.getElementById('marketValueError').classList.remove('hidden');
+  }
+}
+
+function hideMarketValue() {
+  document.getElementById('marketValueModal').classList.add('hidden');
+}
+
+// ===== EXPENSE MODAL FUNCTIONS =====
+function showAddExpense() {
+  if (!currentVehicle) {
+    alert('Please add a vehicle first');
+    return;
+  }
+  document.getElementById('expenseModal').classList.remove('hidden');
+  document.getElementById('expenseDate').valueAsDate = new Date();
+}
+
+function hideAddExpense() {
+  document.getElementById('expenseModal').classList.add('hidden');
+  document.getElementById('expenseAmount').value = '';
+  document.getElementById('expenseDescription').value = '';
+  document.getElementById('expenseError').classList.add('hidden');
+}
+
+async function saveExpense() {
+  const category = document.getElementById('expenseCategory').value;
+  const amount = document.getElementById('expenseAmount').value;
+  const date = document.getElementById('expenseDate').value;
+  const description = document.getElementById('expenseDescription').value;
+  const error = document.getElementById('expenseError');
+  const btn = document.getElementById('saveExpenseBtn');
+  
+  if (!amount || parseFloat(amount) <= 0) {
+    error.textContent = 'Please enter a valid amount';
+    error.classList.remove('hidden');
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  error.classList.add('hidden');
+  
+  try {
+    const response = await fetch('/api/user/costs', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        category,
+        amount: parseFloat(amount),
+        date,
+        description,
+        vehicleReg: currentVehicle?.registrationNumber
+      })
+    });
+    
+    if (response.ok) {
+      hideAddExpense();
+      loadMonthlyCosts();
+      
+      const successMsg = document.createElement('div');
+      successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      successMsg.textContent = '✅ Expense added!';
+      document.body.appendChild(successMsg);
+      setTimeout(() => successMsg.remove(), 3000);
+    } else {
+      error.textContent = 'Failed to save';
+      error.classList.remove('hidden');
+    }
+  } catch (err) {
+    error.textContent = 'Network error';
+    error.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Expense';
+  }
+}
+
+// ===== VEHICLE FUNCTIONS =====
 async function loadVehicles() {
   try {
     const response = await fetch('/api/user/vehicles', {
@@ -138,7 +557,7 @@ async function loadVehicles() {
       loadMonthlyCosts();
       loadNotifications();
     } else {
-      document.getElementById('vehiclesList').innerHTML = '<div class="bg-white rounded-xl p-8 text-center"><p class="text-gray-600">No vehicles added yet. Click "Add Vehicle" to get started!</p></div>';
+      document.getElementById('vehiclesList').innerHTML = '<div class="bg-white rounded-xl p-8 text-center"><p class="text-gray-600">No vehicles added yet. Click "+ Add Vehicle" to get started!</p></div>';
     }
   } catch (error) {
     console.error('Load error:', error);
@@ -151,13 +570,18 @@ function displayVehicles(vehicles) {
       <div class="flex justify-between items-start mb-4">
         <div>
           <h3 class="text-2xl font-bold text-blue-900">${v.make} ${v.model}</h3>
-          <p class="text-gray-600">${v.registrationNumber}</p>
+          <p class="text-gray-600 font-semibold">${v.registrationNumber}</p>
         </div>
-        <button onclick="deleteVehicle('${v.registrationNumber}')" class="text-red-600 hover:text-red-800">🗑️</button>
+        <div class="flex gap-2">
+          <button onclick='showMarketValue(${JSON.stringify(v).replace(/'/g, "&#39;")})' class="bg-green-50 text-green-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-100 transition">
+            💰 Get Value
+          </button>
+          <button onclick="deleteVehicle('${v.registrationNumber}')" class="text-red-600 hover:text-red-800 text-xl px-2">🗑️</button>
+        </div>
       </div>
       <div class="grid grid-cols-2 gap-4 text-sm">
-        <div><span class="text-gray-600">Year:</span> <span class="font-semibold">${v.yearOfManufacture}</span></div>
-        <div><span class="text-gray-600">Fuel:</span> <span class="font-semibold">${v.fuelType}</span></div>
+        <div><span class="text-gray-600">Year:</span> <span class="font-semibold">${v.yearOfManufacture || 'N/A'}</span></div>
+        <div><span class="text-gray-600">Fuel:</span> <span class="font-semibold">${v.fuelType || 'N/A'}</span></div>
         <div><span class="text-gray-600">MOT:</span> <span class="font-semibold ${v.motStatus === 'Valid' ? 'text-green-600' : 'text-red-600'}">${v.motExpiryDate || 'N/A'}</span></div>
         <div><span class="text-gray-600">Tax:</span> <span class="font-semibold ${v.taxStatus === 'Taxed' ? 'text-green-600' : 'text-red-600'}">${v.taxDueDate || 'N/A'}</span></div>
       </div>
@@ -183,7 +607,7 @@ async function addVehicle() {
   const btn = document.getElementById('addBtn');
   
   if (!reg) {
-    error.textContent = 'Enter registration';
+    error.textContent = 'Please enter a registration number';
     error.classList.remove('hidden');
     return;
   }
@@ -228,7 +652,9 @@ async function deleteVehicle(reg) {
       headers: {'Authorization': `Bearer ${token}`}
     });
     loadVehicles();
-  } catch {}
+  } catch (error) {
+    console.error('Delete error:', error);
+  }
 }
 
 async function loadHealthScore() {
@@ -246,12 +672,14 @@ async function loadHealthScore() {
       document.getElementById('healthScore').className = `text-5xl font-bold mb-2 ${data.score > 80 ? 'text-green-600' : data.score > 60 ? 'text-yellow-600' : 'text-red-600'}`;
       document.getElementById('healthGrade').textContent = `Grade ${data.grade}`;
       
-      const issuesHTML = data.issues.length > 0 
-        ? data.issues.map(i => `<div class="text-red-600">⚠️ ${i}</div>`).join('')
-        : '<div class="text-green-600">✓ All good!</div>';
+      const issuesHTML = data.issues && data.issues.length > 0
+        ? data.issues.map(i => `<div class="text-red-600 text-xs">⚠️ ${i}</div>`).join('')
+        : '<div class="text-green-600 text-xs">✓ All systems good!</div>';
       document.getElementById('healthIssues').innerHTML = issuesHTML;
     }
-  } catch {}
+  } catch (error) {
+    console.error('Health score error:', error);
+  }
 }
 
 async function loadAIInsights() {
@@ -267,11 +695,13 @@ async function loadAIInsights() {
       document.getElementById('aiContent').innerHTML = `
         <h3 class="text-xl font-bold mb-2">${opp.title}</h3>
         <p class="mb-4">${opp.message}</p>
-        ${opp.potentialSaving > 0 ? `<p class="text-lg font-bold mb-4">💰 Save £${opp.potentialSaving}</p>` : ''}
-        <button onclick="window.location.href='${opp.action}'" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50">Take Action</button>
+        ${opp.potentialSaving > 0 ? `<p class="text-lg font-bold mb-4">💰 Potential Saving: £${opp.potentialSaving}</p>` : ''}
+        <button onclick="window.location.href='${opp.action}'" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50 transition">Take Action →</button>
       `;
     }
-  } catch {}
+  } catch (error) {
+    console.error('AI insights error:', error);
+  }
 }
 
 async function loadMonthlyCosts() {
@@ -283,28 +713,30 @@ async function loadMonthlyCosts() {
     });
     
     if (!response.ok) {
-      document.getElementById('monthlyTotal').textContent = '£0';
+      document.getElementById('monthlyTotal').textContent = '0';
       return;
     }
     
     const data = await response.json();
     const total = data.total || 0;
-    document.getElementById('monthlyTotal').textContent = `£${total.toFixed(0)}`;
+    document.getElementById('monthlyTotal').textContent = total.toFixed(0);
     const percentUsed = data.percentUsed || 0;
     document.getElementById('budgetBar').style.width = `${Math.min(percentUsed, 100)}%`;
     
     if (data.breakdown && Object.keys(data.breakdown).length > 0) {
       const breakdownHTML = Object.entries(data.breakdown).map(([cat, amount]) => `
-        <div class="flex justify-between">
+        <div class="flex justify-between text-xs">
           <span class="text-gray-600 capitalize">${cat}</span>
           <span class="font-semibold">£${Number(amount).toFixed(0)}</span>
         </div>
       `).join('');
       document.getElementById('costBreakdown').innerHTML = breakdownHTML;
     } else {
-      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-sm">No expenses</p>';
+      document.getElementById('costBreakdown').innerHTML = '<p class="text-gray-500 text-xs">No expenses this month</p>';
     }
-  } catch {}
+  } catch (error) {
+    console.error('Monthly costs error:', error);
+  }
 }
 
 async function loadNotifications() {
@@ -314,11 +746,13 @@ async function loadNotifications() {
     });
     const data = await response.json();
     
-    if (data.unread > 0) {
+    if (data.unread && data.unread > 0) {
       document.getElementById('notifBadge').textContent = data.unread;
       document.getElementById('notifBadge').classList.remove('hidden');
     }
-  } catch {}
+  } catch (error) {
+    console.error('Notifications error:', error);
+  }
 }
 
 function exportPDF() {
