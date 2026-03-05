@@ -866,6 +866,8 @@ app.get('/api/mot-centres', async (req, res) => {
 });
 
 // ===== MARKET VALUE ENDPOINT (Market Check API) =====
+```javascript
+// ===== UK INVENTORY MARKET VALUE (FREE - Uses 25K included calls) =====
 app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) => {
   const reg = req.params.reg.toUpperCase().replace(/\s/g, '');
   
@@ -873,28 +875,40 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
     const user = users.get(req.userEmail);
     const vehicle = user.vehicles?.find(v => v.registrationNumber === reg);
     
-    // Check cache (24 hours)
-    if (vehicle && vehicle.marketValueCache && 
+    if (!vehicle) {
+      return res.status(404).json({error: 'Vehicle not found'});
+    }
+    
+    // Check cache (24 hours - saves API calls)
+    if (vehicle.marketValueCache && 
         vehicle.marketValueCacheTime && 
         Date.now() - vehicle.marketValueCacheTime < 24*60*60*1000) {
-      console.log('💰 Market value from cache:', reg);
+      console.log('💷 Market value from cache:', reg);
       return res.json(vehicle.marketValueCache);
     }
     
-    console.log('💰 Fetching market value from API:', reg);
+    console.log('💷 Fetching UK market value from inventory:', reg);
     
-    // Fetch from Market Check API
+    // Search UK inventory for similar cars
+    const searchParams = {
+      api_key: 'QbyFue6ZqVsNtMgRVkLABlwNQu1jPFdE',
+      year: vehicle.yearOfManufacture,
+      make: vehicle.make,
+      rows: 20, // Get more results for better average
+      country: 'UK'
+    };
+    
+    // Add model if available
+    if (vehicle.model && vehicle.model !== 'undefined') {
+      searchParams.model = vehicle.model;
+    }
+    
     const response = await axios.get(
-      'https://api.marketcheck.com/v2/search/car/active',
+      'https://mc-api.marketcheck.com/v2/search/car/active',
       {
-        params: {
-          api_key: 'QbyFue6ZqVsNtMgRVkLABlwNQu1jPFdE',
-          vin: reg,
-          rows: 1
-        },
+        params: searchParams,
         headers: { 
-          'Accept': 'application/json',
-          'Host': 'api.marketcheck.com'
+          'Accept': 'application/json'
         },
         timeout: 10000
       }
@@ -903,75 +917,179 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
     const listings = response.data?.listings || [];
     
     if (listings.length > 0) {
-      const listing = listings[0];
-      const basePrice = listing.price || listing.msrp || 0;
+      // Extract prices from listings
+      const prices = listings
+        .map(listing => listing.price)
+        .filter(price => price && price > 0)
+        .sort((a, b) => a - b);
       
-      const valuation = {
-        marketValue: basePrice,
-        tradeIn: Math.round(basePrice * 0.85),
-        privateSale: Math.round(basePrice * 0.95),
-        dealerRetail: Math.round(basePrice * 1.10),
-        trend: {
-          direction: 'stable',
-          percentage: 0
-        },
-        lastUpdated: new Date().toISOString(),
-        source: 'Market Check UK'
-      };
-      
-      // Cache for 24 hours
-      if (vehicle) {
+      if (prices.length > 0) {
+        // Calculate statistics
+        const average = Math.round(prices.reduce((sum, p) => sum + p, 0) / prices.length);
+        const low = prices[0];
+        const high = prices[prices.length - 1];
+        const median = prices[Math.floor(prices.length / 2)];
+        
+        // Use median as market value (more accurate than average)
+        const marketValue = median;
+        
+        const valuation = {
+          marketValue: marketValue,
+          tradeIn: Math.round(marketValue * 0.85),
+          privateSale: Math.round(marketValue * 0.95),
+          dealerRetail: Math.round(marketValue * 1.10),
+          priceRange: {
+            low: low,
+            average: average,
+            high: high
+          },
+          confidence: prices.length >= 5 ? 'high' : prices.length >= 3 ? 'medium' : 'low',
+          sampleSize: prices.length,
+          trend: { direction: 'stable', percentage: 0 },
+          lastUpdated: new Date().toISOString(),
+          source: `UK Market Data (${prices.length} similar cars)`,
+          method: 'UK Inventory Search',
+          currency: 'GBP'
+        };
+        
+        // Save to value history
+        if (!vehicle.valueHistory) vehicle.valueHistory = [];
+        
+        vehicle.valueHistory.push({
+          date: new Date().toISOString().split('T')[0],
+          value: marketValue,
+          source: valuation.source,
+          confidence: valuation.confidence,
+          sampleSize: prices.length
+        });
+        
+        // Keep only last 12 checks
+        if (vehicle.valueHistory.length > 12) {
+          vehicle.valueHistory = vehicle.valueHistory.slice(-12);
+        }
+        
+        // Calculate trend from history
+        if (vehicle.valueHistory.length >= 2) {
+          const current = marketValue;
+          const previous = vehicle.valueHistory[vehicle.valueHistory.length - 2].value;
+          const change = current - previous;
+          const percentChange = Math.round((change / previous) * 100);
+          
+          valuation.trend = {
+            direction: change > 0 ? 'up' : change < 0 ? 'down' : 'stable',
+            percentage: Math.abs(percentChange),
+            change: change
+          };
+        }
+        
+        // Cache for 24 hours
         vehicle.marketValueCache = valuation;
         vehicle.marketValueCacheTime = Date.now();
         await saveDB(users);
+        
+        console.log(`✅ UK market value calculated: £${marketValue} (${prices.length} cars)`);
+        return res.json(valuation);
       }
-      
-      console.log('✅ Market value fetched:', basePrice);
-      return res.json(valuation);
-      
-    } else {
-      console.log('⚠️ No market data, using estimation');
-      
-      const year = vehicle?.yearOfManufacture || 2020;
-      const age = new Date().getFullYear() - year;
-      const estimatedValue = Math.max(15000 - (age * 1500), 3000);
-      
-      const valuation = {
-        marketValue: estimatedValue,
-        tradeIn: Math.round(estimatedValue * 0.85),
-        privateSale: Math.round(estimatedValue * 0.95),
-        dealerRetail: Math.round(estimatedValue * 1.10),
-        trend: { direction: 'stable', percentage: 0 },
-        lastUpdated: new Date().toISOString(),
-        source: 'Estimated (no market data)',
-        isEstimate: true
-      };
-      
-      return res.json(valuation);
     }
     
-  } catch (error) {
-    console.error('❌ Market Check API error:', error.message);
+    // Fallback: No similar cars found - use age-based estimation
+    console.log('⚠️ No UK listings found, using estimation');
     
+    const year = vehicle.yearOfManufacture || 2020;
+    const age = new Date().getFullYear() - year;
+    
+    // UK-specific estimation (more conservative)
+    let estimatedValue = 15000; // Base for newish car
+    if (age <= 3) estimatedValue = 18000 - (age * 3000);
+    else if (age <= 7) estimatedValue = 12000 - ((age - 3) * 1500);
+    else if (age <= 12) estimatedValue = 6000 - ((age - 7) * 500);
+    else estimatedValue = Math.max(3500 - ((age - 12) * 200), 1500);
+    
+    const valuation = {
+      marketValue: estimatedValue,
+      tradeIn: Math.round(estimatedValue * 0.85),
+      privateSale: Math.round(estimatedValue * 0.95),
+      dealerRetail: Math.round(estimatedValue * 1.10),
+      priceRange: {
+        low: Math.round(estimatedValue * 0.80),
+        average: estimatedValue,
+        high: Math.round(estimatedValue * 1.20)
+      },
+      confidence: 'low',
+      sampleSize: 0,
+      trend: { direction: 'stable', percentage: 0 },
+      lastUpdated: new Date().toISOString(),
+      source: 'Estimated (no similar cars found)',
+      method: 'Age-based estimation',
+      currency: 'GBP',
+      isEstimate: true,
+      note: 'Limited market data available for this vehicle'
+    };
+    
+    return res.json(valuation);
+    
+  } catch (error) {
+    console.error('❌ UK market value error:', error.message);
+    
+    // Emergency fallback
     const user = users.get(req.userEmail);
     const vehicle = user?.vehicles?.find(v => v.registrationNumber === reg);
     const year = vehicle?.yearOfManufacture || 2020;
     const age = new Date().getFullYear() - year;
-    const estimatedValue = Math.max(15000 - (age * 1500), 3000);
+    const estimatedValue = Math.max(12000 - (age * 1200), 2000);
     
     res.json({
       marketValue: estimatedValue,
       tradeIn: Math.round(estimatedValue * 0.85),
       privateSale: Math.round(estimatedValue * 0.95),
       dealerRetail: Math.round(estimatedValue * 1.10),
+      priceRange: {
+        low: Math.round(estimatedValue * 0.85),
+        average: estimatedValue,
+        high: Math.round(estimatedValue * 1.15)
+      },
+      confidence: 'low',
+      sampleSize: 0,
       trend: { direction: 'stable', percentage: 0 },
       lastUpdated: new Date().toISOString(),
-      source: 'Estimated (API unavailable)',
+      source: 'Estimated (API error)',
+      currency: 'GBP',
       isEstimate: true,
-      error: 'Market data temporarily unavailable'
+      error: 'Temporary issue - showing estimate'
     });
   }
 });
+
+// ===== VALUE HISTORY ENDPOINT =====
+app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
+  const user = users.get(req.userEmail);
+  const vehicle = user?.vehicles?.find(v => v.registrationNumber === req.params.reg);
+  
+  if (!vehicle) {
+    return res.status(404).json({error: 'Vehicle not found'});
+  }
+  
+  const history = vehicle.valueHistory || [];
+  
+  const values = history.map(h => h.value);
+  const current = values[values.length - 1] || 0;
+  const first = values[0] || 0;
+  const totalChange = current - first;
+  const totalChangePercent = first > 0 ? Math.round((totalChange / first) * 100) : 0;
+  
+  res.json({
+    history,
+    summary: {
+      currentValue: current,
+      firstValue: first,
+      totalChange,
+      totalChangePercent,
+      checksCount: history.length,
+      currency: 'GBP'
+    }
+  });
+});
+```
 
 app.listen(port, '0.0.0.0', () => {
   console.log('\n╔══════════════════════════════════════╗');
