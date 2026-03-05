@@ -928,7 +928,34 @@ app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
     }
   });
 });
-
+// Geocoding endpoint (keeps API key secret)
+app.get('/api/geocode', async (req, res) => {
+  const { postcode } = req.query;
+  
+  if (!postcode) {
+    return res.status(400).json({error: 'Postcode required'});
+  }
+  
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: postcode + ', UK',
+        key: GOOGLE_MAPS_API_KEY
+      }
+    });
+    
+    if (response.data.status !== 'OK' || !response.data.results || response.data.results.length === 0) {
+      return res.status(404).json({error: 'Location not found'});
+    }
+    
+    const location = response.data.results[0].geometry.location;
+    res.json({ lat: location.lat, lng: location.lng });
+    
+  } catch (error) {
+    console.error('Geocoding error:', error.message);
+    res.status(500).json({error: 'Geocoding failed'});
+  }
+});
 app.listen(port, '0.0.0.0', () => {
   console.log('\n╔══════════════════════════════════════╗');
   console.log('║  GLOVBOX v2.5 COMPLETE + UK VALUE    ║');
