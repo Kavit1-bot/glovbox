@@ -75,30 +75,25 @@ async function searchMOT() {
   searchBtn.textContent = 'Searching...';
   
   try {
-    // Step 1: Convert postcode to coordinates using Google Geocoding API
-    const geocodeResponse = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(postcode)},UK&key=AIzaSyBqJ8h8YqP0v5K9Z_Xm4N2wL7Q6tR8sU0E`
-    );
+    // Call server endpoint which does geocoding securely
+    const geocodeResponse = await fetch(`/api/geocode?postcode=${encodeURIComponent(postcode)}`, {
+      headers: token ? {'Authorization': `Bearer ${token}`} : {}
+    });
     
-    const geocodeData = await geocodeResponse.json();
-    
-    if (geocodeData.status !== 'OK' || !geocodeData.results || geocodeData.results.length === 0) {
+    if (!geocodeResponse.ok) {
       throw new Error('Invalid postcode or location not found');
     }
     
-    const location = geocodeData.results[0].geometry.location;
-    const lat = location.lat;
-    const lng = location.lng;
+    const geocodeData = await geocodeResponse.json();
+    const lat = geocodeData.lat;
+    const lng = geocodeData.lng;
     
     console.log('Coordinates found:', lat, lng);
     
-    // Step 2: Search for MOT centres near those coordinates
-    const response = await fetch(
-      `/api/mot-centres?lat=${lat}&lng=${lng}`,
-      {
-        headers: token ? {'Authorization': `Bearer ${token}`} : {}
-      }
-    );
+    // Search for MOT centres near those coordinates
+    const response = await fetch(`/api/mot-centres?lat=${lat}&lng=${lng}`, {
+      headers: token ? {'Authorization': `Bearer ${token}`} : {}
+    });
     
     if (!response.ok) {
       throw new Error('Search failed');
