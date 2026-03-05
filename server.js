@@ -1,5 +1,5 @@
-// GLOVBOX SERVER - COMPLETE VERSION 2.5 WITH ALL ENHANCEMENTS
-// Production ready with Market Value API + Enhanced Health Algorithm
+// GLOVBOX SERVER - COMPLETE VERSION WITH UK MARKET VALUE
+// Production ready with all security features + UK-safe market valuation
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -158,106 +158,13 @@ function daysUntilDate(dateStr) {
   return diff;
 }
 
-// ===== ENHANCED HEALTH SCORE ALGORITHM (5-DIMENSIONAL) =====
-function calculateHealthScore(vehicle, serviceRecords = [], costHistory = []) {
-  let score = 0;
-  let breakdown = {};
-  
-  // 1. REGULATORY COMPLIANCE (30 points max)
-  let regulatory = 30;
-  
-  if (vehicle.motStatus !== 'Valid') {
-    regulatory -= 25;
-  } else {
-    const motDays = daysUntilDate(vehicle.motExpiryDate);
-    if (motDays !== null) {
-      if (motDays < 7) regulatory -= 10;
-      else if (motDays < 30) regulatory -= 5;
-    }
-  }
-  
-  if (vehicle.taxStatus !== 'Taxed') regulatory -= 5;
-  
-  score += regulatory;
-  breakdown.regulatory = regulatory;
-  
-  // 2. SERVICE HISTORY QUALITY (25 points max)
-  let serviceScore = 0;
-  
-  if (serviceRecords && serviceRecords.length > 0) {
-    serviceScore += 10;
-    
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    const recentService = serviceRecords.find(r => new Date(r.date) > sixMonthsAgo);
-    if (recentService) serviceScore += 10;
-    
-    if (serviceRecords.length >= 3) serviceScore += 5;
-  }
-  
-  score += serviceScore;
-  breakdown.service = serviceScore;
-  
-  // 3. AGE & MILEAGE RELATIONSHIP (20 points max)
-  let ageScore = 20;
+function calculateHealthScore(vehicle) {
+  let score = 100;
+  if (vehicle.motStatus !== 'Valid') score -= 30;
+  if (vehicle.taxStatus !== 'Taxed') score -= 30;
   const age = new Date().getFullYear() - (vehicle.yearOfManufacture || 2020);
-  ageScore -= Math.min(age * 2, 15);
-  
-  if (serviceRecords && serviceRecords.length > 0) {
-    const latestRecord = serviceRecords.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-    if (latestRecord && latestRecord.mileage) {
-      const milesPerYear = latestRecord.mileage / Math.max(age, 1);
-      if (milesPerYear < 12000) ageScore += 5;
-      else if (milesPerYear < 15000) ageScore += 3;
-    }
-  }
-  
-  score += Math.max(ageScore, 0);
-  breakdown.age = ageScore;
-  
-  // 4. COST TREND ANALYSIS (15 points max) - UNIQUE FEATURE
-  let costScore = 10;
-  
-  if (costHistory && costHistory.length >= 2) {
-    const recent = costHistory.slice(0, 3).reduce((sum, c) => sum + (c.amount || 0), 0);
-    const older = costHistory.slice(3, 6).reduce((sum, c) => sum + (c.amount || 0), 0);
-    
-    if (older > 0) {
-      if (recent < older * 0.7) costScore += 5;
-      else if (recent < older) costScore += 3;
-      else if (recent > older * 1.5) costScore -= 5;
-    }
-  }
-  
-  score += costScore;
-  breakdown.costs = costScore;
-  
-  // 5. PROACTIVITY BONUS (10 points max) - UNIQUE FEATURE
-  let proactivity = 0;
-  
-  const motDays = daysUntilDate(vehicle.motExpiryDate);
-  if (motDays !== null && motDays > 30 && vehicle.motStatus === 'Valid') {
-    proactivity += 5;
-  }
-  
-  if (serviceRecords && serviceRecords.length >= 5) {
-    proactivity += 5;
-  }
-  
-  score += proactivity;
-  breakdown.proactivity = proactivity;
-  
-  return {
-    score: Math.round(Math.min(score, 100)),
-    breakdown,
-    maxScores: {
-      regulatory: 30,
-      service: 25,
-      age: 20,
-      costs: 15,
-      proactivity: 10
-    }
-  };
+  score -= Math.min(age * 2, 20);
+  return Math.max(score, 0);
 }
 
 function generateInsights(user) {
@@ -302,7 +209,6 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// ===== AUTOMATED TASKS =====
 cron.schedule('0 9 * * *', async () => {
   console.log('🔔 Running daily reminders...');
   for (const [email, user] of users.entries()) {
@@ -342,8 +248,6 @@ cron.schedule('0 2 * * *', async () => {
     console.error('❌ Backup failed:', error.message);
   }
 });
-
-// ===== API ENDPOINTS =====
 
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
@@ -566,62 +470,30 @@ app.delete('/api/user/vehicles/:reg', authenticateToken, async (req, res) => {
   res.json({message:'Vehicle removed'});
 });
 
-// ===== ENHANCED HEALTH SCORE ENDPOINT =====
 app.get('/api/vehicle/:reg/health-score', authenticateToken, (req, res) => {
   const user = users.get(req.userEmail);
   const vehicle = user.vehicles?.find(v => v.registrationNumber === req.params.reg);
   
   if (!vehicle) return res.status(404).json({error:'Vehicle not found'});
   
-  const serviceRecords = (user.serviceRecords?.[req.params.reg] || [])
-    .sort((a,b) => new Date(b.date) - new Date(a.date));
-  
-  const costHistory = (user.costTransactions || [])
-    .filter(t => t.vehicleReg === req.params.reg)
-    .sort((a,b) => new Date(b.date) - new Date(a.date));
-  
-  const result = calculateHealthScore(vehicle, serviceRecords, costHistory);
-  const score = result.score;
+  const score = calculateHealthScore(vehicle);
   
   const issues = [];
   if (vehicle.motStatus !== 'Valid') issues.push('MOT expired or expiring soon');
   if (vehicle.taxStatus !== 'Taxed') issues.push('Tax not paid');
-  if (serviceRecords.length === 0) issues.push('No service history recorded');
   const age = new Date().getFullYear() - (vehicle.yearOfManufacture || 2020);
   if (age > 10) issues.push('Vehicle is over 10 years old');
-  
-  const recommendations = [];
-  if (result.breakdown.regulatory < 25) {
-    recommendations.push('Renew MOT and Tax immediately');
-  }
-  if (result.breakdown.service < 15) {
-    recommendations.push('Add service records to track maintenance history');
-  }
-  if (result.breakdown.age < 10) {
-    recommendations.push('Regular maintenance becomes more important as vehicle ages');
-  }
-  if (result.breakdown.costs < 8) {
-    recommendations.push('Consider budgeting for upcoming repairs - costs are trending up');
-  }
-  if (result.breakdown.proactivity < 5) {
-    recommendations.push('Book MOT early and keep detailed service records for bonus points');
-  }
-  if (recommendations.length === 0) {
-    recommendations.push('Excellent maintenance! Keep up the great work!');
-  }
   
   res.json({
     score,
     grade: score > 80 ? 'A' : score > 60 ? 'B' : score > 40 ? 'C' : 'D',
     issues,
-    recommendations,
-    breakdown: result.breakdown,
-    maxScores: result.maxScores,
-    regulatoryScore: result.breakdown.regulatory,
-    serviceScore: result.breakdown.service,
-    mileageScore: result.breakdown.age,
-    costScore: result.breakdown.costs,
-    proactivityScore: result.breakdown.proactivity
+    vehicles: user.vehicles?.map(v => ({
+      registrationNumber: v.registrationNumber,
+      make: v.make,
+      model: v.model,
+      score: calculateHealthScore(v)
+    }))
   });
 });
 
@@ -865,9 +737,7 @@ app.get('/api/mot-centres', async (req, res) => {
   }
 });
 
-// ===== MARKET VALUE ENDPOINT (Market Check API) =====
-```javascript
-// ===== UK INVENTORY MARKET VALUE (FREE - Uses 25K included calls) =====
+// UK INVENTORY MARKET VALUE (FREE - Uses 25K included calls)
 app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) => {
   const reg = req.params.reg.toUpperCase().replace(/\s/g, '');
   
@@ -879,58 +749,41 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
       return res.status(404).json({error: 'Vehicle not found'});
     }
     
-    // Check cache (24 hours - saves API calls)
-    if (vehicle.marketValueCache && 
-        vehicle.marketValueCacheTime && 
-        Date.now() - vehicle.marketValueCacheTime < 24*60*60*1000) {
-      console.log('💷 Market value from cache:', reg);
+    if (vehicle.marketValueCache && vehicle.marketValueCacheTime && Date.now() - vehicle.marketValueCacheTime < 24*60*60*1000) {
+      console.log('Market value from cache:', reg);
       return res.json(vehicle.marketValueCache);
     }
     
-    console.log('💷 Fetching UK market value from inventory:', reg);
+    console.log('Fetching UK market value from inventory:', reg);
     
-    // Search UK inventory for similar cars
     const searchParams = {
       api_key: 'QbyFue6ZqVsNtMgRVkLABlwNQu1jPFdE',
       year: vehicle.yearOfManufacture,
       make: vehicle.make,
-      rows: 20, // Get more results for better average
+      rows: 20,
       country: 'UK'
     };
     
-    // Add model if available
     if (vehicle.model && vehicle.model !== 'undefined') {
       searchParams.model = vehicle.model;
     }
     
-    const response = await axios.get(
-      'https://mc-api.marketcheck.com/v2/search/car/active',
-      {
-        params: searchParams,
-        headers: { 
-          'Accept': 'application/json'
-        },
-        timeout: 10000
-      }
-    );
+    const response = await axios.get('https://mc-api.marketcheck.com/v2/search/car/active', {
+      params: searchParams,
+      headers: { 'Accept': 'application/json' },
+      timeout: 10000
+    });
     
     const listings = response.data?.listings || [];
     
     if (listings.length > 0) {
-      // Extract prices from listings
-      const prices = listings
-        .map(listing => listing.price)
-        .filter(price => price && price > 0)
-        .sort((a, b) => a - b);
+      const prices = listings.map(listing => listing.price).filter(price => price && price > 0).sort((a, b) => a - b);
       
       if (prices.length > 0) {
-        // Calculate statistics
         const average = Math.round(prices.reduce((sum, p) => sum + p, 0) / prices.length);
         const low = prices[0];
         const high = prices[prices.length - 1];
         const median = prices[Math.floor(prices.length / 2)];
-        
-        // Use median as market value (more accurate than average)
         const marketValue = median;
         
         const valuation = {
@@ -938,23 +791,17 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
           tradeIn: Math.round(marketValue * 0.85),
           privateSale: Math.round(marketValue * 0.95),
           dealerRetail: Math.round(marketValue * 1.10),
-          priceRange: {
-            low: low,
-            average: average,
-            high: high
-          },
+          priceRange: { low: low, average: average, high: high },
           confidence: prices.length >= 5 ? 'high' : prices.length >= 3 ? 'medium' : 'low',
           sampleSize: prices.length,
           trend: { direction: 'stable', percentage: 0 },
           lastUpdated: new Date().toISOString(),
-          source: `UK Market Data (${prices.length} similar cars)`,
+          source: 'UK Market Data (' + prices.length + ' similar cars)',
           method: 'UK Inventory Search',
           currency: 'GBP'
         };
         
-        // Save to value history
         if (!vehicle.valueHistory) vehicle.valueHistory = [];
-        
         vehicle.valueHistory.push({
           date: new Date().toISOString().split('T')[0],
           value: marketValue,
@@ -963,12 +810,10 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
           sampleSize: prices.length
         });
         
-        // Keep only last 12 checks
         if (vehicle.valueHistory.length > 12) {
           vehicle.valueHistory = vehicle.valueHistory.slice(-12);
         }
         
-        // Calculate trend from history
         if (vehicle.valueHistory.length >= 2) {
           const current = marketValue;
           const previous = vehicle.valueHistory[vehicle.valueHistory.length - 2].value;
@@ -982,24 +827,21 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
           };
         }
         
-        // Cache for 24 hours
         vehicle.marketValueCache = valuation;
         vehicle.marketValueCacheTime = Date.now();
         await saveDB(users);
         
-        console.log(`✅ UK market value calculated: £${marketValue} (${prices.length} cars)`);
+        console.log('UK market value calculated:', marketValue, '(' + prices.length + ' cars)');
         return res.json(valuation);
       }
     }
     
-    // Fallback: No similar cars found - use age-based estimation
-    console.log('⚠️ No UK listings found, using estimation');
+    console.log('No UK listings found, using estimation');
     
     const year = vehicle.yearOfManufacture || 2020;
     const age = new Date().getFullYear() - year;
     
-    // UK-specific estimation (more conservative)
-    let estimatedValue = 15000; // Base for newish car
+    let estimatedValue = 15000;
     if (age <= 3) estimatedValue = 18000 - (age * 3000);
     else if (age <= 7) estimatedValue = 12000 - ((age - 3) * 1500);
     else if (age <= 12) estimatedValue = 6000 - ((age - 7) * 500);
@@ -1029,9 +871,8 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
     return res.json(valuation);
     
   } catch (error) {
-    console.error('❌ UK market value error:', error.message);
+    console.error('UK market value error:', error.message);
     
-    // Emergency fallback
     const user = users.get(req.userEmail);
     const vehicle = user?.vehicles?.find(v => v.registrationNumber === reg);
     const year = vehicle?.yearOfManufacture || 2020;
@@ -1060,7 +901,6 @@ app.get('/api/vehicle/:reg/market-value', authenticateToken, async (req, res) =>
   }
 });
 
-// ===== VALUE HISTORY ENDPOINT =====
 app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
   const user = users.get(req.userEmail);
   const vehicle = user?.vehicles?.find(v => v.registrationNumber === req.params.reg);
@@ -1070,7 +910,6 @@ app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
   }
   
   const history = vehicle.valueHistory || [];
-  
   const values = history.map(h => h.value);
   const current = values[values.length - 1] || 0;
   const first = values[0] || 0;
@@ -1089,17 +928,15 @@ app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
     }
   });
 });
-```
 
 app.listen(port, '0.0.0.0', () => {
   console.log('\n╔══════════════════════════════════════╗');
-  console.log('║  GLOVBOX v2.5 COMPLETE               ║');
+  console.log('║  GLOVBOX v2.5 COMPLETE + UK VALUE    ║');
   console.log('╠══════════════════════════════════════╣');
   console.log(`║  Port: ${port}                        `);
   console.log('║  ✅ Email Verification               ║');
   console.log('║  ✅ Password Reset                   ║');
-  console.log('║  ✅ Enhanced Health Algorithm        ║');
-  console.log('║  ✅ Market Value (Market Check)      ║');
+  console.log('║  ✅ UK Market Valuation (FREE)       ║');
   console.log('║  ✅ All Features                     ║');
   console.log(`║  Users: ${users.size}                         `);
   console.log('╚══════════════════════════════════════╝\n');
