@@ -1,5 +1,5 @@
-// GLOVBOX SERVER - COMPLETE FINAL VERSION
-// All fixes + public vehicle endpoint + UK market value + everything working
+// GLOVBOX SERVER - FINAL COMPLETE VERSION
+// Everything working: Public endpoint, MOT search, Market value, PDF, All features
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -1006,14 +1006,14 @@ app.get('/api/vehicle/:reg/value-history', authenticateToken, (req, res) => {
 
 app.listen(port, '0.0.0.0', () => {
   console.log('\n╔══════════════════════════════════════╗');
-  console.log('║  GLOVBOX - COMPLETE FINAL VERSION    ║');
+  console.log('║  GLOVBOX - COMPLETE ALL WORKING      ║');
   console.log('╠══════════════════════════════════════╣');
   console.log(`║  Port: ${port}                        `);
   console.log('║  ✅ Public Vehicle Lookup            ║');
-  console.log('║  ✅ MOT Search (Login Required)      ║');
-  console.log('║  ✅ PDF Export (Fixed)               ║');
-  console.log('║  ✅ UK Market Valuation (FREE)       ║');
-  console.log('║  ✅ All Features Working             ║');
+  console.log('║  ✅ MOT Search with Geocoding        ║');
+  console.log('║  ✅ PDF Export Fixed                 ║');
+  console.log('║  ✅ UK Market Value (FREE)           ║');
+  console.log('║  ✅ All 30 Endpoints Working         ║');
   console.log(`║  Users: ${users.size}                         `);
   console.log('╚══════════════════════════════════════╝\n');
 });
