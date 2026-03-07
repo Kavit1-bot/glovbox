@@ -149,12 +149,10 @@ document.getElementById('signinForm').addEventListener('submit', async function(
   }
 });
 
-// Check if already signed in
-window.addEventListener('DOMContentLoaded', function() {
-  const token = localStorage.getItem('token');
-  if (token) {
-    console.log('ℹ️ Already signed in, redirecting to dashboard...');
-    window.location.href = '/dashboard.html';
+// Enter key support
+document.getElementById('password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    document.getElementById('signinForm').dispatchEvent(new Event('submit'));
   }
 });
 </script>
