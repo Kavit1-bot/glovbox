@@ -4,132 +4,107 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign Up - Glovbox</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.container{max-width:400px;width:100%}.card{background:white;border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}.logo{text-align:center;margin-bottom:32px}.logo h1{color:#0B3D91;font-size:32px;font-weight:700}.form-group{margin-bottom:20px}label{display:block;color:#1E293B;font-weight:600;margin-bottom:8px;font-size:14px}input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px}input:focus{outline:none;border-color:#0B3D91}.btn{width:100%;background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer}.btn:hover{background:#E85A2A}.btn:disabled{background:#CBD5E1;cursor:not-allowed}.error{background:#FEF2F2;color:#DC2626;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2;display:none;font-size:14px}.success{background:#F0FDF4;color:#15803D;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #BBF7D0;display:none;font-size:14px}.links{text-align:center;margin-top:20px;font-size:14px}.links a{color:#0B3D91;text-decoration:none;font-weight:600}.links a:hover{text-decoration:underline}.divider{text-align:center;margin:16px 0;color:#64748B;font-size:14px}
+</style>
 </head>
-<body class="bg-gray-50">
+<body>
 
-<div class="min-h-screen flex items-center justify-center px-4 py-12">
-  <div class="max-w-md w-full">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-blue-900 mb-2">🚗 Glovbox</h1>
-      <h2 class="text-2xl font-bold text-gray-900">Create Account</h2>
-    </div>
+<div class="container">
+<div class="card">
+<div class="logo">
+<h1>Glovbox</h1>
+<p style="color:#64748B;font-size:14px;margin-top:8px">Create your account</p>
+</div>
 
-    <!-- Signup Form -->
-    <div id="signupForm" class="bg-white rounded-2xl shadow-lg p-8">
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-          <input
-            type="text"
-            id="name"
-            placeholder="John Doe"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-          />
-        </div>
+<div id="error" class="error"></div>
+<div id="success" class="success"></div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="you@example.com"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-          />
-        </div>
+<form id="signupForm">
+<div class="form-group">
+<label for="name">Full Name</label>
+<input type="text" id="name" required autocomplete="name">
+</div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="At least 8 characters"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-          />
-        </div>
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" required autocomplete="email">
+</div>
 
-        <p id="error" class="text-red-600 text-sm hidden"></p>
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" id="password" required autocomplete="new-password" minlength="8">
+<p style="color:#64748B;font-size:12px;margin-top:4px">Minimum 8 characters</p>
+</div>
 
-        <button
-          onclick="signUp()"
-          id="signUpBtn"
-          class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600"
-        >
-          Create Account
-        </button>
+<button type="submit" class="btn" id="submitBtn">Create Account</button>
+</form>
 
-        <p class="text-center text-gray-600 text-sm">
-          Already have an account? 
-          <a href="/signin.html" class="text-blue-600 hover:underline font-semibold">Sign In</a>
-        </p>
-      </div>
-    </div>
+<div class="divider">Already have an account?</div>
 
-    <!-- Success Message -->
-    <div id="successMessage" class="hidden bg-white rounded-2xl shadow-lg p-8 text-center">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-      </div>
-      <h3 class="text-2xl font-bold text-gray-900 mb-2">Check Your Email!</h3>
-      <p class="text-gray-600 mb-4">We've sent a verification link to:</p>
-      <p id="sentEmail" class="text-blue-600 font-semibold mb-6"></p>
-      <p class="text-sm text-gray-500">Click the link in the email to activate your account.</p>
-    </div>
-  </div>
+<div class="links">
+<a href="/signin.html">Sign in →</a>
+</div>
+</div>
 </div>
 
 <script>
-async function signUp() {
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
-  const errorEl = document.getElementById('error');
-  const btn = document.getElementById('signUpBtn');
-
-  errorEl.classList.add('hidden');
-
+  const errorDiv = document.getElementById('error');
+  const successDiv = document.getElementById('success');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+  
   if (!name || !email || !password) {
-    errorEl.textContent = 'Please fill all fields';
-    errorEl.classList.remove('hidden');
+    errorDiv.textContent = 'Please fill in all fields';
+    errorDiv.style.display = 'block';
     return;
   }
-
+  
   if (password.length < 8) {
-    errorEl.textContent = 'Password must be at least 8 characters';
-    errorEl.classList.remove('hidden');
+    errorDiv.textContent = 'Password must be at least 8 characters';
+    errorDiv.style.display = 'block';
     return;
   }
-
-  btn.disabled = true;
-  btn.textContent = 'Creating account...';
-
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating account...';
+  
   try {
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name, email, password})
+      body: JSON.stringify({ name, email, password })
     });
-
+    
     const data = await response.json();
-
-    if (response.ok) {
-      document.getElementById('signupForm').classList.add('hidden');
-      document.getElementById('successMessage').classList.remove('hidden');
-      document.getElementById('sentEmail').textContent = email;
-    } else {
-      errorEl.textContent = data.error || 'Signup failed';
-      errorEl.classList.remove('hidden');
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign up failed');
     }
+    
+    successDiv.textContent = '✅ ' + data.message;
+    successDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      window.location.href = '/signin.html';
+    }, 2000);
+    
   } catch (error) {
-    errorEl.textContent = 'Network error. Please try again.';
-    errorEl.classList.remove('hidden');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Create Account';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create Account';
+    errorDiv.textContent = '❌ ' + error.message;
+    errorDiv.style.display = 'block';
   }
-}
+});
 </script>
 
 </body>

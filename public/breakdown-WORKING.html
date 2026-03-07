@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare Breakdown Cover - Glovbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}.back-link{color:#0B3D91;text-decoration:none;font-size:14px;font-weight:600}.container{max-width:900px;margin:40px auto;padding:0 20px}h1{font-size:36px;color:#0B3D91;margin-bottom:12px;text-align:center}.hero{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:40px;border-radius:16px;text-align:center;margin-bottom:40px}.hero h2{font-size:28px;margin-bottom:16px}.hero p{font-size:18px;opacity:0.95}.info-box{background:white;border:2px solid #0EA5E9;border-radius:12px;padding:24px;margin:24px 0}.section-title{font-size:24px;font-weight:700;color:#0B3D91;margin-bottom:24px;text-align:center}.providers{display:grid;gap:20px;margin-bottom:40px}.provider{background:white;border:2px solid #E2E8F0;border-radius:12px;padding:28px;transition:all 0.3s;cursor:pointer}.provider:hover{border-color:#0B3D91;box-shadow:0 8px 24px rgba(11,61,145,0.15);transform:translateY(-4px)}.provider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.provider-name{font-size:22px;font-weight:700;color:#0B3D91}.provider-badge{background:#10B981;color:white;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}.badge-popular{background:#FF6B35}.badge-value{background:#0EA5E9}.provider-desc{color:#64748B;font-size:14px;line-height:1.6;margin-bottom:20px}.pricing{background:#F0F9FF;padding:12px;border-radius:8px;margin-bottom:16px;text-align:center}.price{color:#0B3D91;font-size:24px;font-weight:700}.provider-features{margin-bottom:20px}.feature{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}.feature-icon{color:#10B981;font-weight:700}.btn-compare{background:#FF6B35;color:white;padding:14px 32px;border-radius:8px;font-weight:700;font-size:16px;text-decoration:none;display:inline-block;text-align:center}.btn-compare:hover{background:#E85A2A}.coverage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}.coverage-card{background:#F8FAFC;padding:20px;border-radius:10px;border:1px solid #E2E8F0}.coverage-card h3{color:#0B3D91;margin-bottom:12px}.coverage-card li{color:#64748B;font-size:14px;margin-bottom:8px;list-style:none;padding-left:20px;position:relative}.coverage-card li:before{content:"✓";color:#10B981;font-weight:700;position:absolute;left:0}
+</style>
+</head>
+<body>
+<nav><a href="/" class="logo">Glovbox</a><a href="/dashboard.html" class="back-link">← Back</a></nav>
+<div class="container">
+<div class="hero"><h2>🚗 Compare Breakdown Cover</h2><p>Get roadside assistance from the UK's top providers</p></div>
+<div class="info-box"><strong style="color:#0B3D91;font-size:18px">🛡️ Why Breakdown Cover?</strong><p style="color:#64748B;margin-top:8px">Over 2 million UK breakdowns yearly. Single callout costs £100-£300. Cover from £6/month = peace of mind 24/7.</p></div>
+<h2 class="section-title">🏆 Top Providers</h2>
+<div class="providers">
+<div class="provider" onclick="window.open('https://www.aa.com/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">AA Breakdown</div><div class="provider-badge badge-popular">MOST POPULAR</div></div>
+<div class="provider-desc">UK's largest breakdown service. 3,000+ patrols. 4/5 breakdowns fixed roadside.</div>
+<div class="pricing"><div class="price">£7/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>3,000+ patrols</div>
+<div class="feature"><span class="feature-icon">✓</span>30-min avg response</div>
+<div class="feature"><span class="feature-icon">✓</span>UK & Europe cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Home start included</div>
+</div>
+<a href="https://www.aa.com/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get AA Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.rac.co.uk/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">RAC Breakdown</div><div class="provider-badge">TRUSTED</div></div>
+<div class="provider-desc">120+ years experience. 1,500 patrols + 4,000 approved garages.</div>
+<div class="pricing"><div class="price">£6.50/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>1,500 patrols nationwide</div>
+<div class="feature"><span class="feature-icon">✓</span>24/7 support</div>
+<div class="feature"><span class="feature-icon">✓</span>European cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Battery replacement</div>
+</div>
+<a href="https://www.rac.co.uk/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get RAC Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.greenflag.com/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">Green Flag</div><div class="provider-badge badge-value">BEST VALUE</div></div>
+<div class="provider-desc">Affordable cover. 3.5m+ customers. Excellent service.</div>
+<div class="pricing"><div class="price">£6/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>Budget-friendly</div>
+<div class="feature"><span class="feature-icon">✓</span>24/7 assistance</div>
+<div class="feature"><span class="feature-icon">✓</span>UK & Europe options</div>
+<div class="feature"><span class="feature-icon">✓</span>Onward travel</div>
+</div>
+<a href="https://www.greenflag.com/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get Green Flag Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.startrescue.co.uk/','_blank')">
+<div class="provider-header"><div class="provider-name">Start Rescue</div></div>
+<div class="provider-desc">Award-winning service. Competitive prices. 5-star rated.</div>
+<div class="pricing"><div class="price">£5.50/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>Cheapest UK cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Fast response</div>
+<div class="feature"><span class="feature-icon">✓</span>No age limits</div>
+<div class="feature"><span class="feature-icon">✓</span>Defaqto 5-star</div>
+</div>
+<a href="https://www.startrescue.co.uk/" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get Start Rescue Cover →</a>
+</div>
+</div>
+<div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:32px;margin-bottom:40px">
+<h2 class="section-title">Coverage Levels Explained</h2>
+<div class="coverage-grid">
+<div class="coverage-card"><h3>🔧 Roadside</h3><ul><li>Fixes at roadside</li><li>24/7 assistance</li><li>Battery jump start</li><li>Tyre changes</li></ul></div>
+<div class="coverage-card"><h3>🚙 Recovery</h3><ul><li>All roadside benefits</li><li>Tow to garage</li><li>Relay to destination</li><li>Hotel if needed</li></ul></div>
+<div class="coverage-card"><h3>🏠 Home Start</h3><ul><li>All recovery benefits</li><li>Breakdown at home</li><li>No distance limits</li><li>Nationwide cover</li></ul></div>
+<div class="coverage-card"><h3>🌍 European</h3><ul><li>All UK benefits</li><li>Europe-wide cover</li><li>Repatriation</li><li>Up to 90 days</li></ul></div>
+</div>
+</div>
+<div style="background:#F0FDF4;border:2px solid #10B981;border-radius:12px;padding:24px;text-align:center"><h3 style="color:#0B3D91;margin-bottom:12px">✅ Don't Get Caught Out!</h3><p style="color:#64748B;line-height:1.6">Single callout = £100-£300. Cover from £6/month (£72/year). Compare above & save!</p></div>
+</div>
+</body>
+</html>
