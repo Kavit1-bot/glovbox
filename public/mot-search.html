@@ -45,7 +45,7 @@ async function searchCentres() {
   const resultsDiv = document.getElementById('results');
   const searchBtn = document.getElementById('searchBtn');
   
-  // Hide previous results
+  // Clear previous results
   errorDiv.style.display = 'none';
   resultsDiv.innerHTML = '';
   
@@ -56,8 +56,10 @@ async function searchCentres() {
     return;
   }
   
-  // Check for token ONLY when searching
+  // Get token
   const token = localStorage.getItem('token');
+  console.log('Token found:', token ? 'YES (length: ' + token.length + ')' : 'NO');
+  
   if (!token) {
     errorDiv.textContent = 'Please sign in to use MOT search. Redirecting...';
     errorDiv.style.display = 'block';
@@ -74,44 +76,63 @@ async function searchCentres() {
   
   try {
     // Step 1: Geocode postcode
-    console.log('Geocoding postcode:', postcode);
+    console.log('🔍 Step 1: Geocoding postcode:', postcode);
+    console.log('📤 Sending request to: /api/geocode?postcode=' + postcode);
+    console.log('🔑 Authorization header: Bearer ' + token.substring(0, 20) + '...');
+    
     const geocodeResponse = await fetch('/api/geocode?postcode=' + encodeURIComponent(postcode), {
-      headers: { 'Authorization': 'Bearer ' + token }
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
     });
     
-    console.log('Geocode response status:', geocodeResponse.status);
+    console.log('📥 Geocode response status:', geocodeResponse.status);
     
-    if (geocodeResponse.status === 401 || geocodeResponse.status === 403) {
-      throw new Error('Your session has expired. Please sign in again.');
+    if (geocodeResponse.status === 401) {
+      throw new Error('Not authenticated. Please sign in again.');
+    }
+    
+    if (geocodeResponse.status === 403) {
+      throw new Error('Session expired. Please sign in again.');
     }
     
     if (!geocodeResponse.ok) {
-      const error = await geocodeResponse.json();
-      throw new Error(error.error || 'Invalid postcode or location not found');
+      const errorData = await geocodeResponse.json();
+      console.error('❌ Geocode error:', errorData);
+      throw new Error(errorData.error || 'Invalid postcode or location not found');
     }
     
     const location = await geocodeResponse.json();
-    console.log('Location found:', location);
+    console.log('✅ Location found:', location);
     
     // Step 2: Search for MOT centres
-    console.log('Searching for MOT centres...');
-    const centresResponse = await fetch(`/api/mot-centres?lat=${location.lat}&lng=${location.lng}`, {
-      headers: { 'Authorization': 'Bearer ' + token }
+    console.log('🔍 Step 2: Searching for MOT centres...');
+    console.log('📤 Sending request to: /api/mot-centres?lat=' + location.lat + '&lng=' + location.lng);
+    
+    const centresResponse = await fetch('/api/mot-centres?lat=' + location.lat + '&lng=' + location.lng, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
     });
     
-    console.log('MOT centres response status:', centresResponse.status);
+    console.log('📥 MOT centres response status:', centresResponse.status);
     
     if (centresResponse.status === 401 || centresResponse.status === 403) {
-      throw new Error('Your session has expired. Please sign in again.');
+      throw new Error('Session expired. Please sign in again.');
     }
     
     if (!centresResponse.ok) {
-      const error = await centresResponse.json();
-      throw new Error(error.error || 'Failed to find MOT centres');
+      const errorData = await centresResponse.json();
+      console.error('❌ MOT centres error:', errorData);
+      throw new Error(errorData.error || 'Failed to find MOT centres');
     }
     
     const data = await centresResponse.json();
-    console.log('Found centres:', data.centres?.length || 0);
+    console.log('✅ Found', data.centres?.length || 0, 'centres');
     
     // Hide loading
     loadingDiv.style.display = 'none';
@@ -126,29 +147,31 @@ async function searchCentres() {
     
     resultsDiv.innerHTML = '<h2 class="results-header">✅ Found ' + data.centres.length + ' MOT Centre' + (data.centres.length > 1 ? 's' : '') + ' Near ' + postcode + '</h2>';
     
-    data.centres.forEach(centre => {
+    data.centres.forEach((centre, index) => {
+      console.log('Centre ' + (index + 1) + ':', centre.name);
+      
       const centreDiv = document.createElement('div');
       centreDiv.className = 'centre';
       
-      let html = `<h3>${centre.name}</h3>`;
-      html += `<div class="centre-info">📍 ${centre.address}</div>`;
+      let html = '<h3>' + centre.name + '</h3>';
+      html += '<div class="centre-info">📍 ' + centre.address + '</div>';
       
       if (centre.rating && centre.rating !== 'N/A') {
-        html += `<div class="centre-info">⭐ Rating: <span class="centre-rating">${centre.rating}/5</span></div>`;
+        html += '<div class="centre-info">⭐ Rating: <span class="centre-rating">' + centre.rating + '/5</span></div>';
       }
       
       if (centre.phone) {
-        html += `<div class="centre-info">📞 <a href="tel:${centre.phone}" class="phone">${centre.phone}</a> - Click to call</div>`;
+        html += '<div class="centre-info">📞 <a href="tel:' + centre.phone + '" class="phone">' + centre.phone + '</a> - Click to call</div>';
       }
       
       if (centre.isOpenNow !== undefined) {
-        html += `<div class="centre-info">🕐 <span class="${centre.isOpenNow ? 'open' : 'closed'}">${centre.isOpenNow ? 'Open Now' : 'Currently Closed'}</span></div>`;
+        html += '<div class="centre-info">🕐 <span class="' + (centre.isOpenNow ? 'open' : 'closed') + '">' + (centre.isOpenNow ? 'Open Now' : 'Currently Closed') + '</span></div>';
       }
       
       if (centre.hours && centre.hours.length > 0) {
         html += '<details><summary>📅 View Opening Hours</summary><ul class="hours-list">';
         centre.hours.forEach(day => {
-          html += `<li>${day}</li>`;
+          html += '<li>' + day + '</li>';
         });
         html += '</ul></details>';
       }
@@ -157,20 +180,22 @@ async function searchCentres() {
       resultsDiv.appendChild(centreDiv);
     });
     
+    console.log('🎉 MOT search completed successfully!');
+    
   } catch (error) {
-    console.error('Error:', error);
+    console.error('❌ Error:', error);
     loadingDiv.style.display = 'none';
     searchBtn.disabled = false;
     searchBtn.textContent = 'Search MOT Centres';
     
-    if (error.message.includes('session') || error.message.includes('sign in')) {
+    if (error.message.includes('sign in') || error.message.includes('Session') || error.message.includes('authenticated')) {
       errorDiv.textContent = error.message + ' Redirecting...';
       errorDiv.style.display = 'block';
       setTimeout(() => {
         window.location.href = '/signin.html?redirect=/mot-search.html';
       }, 2000);
     } else {
-      errorDiv.textContent = error.message;
+      errorDiv.textContent = '❌ ' + error.message;
       errorDiv.style.display = 'block';
     }
   }
@@ -181,6 +206,18 @@ document.getElementById('postcode').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') {
     searchCentres();
   }
+});
+
+// Show token status on page load (for debugging)
+window.addEventListener('DOMContentLoaded', function() {
+  const token = localStorage.getItem('token');
+  console.log('=================================');
+  console.log('MOT Search Page Loaded');
+  console.log('Token present:', token ? 'YES' : 'NO');
+  if (token) {
+    console.log('Token preview:', token.substring(0, 30) + '...');
+  }
+  console.log('=================================');
 });
 </script>
 
