@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In - Glovbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.container{max-width:400px;width:100%}.card{background:white;border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}.logo{text-align:center;margin-bottom:32px}.logo h1{color:#0B3D91;font-size:32px;font-weight:700}.form-group{margin-bottom:20px}label{display:block;color:#1E293B;font-weight:600;margin-bottom:8px;font-size:14px}input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px;transition:border-color 0.2s}input:focus{outline:none;border-color:#0B3D91}.btn{width:100%;background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer;transition:background 0.2s}.btn:hover{background:#E85A2A}.btn:disabled{background:#CBD5E1;cursor:not-allowed}.error{background:#FEF2F2;color:#DC2626;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2;display:none;font-size:14px}.success{background:#F0FDF4;color:#15803D;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #BBF7D0;display:none;font-size:14px}.links{text-align:center;margin-top:20px;font-size:14px}.links a{color:#0B3D91;text-decoration:none;font-weight:600}.links a:hover{text-decoration:underline}.divider{text-align:center;margin:16px 0;color:#64748B;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+<div class="logo">
+<h1>Glovbox</h1>
+<p style="color:#64748B;font-size:14px;margin-top:8px">Sign in to your account</p>
+</div>
+
+<div id="error" class="error"></div>
+<div id="success" class="success"></div>
+
+<form id="signinForm">
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" required autocomplete="email">
+</div>
+
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" id="password" required autocomplete="current-password">
+</div>
+
+<button type="submit" class="btn" id="submitBtn">Sign In</button>
+</form>
+
+<div class="links">
+<a href="/forgot-password.html">Forgot password?</a>
+</div>
+
+<div class="divider">Don't have an account?</div>
+
+<div class="links">
+<a href="/signup.html">Create account →</a>
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById('signinForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('error');
+  const successDiv = document.getElementById('success');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  // Hide previous messages
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+  
+  // Validate
+  if (!email || !password) {
+    errorDiv.textContent = 'Please enter both email and password';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // Disable button
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing in...';
+  
+  console.log('🔐 Attempting sign in for:', email);
+  
+  try {
+    const response = await fetch('/api/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+    
+    console.log('📥 Response status:', response.status);
+    
+    const data = await response.json();
+    console.log('📦 Response data:', data);
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign in failed');
+    }
+    
+    // SUCCESS! Save token
+    console.log('✅ Sign in successful!');
+    console.log('🔑 Token received:', data.token ? 'YES (length: ' + data.token.length + ')' : 'NO');
+    
+    if (!data.token) {
+      throw new Error('No token received from server');
+    }
+    
+    // CRITICAL: Save token to localStorage
+    localStorage.setItem('token', data.token);
+    console.log('💾 Token saved to localStorage');
+    
+    // Verify token was saved
+    const savedToken = localStorage.getItem('token');
+    console.log('✅ Token verification:', savedToken ? 'SAVED' : 'FAILED');
+    
+    if (!savedToken) {
+      throw new Error('Failed to save token to localStorage');
+    }
+    
+    // Save user info (optional)
+    if (data.user) {
+      localStorage.setItem('userName', data.user.name);
+      localStorage.setItem('userEmail', data.user.email);
+      console.log('👤 User info saved:', data.user.name);
+    }
+    
+    // Show success message
+    successDiv.textContent = '✅ Sign in successful! Redirecting...';
+    successDiv.style.display = 'block';
+    
+    console.log('🔄 Redirecting to dashboard...');
+    
+    // Check for redirect parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirect = urlParams.get('redirect');
+    
+    // Redirect
+    setTimeout(() => {
+      if (redirect) {
+        console.log('🔄 Redirecting to:', redirect);
+        window.location.href = redirect;
+      } else {
+        console.log('🔄 Redirecting to: /dashboard.html');
+        window.location.href = '/dashboard.html';
+      }
+    }, 1000);
+    
+  } catch (error) {
+    console.error('❌ Sign in error:', error);
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+    errorDiv.textContent = '❌ ' + error.message;
+    errorDiv.style.display = 'block';
+  }
+});
+
+// Check if already signed in
+window.addEventListener('DOMContentLoaded', function() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    console.log('ℹ️ Already signed in, redirecting to dashboard...');
+    window.location.href = '/dashboard.html';
+  }
+});
+</script>
+
+</body>
+</html>
