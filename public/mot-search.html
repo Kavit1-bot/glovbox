@@ -3,177 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find MOT Centres - Glovbox</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>MOT Centre Finder - Glovbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}
+nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}
+.back-link{color:#0B3D91;text-decoration:none;font-size:14px;font-weight:600}
+.container{max-width:800px;margin:40px auto;padding:0 20px}
+h1{font-size:32px;color:#0B3D91;margin-bottom:8px;text-align:center}
+.subtitle{text-align:center;color:#64748B;margin-bottom:32px}
+.card{background:white;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(11,61,145,0.06)}
+.input-group{margin-bottom:16px}
+label{display:block;font-weight:600;color:#0B3D91;margin-bottom:8px}
+input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px}
+input:focus{outline:none;border-color:#0B3D91}
+button{background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:15px;cursor:pointer;width:100%}
+button:hover{background:#E85A2A}
+button:disabled{background:#CBD5E1;cursor:not-allowed}
+.loading{text-align:center;padding:40px}
+.spinner{border:3px solid #E2E8F0;border-top:3px solid:#0B3D91;border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error{background:#FEF2F2;color:#DC2626;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2}
+.centre{background:white;border:1px solid #E2E8F0;padding:20px;border-radius:8px;margin-bottom:16px}
+.centre h3{color:#0B3D91;font-size:18px;margin-bottom:8px}
+.centre-info{color:#64748B;font-size:14px;margin-bottom:6px}
+.centre-rating{color:#10B981;font-weight:600}
+.open{color:#10B981;font-weight:600}
+.closed{color:#DC2626;font-weight:600}
+.phone{color:#0B3D91;font-weight:600;text-decoration:none}
+.phone:hover{text-decoration:underline}
+.no-results{text-align:center;padding:40px;color:#64748B}
+</style>
 </head>
-<body class="bg-gray-50">
-
-<nav class="bg-white border-b">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
-    </div>
-    <a href="/dashboard.html" class="text-blue-600 hover:text-blue-800 font-semibold">← Back to Dashboard</a>
-  </div>
+<body>
+<nav>
+<a href="/" class="logo">Glovbox</a>
+<a href="/dashboard.html" class="back-link">← Back to Dashboard</a>
 </nav>
 
-<div class="max-w-4xl mx-auto px-6 py-8">
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">🔧 Find MOT Centres</h1>
-    <p class="text-gray-600">Search for MOT testing centres with phone numbers and opening hours</p>
-  </div>
+<div class="container">
+<h1>🔧 Find MOT Centres</h1>
+<p class="subtitle">Search for MOT testing centres with phone numbers and opening hours</p>
 
-  <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
-    <label class="block text-lg font-bold text-gray-900 mb-4">Enter Your Postcode</label>
-    <div class="flex gap-3">
-      <input 
-        type="text" 
-        id="postcodeInput" 
-        placeholder="e.g., SW1A 1AA" 
-        class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none"
-        onkeypress="if(event.key==='Enter') searchMOT()"
-      />
-      <button 
-        onclick="searchMOT()" 
-        id="searchBtn"
-        class="bg-orange-500 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-orange-600 transition"
-      >
-        Search
-      </button>
-    </div>
-    <p id="errorMsg" class="text-red-600 text-sm mt-2 hidden"></p>
-  </div>
+<div class="card">
+<div class="input-group">
+<label for="postcode">Enter Your Postcode</label>
+<input type="text" id="postcode" placeholder="e.g. SW1A 1AA" maxlength="10">
+</div>
+<button id="searchBtn" onclick="searchCentres()">Search</button>
+</div>
 
-  <div id="loadingMsg" class="hidden text-center py-8">
-    <div class="inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    <p class="text-gray-600 mt-4">Searching for MOT centres...</p>
-  </div>
+<div id="error" class="error" style="display:none"></div>
+<div id="loading" class="loading" style="display:none">
+<div class="spinner"></div>
+<p>Searching for MOT centres near you...</p>
+</div>
 
-  <div id="results" class="space-y-4"></div>
+<div id="results"></div>
 </div>
 
 <script>
-const token = sessionStorage.getItem('glovbox_token');
-
-async function searchMOT() {
-  const postcode = document.getElementById('postcodeInput').value.trim().toUpperCase();
-  const errorMsg = document.getElementById('errorMsg');
-  const loadingMsg = document.getElementById('loadingMsg');
-  const results = document.getElementById('results');
+async function searchCentres() {
+  const postcode = document.getElementById('postcode').value.trim().toUpperCase();
+  const errorDiv = document.getElementById('error');
+  const loadingDiv = document.getElementById('loading');
+  const resultsDiv = document.getElementById('results');
   const searchBtn = document.getElementById('searchBtn');
   
+  errorDiv.style.display = 'none';
+  resultsDiv.innerHTML = '';
+  
   if (!postcode) {
-    errorMsg.textContent = 'Please enter a postcode';
-    errorMsg.classList.remove('hidden');
+    errorDiv.textContent = 'Please enter a postcode';
+    errorDiv.style.display = 'block';
     return;
   }
   
-  errorMsg.classList.add('hidden');
-  results.innerHTML = '';
-  loadingMsg.classList.remove('hidden');
+  const token = localStorage.getItem('token');
+  if (!token) {
+    errorDiv.textContent = 'Please sign in to use MOT search';
+    errorDiv.style.display = 'block';
+    setTimeout(() => window.location.href = '/signin.html', 2000);
+    return;
+  }
+  
+  loadingDiv.style.display = 'block';
   searchBtn.disabled = true;
   searchBtn.textContent = 'Searching...';
   
   try {
-    // Call server endpoint which does geocoding securely
-    const geocodeResponse = await fetch(`/api/geocode?postcode=${encodeURIComponent(postcode)}`, {
-      headers: token ? {'Authorization': `Bearer ${token}`} : {}
+    // Step 1: Geocode the postcode (NO API KEY - calls server)
+    const geocodeResponse = await fetch('/api/geocode?postcode=' + encodeURIComponent(postcode), {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
     
     if (!geocodeResponse.ok) {
-      throw new Error('Invalid postcode or location not found');
+      const error = await geocodeResponse.json();
+      throw new Error(error.error || 'Invalid postcode or location not found');
     }
     
-    const geocodeData = await geocodeResponse.json();
-    const lat = geocodeData.lat;
-    const lng = geocodeData.lng;
+    const location = await geocodeResponse.json();
     
-    console.log('Coordinates found:', lat, lng);
-    
-    // Search for MOT centres near those coordinates
-    const response = await fetch(`/api/mot-centres?lat=${lat}&lng=${lng}`, {
-      headers: token ? {'Authorization': `Bearer ${token}`} : {}
+    // Step 2: Search for MOT centres (NO API KEY - calls server)
+    const centresResponse = await fetch(`/api/mot-centres?lat=${location.lat}&lng=${location.lng}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
     
-    if (!response.ok) {
-      throw new Error('Search failed');
+    if (!centresResponse.ok) {
+      const error = await centresResponse.json();
+      throw new Error(error.error || 'Failed to find MOT centres');
     }
     
-    const data = await response.json();
+    const data = await centresResponse.json();
     
-    loadingMsg.classList.add('hidden');
+    loadingDiv.style.display = 'none';
     searchBtn.disabled = false;
     searchBtn.textContent = 'Search';
     
     if (!data.centres || data.centres.length === 0) {
-      results.innerHTML = '<div class="bg-white rounded-xl p-8 text-center"><p class="text-gray-600">No MOT centres found nearby. Try a different postcode.</p></div>';
+      resultsDiv.innerHTML = '<div class="no-results">No MOT centres found near this postcode. Try a different location.</div>';
       return;
     }
     
-    displayResults(data.centres);
+    resultsDiv.innerHTML = '<h2 style="color:#0B3D91;margin-bottom:20px">Found ' + data.centres.length + ' MOT Centres</h2>';
+    
+    data.centres.forEach(centre => {
+      const centreDiv = document.createElement('div');
+      centreDiv.className = 'centre';
+      
+      let html = `<h3>${centre.name}</h3>`;
+      html += `<div class="centre-info">📍 ${centre.address}</div>`;
+      
+      if (centre.rating && centre.rating !== 'N/A') {
+        html += `<div class="centre-info">⭐ Rating: <span class="centre-rating">${centre.rating}/5</span></div>`;
+      }
+      
+      if (centre.phone) {
+        html += `<div class="centre-info">📞 <a href="tel:${centre.phone}" class="phone">${centre.phone}</a></div>`;
+      }
+      
+      if (centre.isOpenNow !== undefined) {
+        html += `<div class="centre-info">🕐 <span class="${centre.isOpenNow ? 'open' : 'closed'}">${centre.isOpenNow ? 'Open Now' : 'Closed'}</span></div>`;
+      }
+      
+      if (centre.hours && centre.hours.length > 0) {
+        html += '<details style="margin-top:12px"><summary style="cursor:pointer;color:#0B3D91;font-weight:600">Opening Hours</summary><ul style="margin-top:8px;padding-left:20px">';
+        centre.hours.forEach(day => {
+          html += `<li style="color:#64748B;font-size:13px;margin-bottom:4px">${day}</li>`;
+        });
+        html += '</ul></details>';
+      }
+      
+      centreDiv.innerHTML = html;
+      resultsDiv.appendChild(centreDiv);
+    });
     
   } catch (error) {
-    console.error('Search error:', error);
-    loadingMsg.classList.add('hidden');
+    loadingDiv.style.display = 'none';
     searchBtn.disabled = false;
     searchBtn.textContent = 'Search';
-    errorMsg.textContent = error.message || 'Search failed. Please check your postcode and try again.';
-    errorMsg.classList.remove('hidden');
+    errorDiv.textContent = error.message;
+    errorDiv.style.display = 'block';
   }
 }
 
-function displayResults(centres) {
-  const html = centres.map(centre => `
-    <div class="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition">
-      <div class="flex justify-between items-start mb-3">
-        <div class="flex-1">
-          <h3 class="text-xl font-bold text-gray-900">${centre.name}</h3>
-          <p class="text-gray-600 text-sm mt-1">${centre.address}</p>
-        </div>
-        <div class="text-right">
-          ${centre.rating !== 'N/A' ? `
-            <div class="flex items-center gap-1">
-              <span class="text-yellow-500">⭐</span>
-              <span class="font-semibold">${centre.rating}</span>
-            </div>
-          ` : ''}
-          ${centre.isOpenNow ? 
-            '<span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Open Now</span>' : 
-            '<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Closed</span>'
-          }
-        </div>
-      </div>
-      
-      ${centre.phone ? `
-        <div class="flex items-center gap-2 mb-2">
-          <span class="text-blue-600">📞</span>
-          <a href="tel:${centre.phone}" class="text-blue-600 hover:underline font-semibold">${centre.phone}</a>
-        </div>
-      ` : ''}
-      
-      ${centre.hours && centre.hours.length > 0 ? `
-        <details class="mt-3">
-          <summary class="cursor-pointer text-sm text-gray-600 hover:text-gray-900 font-semibold">
-            Opening Hours
-          </summary>
-          <ul class="mt-2 text-sm text-gray-600 space-y-1 ml-4">
-            ${centre.hours.map(h => `<li>${h}</li>`).join('')}
-          </ul>
-        </details>
-      ` : ''}
-      
-      <a 
-        href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centre.name + ' ' + centre.address)}" 
-        target="_blank"
-        class="inline-block mt-3 text-blue-600 hover:underline text-sm font-semibold"
-      >
-        View on Google Maps →
-      </a>
-    </div>
-  `).join('');
-  
-  document.getElementById('results').innerHTML = html;
-}
+// Allow Enter key to search
+document.getElementById('postcode').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    searchCentres();
+  }
+});
 </script>
 
 </body>
