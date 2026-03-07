@@ -3,210 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Breakdown Cover - Glovbox</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Compare Breakdown Cover - Glovbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}.back-link{color:#0B3D91;text-decoration:none;font-size:14px;font-weight:600}.container{max-width:900px;margin:40px auto;padding:0 20px}h1{font-size:36px;color:#0B3D91;margin-bottom:12px;text-align:center}.hero{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:40px;border-radius:16px;text-align:center;margin-bottom:40px}.hero h2{font-size:28px;margin-bottom:16px}.hero p{font-size:18px;opacity:0.95}.info-box{background:white;border:2px solid #0EA5E9;border-radius:12px;padding:24px;margin:24px 0}.section-title{font-size:24px;font-weight:700;color:#0B3D91;margin-bottom:24px;text-align:center}.providers{display:grid;gap:20px;margin-bottom:40px}.provider{background:white;border:2px solid #E2E8F0;border-radius:12px;padding:28px;transition:all 0.3s;cursor:pointer}.provider:hover{border-color:#0B3D91;box-shadow:0 8px 24px rgba(11,61,145,0.15);transform:translateY(-4px)}.provider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.provider-name{font-size:22px;font-weight:700;color:#0B3D91}.provider-badge{background:#10B981;color:white;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}.badge-popular{background:#FF6B35}.badge-value{background:#0EA5E9}.provider-desc{color:#64748B;font-size:14px;line-height:1.6;margin-bottom:20px}.pricing{background:#F0F9FF;padding:12px;border-radius:8px;margin-bottom:16px;text-align:center}.price{color:#0B3D91;font-size:24px;font-weight:700}.provider-features{margin-bottom:20px}.feature{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}.feature-icon{color:#10B981;font-weight:700}.btn-compare{background:#FF6B35;color:white;padding:14px 32px;border-radius:8px;font-weight:700;font-size:16px;text-decoration:none;display:inline-block;text-align:center}.btn-compare:hover{background:#E85A2A}.coverage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}.coverage-card{background:#F8FAFC;padding:20px;border-radius:10px;border:1px solid #E2E8F0}.coverage-card h3{color:#0B3D91;margin-bottom:12px}.coverage-card li{color:#64748B;font-size:14px;margin-bottom:8px;list-style:none;padding-left:20px;position:relative}.coverage-card li:before{content:"✓";color:#10B981;font-weight:700;position:absolute;left:0}
+</style>
 </head>
-<body class="bg-gray-50">
-
-<nav class="bg-white border-b sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <span class="text-3xl">🚗</span>
-      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
-    </div>
-    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-900 font-semibold">← Back to Dashboard</a>
-  </div>
-</nav>
-
-<div class="max-w-6xl mx-auto px-6 py-12">
-  
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-blue-900 mb-4">🚗 Breakdown Cover</h1>
-    <p class="text-xl text-gray-600">Compare RAC, AA, and Green Flag breakdown cover</p>
-  </div>
-
-  <!-- RAC Recommended -->
-  <div class="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white">
-    <div class="flex items-center justify-between flex-wrap gap-4">
-      <div>
-        <div class="inline-block bg-white/20 rounded-full px-4 py-1 text-sm font-bold mb-3">RECOMMENDED</div>
-        <h2 class="text-3xl font-bold mb-2">RAC Breakdown Cover</h2>
-        <p class="text-blue-100 mb-4">Trusted partner with excellent UK coverage</p>
-        <ul class="space-y-2 mb-6">
-          <li class="flex items-center gap-2">✓ 24/7 roadside assistance</li>
-          <li class="flex items-center gap-2">✓ Nationwide coverage</li>
-          <li class="flex items-center gap-2">✓ Home start included</li>
-          <li class="flex items-center gap-2">✓ Fast average response time</li>
-        </ul>
-      </div>
-      <div class="text-center">
-        <div class="text-5xl font-bold mb-2">From £6</div>
-        <div class="text-blue-100 mb-4">per month</div>
-        <a href="https://www.rac.co.uk/breakdown-cover" target="_blank" rel="noopener" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50">
-          Get RAC Quote →
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Comparison Table -->
-  <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-    <div class="p-8">
-      <h2 class="text-2xl font-bold text-blue-900 mb-6">Compare Breakdown Cover</h2>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b-2 border-gray-200">
-              <th class="text-left py-4 px-4 font-bold text-gray-900">Provider</th>
-              <th class="text-left py-4 px-4 font-bold text-gray-900">Price</th>
-              <th class="text-left py-4 px-4 font-bold text-gray-900">Coverage</th>
-              <th class="text-left py-4 px-4 font-bold text-gray-900">Response Time</th>
-              <th class="py-4 px-4"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- RAC -->
-            <tr class="border-b border-gray-100 hover:bg-blue-50">
-              <td class="py-6 px-4">
-                <div class="font-bold text-lg text-blue-900">RAC</div>
-                <div class="text-sm text-gray-600">Recommended</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-bold text-2xl text-blue-900">£6</div>
-                <div class="text-sm text-gray-600">per month</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="text-sm space-y-1">
-                  <div class="text-green-600">✓ Roadside</div>
-                  <div class="text-green-600">✓ Home Start</div>
-                  <div class="text-green-600">✓ Recovery</div>
-                  <div class="text-green-600">✓ UK & Europe</div>
-                </div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-semibold text-green-600">~30 mins</div>
-                <div class="text-sm text-gray-600">Average</div>
-              </td>
-              <td class="py-6 px-4">
-                <a href="https://www.rac.co.uk/breakdown-cover" target="_blank" rel="noopener" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 inline-block">
-                  Get Quote
-                </a>
-              </td>
-            </tr>
-
-            <!-- AA -->
-            <tr class="border-b border-gray-100 hover:bg-gray-50">
-              <td class="py-6 px-4">
-                <div class="font-bold text-lg text-gray-900">AA</div>
-                <div class="text-sm text-gray-600">Popular choice</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-bold text-2xl text-gray-900">£7</div>
-                <div class="text-sm text-gray-600">per month</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="text-sm space-y-1">
-                  <div class="text-green-600">✓ Roadside</div>
-                  <div class="text-green-600">✓ Home Start</div>
-                  <div class="text-green-600">✓ Recovery</div>
-                  <div class="text-gray-400">• Europe extra</div>
-                </div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-semibold text-gray-700">~35 mins</div>
-                <div class="text-sm text-gray-600">Average</div>
-              </td>
-              <td class="py-6 px-4">
-                <a href="https://www.theaa.com/breakdown-cover" target="_blank" rel="noopener" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 inline-block">
-                  Get Quote
-                </a>
-              </td>
-            </tr>
-
-            <!-- Green Flag -->
-            <tr class="hover:bg-gray-50">
-              <td class="py-6 px-4">
-                <div class="font-bold text-lg text-gray-900">Green Flag</div>
-                <div class="text-sm text-gray-600">Budget option</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-bold text-2xl text-gray-900">£5</div>
-                <div class="text-sm text-gray-600">per month</div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="text-sm space-y-1">
-                  <div class="text-green-600">✓ Roadside</div>
-                  <div class="text-gray-400">• Home Start extra</div>
-                  <div class="text-gray-400">• Recovery extra</div>
-                  <div class="text-gray-400">• Europe extra</div>
-                </div>
-              </td>
-              <td class="py-6 px-4">
-                <div class="font-semibold text-gray-700">~45 mins</div>
-                <div class="text-sm text-gray-600">Average</div>
-              </td>
-              <td class="py-6 px-4">
-                <a href="https://www.greenflag.com" target="_blank" rel="noopener" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 inline-block">
-                  Get Quote
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- What's Included -->
-  <div class="grid md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white rounded-xl p-6 shadow-md">
-      <div class="text-4xl mb-4">🔧</div>
-      <h3 class="text-xl font-bold text-blue-900 mb-2">Roadside Assistance</h3>
-      <p class="text-gray-600">Get help at the roadside if your car breaks down. Most repairs done on the spot.</p>
-    </div>
-
-    <div class="bg-white rounded-xl p-6 shadow-md">
-      <div class="text-4xl mb-4">🏠</div>
-      <h3 class="text-xl font-bold text-blue-900 mb-2">Home Start</h3>
-      <p class="text-gray-600">Covered if your car won't start at home. We'll get you moving or recovered.</p>
-    </div>
-
-    <div class="bg-white rounded-xl p-6 shadow-md">
-      <div class="text-4xl mb-4">🚚</div>
-      <h3 class="text-xl font-bold text-blue-900 mb-2">Vehicle Recovery</h3>
-      <p class="text-gray-600">If your car can't be fixed, we'll recover it to your chosen garage.</p>
-    </div>
-  </div>
-
-  <!-- Why RAC -->
-  <div class="bg-blue-50 rounded-2xl p-8">
-    <h2 class="text-2xl font-bold text-blue-900 mb-4">Why We Recommend RAC</h2>
-    <div class="space-y-3 text-gray-700">
-      <p class="flex items-start gap-2">
-        <span class="text-blue-600 font-bold">✓</span>
-        <span><strong>Fast Response:</strong> Average 30-minute arrival time across the UK</span>
-      </p>
-      <p class="flex items-start gap-2">
-        <span class="text-blue-600 font-bold">✓</span>
-        <span><strong>Fix Rate:</strong> 4 out of 5 breakdowns fixed at the roadside</span>
-      </p>
-      <p class="flex items-start gap-2">
-        <span class="text-blue-600 font-bold">✓</span>
-        <span><strong>Trusted Partner:</strong> RAC has been helping UK drivers for over 125 years</span>
-      </p>
-      <p class="flex items-start gap-2">
-        <span class="text-blue-600 font-bold">✓</span>
-        <span><strong>Comprehensive Cover:</strong> Includes home start and nationwide recovery</span>
-      </p>
-      <p class="flex items-start gap-2">
-        <span class="text-blue-600 font-bold">✓</span>
-        <span><strong>Best Value:</strong> Great coverage at competitive prices from £6/month</span>
-      </p>
-    </div>
-  </div>
-
+<body>
+<nav><a href="/" class="logo">Glovbox</a><a href="/dashboard.html" class="back-link">← Back</a></nav>
+<div class="container">
+<div class="hero"><h2>🚗 Compare Breakdown Cover</h2><p>Get roadside assistance from the UK's top providers</p></div>
+<div class="info-box"><strong style="color:#0B3D91;font-size:18px">🛡️ Why Breakdown Cover?</strong><p style="color:#64748B;margin-top:8px">Over 2 million UK breakdowns yearly. Single callout costs £100-£300. Cover from £6/month = peace of mind 24/7.</p></div>
+<h2 class="section-title">🏆 Top Providers</h2>
+<div class="providers">
+<div class="provider" onclick="window.open('https://www.aa.com/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">AA Breakdown</div><div class="provider-badge badge-popular">MOST POPULAR</div></div>
+<div class="provider-desc">UK's largest breakdown service. 3,000+ patrols. 4/5 breakdowns fixed roadside.</div>
+<div class="pricing"><div class="price">£7/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>3,000+ patrols</div>
+<div class="feature"><span class="feature-icon">✓</span>30-min avg response</div>
+<div class="feature"><span class="feature-icon">✓</span>UK & Europe cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Home start included</div>
 </div>
-
+<a href="https://www.aa.com/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get AA Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.rac.co.uk/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">RAC Breakdown</div><div class="provider-badge">TRUSTED</div></div>
+<div class="provider-desc">120+ years experience. 1,500 patrols + 4,000 approved garages.</div>
+<div class="pricing"><div class="price">£6.50/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>1,500 patrols nationwide</div>
+<div class="feature"><span class="feature-icon">✓</span>24/7 support</div>
+<div class="feature"><span class="feature-icon">✓</span>European cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Battery replacement</div>
+</div>
+<a href="https://www.rac.co.uk/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get RAC Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.greenflag.com/breakdown-cover','_blank')">
+<div class="provider-header"><div class="provider-name">Green Flag</div><div class="provider-badge badge-value">BEST VALUE</div></div>
+<div class="provider-desc">Affordable cover. 3.5m+ customers. Excellent service.</div>
+<div class="pricing"><div class="price">£6/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>Budget-friendly</div>
+<div class="feature"><span class="feature-icon">✓</span>24/7 assistance</div>
+<div class="feature"><span class="feature-icon">✓</span>UK & Europe options</div>
+<div class="feature"><span class="feature-icon">✓</span>Onward travel</div>
+</div>
+<a href="https://www.greenflag.com/breakdown-cover" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get Green Flag Cover →</a>
+</div>
+<div class="provider" onclick="window.open('https://www.startrescue.co.uk/','_blank')">
+<div class="provider-header"><div class="provider-name">Start Rescue</div></div>
+<div class="provider-desc">Award-winning service. Competitive prices. 5-star rated.</div>
+<div class="pricing"><div class="price">£5.50/month</div></div>
+<div class="provider-features">
+<div class="feature"><span class="feature-icon">✓</span>Cheapest UK cover</div>
+<div class="feature"><span class="feature-icon">✓</span>Fast response</div>
+<div class="feature"><span class="feature-icon">✓</span>No age limits</div>
+<div class="feature"><span class="feature-icon">✓</span>Defaqto 5-star</div>
+</div>
+<a href="https://www.startrescue.co.uk/" target="_blank" class="btn-compare" onclick="event.stopPropagation()">Get Start Rescue Cover →</a>
+</div>
+</div>
+<div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:32px;margin-bottom:40px">
+<h2 class="section-title">Coverage Levels Explained</h2>
+<div class="coverage-grid">
+<div class="coverage-card"><h3>🔧 Roadside</h3><ul><li>Fixes at roadside</li><li>24/7 assistance</li><li>Battery jump start</li><li>Tyre changes</li></ul></div>
+<div class="coverage-card"><h3>🚙 Recovery</h3><ul><li>All roadside benefits</li><li>Tow to garage</li><li>Relay to destination</li><li>Hotel if needed</li></ul></div>
+<div class="coverage-card"><h3>🏠 Home Start</h3><ul><li>All recovery benefits</li><li>Breakdown at home</li><li>No distance limits</li><li>Nationwide cover</li></ul></div>
+<div class="coverage-card"><h3>🌍 European</h3><ul><li>All UK benefits</li><li>Europe-wide cover</li><li>Repatriation</li><li>Up to 90 days</li></ul></div>
+</div>
+</div>
+<div style="background:#F0FDF4;border:2px solid #10B981;border-radius:12px;padding:24px;text-align:center"><h3 style="color:#0B3D91;margin-bottom:12px">✅ Don't Get Caught Out!</h3><p style="color:#64748B;line-height:1.6">Single callout = £100-£300. Cover from £6/month (£72/year). Compare above & save!</p></div>
+</div>
 </body>
 </html>

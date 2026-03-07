@@ -6,38 +6,11 @@
 <title>MOT Centre Finder - Glovbox</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}
-nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}
-.back-link{color:#0B3D91;text-decoration:none;font-size:14px;font-weight:600}
-.container{max-width:800px;margin:40px auto;padding:0 20px}
-h1{font-size:32px;color:#0B3D91;margin-bottom:8px;text-align:center}
-.subtitle{text-align:center;color:#64748B;margin-bottom:32px}
-.card{background:white;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(11,61,145,0.06)}
-.input-group{margin-bottom:16px}
-label{display:block;font-weight:600;color:#0B3D91;margin-bottom:8px}
-input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px}
-input:focus{outline:none;border-color:#0B3D91}
-button{background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:15px;cursor:pointer;width:100%}
-button:hover{background:#E85A2A}
-button:disabled{background:#CBD5E1;cursor:not-allowed}
-.loading{text-align:center;padding:40px}
-.spinner{border:3px solid #E2E8F0;border-top:3px solid:#0B3D91;border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.error{background:#FEF2F2;color:#DC2626;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2}
-.centre{background:white;border:1px solid #E2E8F0;padding:20px;border-radius:8px;margin-bottom:16px}
-.centre h3{color:#0B3D91;font-size:18px;margin-bottom:8px}
-.centre-info{color:#64748B;font-size:14px;margin-bottom:6px}
-.centre-rating{color:#10B981;font-weight:600}
-.open{color:#10B981;font-weight:600}
-.closed{color:#DC2626;font-weight:600}
-.phone{color:#0B3D91;font-weight:600;text-decoration:none}
-.phone:hover{text-decoration:underline}
-.no-results{text-align:center;padding:40px;color:#64748B}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}.back-link{color:#0B3D91;text-decoration:none;font-size:14px;font-weight:600}.back-link:hover{text-decoration:underline}.container{max-width:800px;margin:40px auto;padding:0 20px}h1{font-size:32px;color:#0B3D91;margin-bottom:8px;text-align:center}.subtitle{text-align:center;color:#64748B;margin-bottom:32px;font-size:15px}.card{background:white;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(11,61,145,0.06)}.input-group{margin-bottom:16px}label{display:block;font-weight:600;color:#0B3D91;margin-bottom:8px;font-size:14px}input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px}input:focus{outline:none;border-color:#0B3D91}.btn-search{background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:15px;cursor:pointer;width:100%}.btn-search:hover{background:#E85A2A}.btn-search:disabled{background:#CBD5E1;cursor:not-allowed}.loading{text-align:center;padding:40px;display:none}.spinner{border:3px solid #E2E8F0;border-top:3px solid:#0B3D91;border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 16px}@keyframes spin{to{transform:rotate(360deg)}}.error{background:#FEF2F2;color:#DC2626;padding:14px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2;display:none}.centre{background:white;border:2px solid #E2E8F0;padding:20px;border-radius:10px;margin-bottom:16px}.centre:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1)}.centre h3{color:#0B3D91;font-size:18px;margin-bottom:10px}.centre-info{color:#64748B;font-size:14px;margin-bottom:8px}.centre-rating{color:#10B981;font-weight:600}.open{color:#10B981;font-weight:600}.closed{color:#DC2626;font-weight:600}.phone{color:#0B3D91;font-weight:600;text-decoration:none}.phone:hover{text-decoration:underline}.no-results{text-align:center;padding:40px;color:#64748B;font-size:16px}details{margin-top:12px}summary{cursor:pointer;color:#0B3D91;font-weight:600;font-size:14px;padding:8px 0}.hours-list{margin-top:10px;padding-left:0;list-style:none}.hours-list li{color:#64748B;font-size:13px;margin-bottom:4px;padding:4px 0}.results-header{color:#0B3D91;margin-bottom:20px;font-size:20px;font-weight:700}
 </style>
 </head>
 <body>
+
 <nav>
 <a href="/" class="logo">Glovbox</a>
 <a href="/dashboard.html" class="back-link">← Back to Dashboard</a>
@@ -52,130 +25,16 @@ button:disabled{background:#CBD5E1;cursor:not-allowed}
 <label for="postcode">Enter Your Postcode</label>
 <input type="text" id="postcode" placeholder="e.g. SW1A 1AA" maxlength="10">
 </div>
-<button id="searchBtn" onclick="searchCentres()">Search</button>
+<button class="btn-search" id="searchBtn" onclick="searchCentres()">Search MOT Centres</button>
 </div>
 
-<div id="error" class="error" style="display:none"></div>
-<div id="loading" class="loading" style="display:none">
-<div class="spinner"></div>
-<p>Searching for MOT centres near you...</p>
-</div>
-
+<div id="error" class="error"></div>
+<div id="loading" class="loading"><div class="spinner"></div><p style="color:#64748B">Searching...</p></div>
 <div id="results"></div>
 </div>
 
 <script>
-async function searchCentres() {
-  const postcode = document.getElementById('postcode').value.trim().toUpperCase();
-  const errorDiv = document.getElementById('error');
-  const loadingDiv = document.getElementById('loading');
-  const resultsDiv = document.getElementById('results');
-  const searchBtn = document.getElementById('searchBtn');
-  
-  errorDiv.style.display = 'none';
-  resultsDiv.innerHTML = '';
-  
-  if (!postcode) {
-    errorDiv.textContent = 'Please enter a postcode';
-    errorDiv.style.display = 'block';
-    return;
-  }
-  
-  const token = localStorage.getItem('token');
-  if (!token) {
-    errorDiv.textContent = 'Please sign in to use MOT search';
-    errorDiv.style.display = 'block';
-    setTimeout(() => window.location.href = '/signin.html', 2000);
-    return;
-  }
-  
-  loadingDiv.style.display = 'block';
-  searchBtn.disabled = true;
-  searchBtn.textContent = 'Searching...';
-  
-  try {
-    // Step 1: Geocode the postcode (NO API KEY - calls server)
-    const geocodeResponse = await fetch('/api/geocode?postcode=' + encodeURIComponent(postcode), {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    
-    if (!geocodeResponse.ok) {
-      const error = await geocodeResponse.json();
-      throw new Error(error.error || 'Invalid postcode or location not found');
-    }
-    
-    const location = await geocodeResponse.json();
-    
-    // Step 2: Search for MOT centres (NO API KEY - calls server)
-    const centresResponse = await fetch(`/api/mot-centres?lat=${location.lat}&lng=${location.lng}`, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    
-    if (!centresResponse.ok) {
-      const error = await centresResponse.json();
-      throw new Error(error.error || 'Failed to find MOT centres');
-    }
-    
-    const data = await centresResponse.json();
-    
-    loadingDiv.style.display = 'none';
-    searchBtn.disabled = false;
-    searchBtn.textContent = 'Search';
-    
-    if (!data.centres || data.centres.length === 0) {
-      resultsDiv.innerHTML = '<div class="no-results">No MOT centres found near this postcode. Try a different location.</div>';
-      return;
-    }
-    
-    resultsDiv.innerHTML = '<h2 style="color:#0B3D91;margin-bottom:20px">Found ' + data.centres.length + ' MOT Centres</h2>';
-    
-    data.centres.forEach(centre => {
-      const centreDiv = document.createElement('div');
-      centreDiv.className = 'centre';
-      
-      let html = `<h3>${centre.name}</h3>`;
-      html += `<div class="centre-info">📍 ${centre.address}</div>`;
-      
-      if (centre.rating && centre.rating !== 'N/A') {
-        html += `<div class="centre-info">⭐ Rating: <span class="centre-rating">${centre.rating}/5</span></div>`;
-      }
-      
-      if (centre.phone) {
-        html += `<div class="centre-info">📞 <a href="tel:${centre.phone}" class="phone">${centre.phone}</a></div>`;
-      }
-      
-      if (centre.isOpenNow !== undefined) {
-        html += `<div class="centre-info">🕐 <span class="${centre.isOpenNow ? 'open' : 'closed'}">${centre.isOpenNow ? 'Open Now' : 'Closed'}</span></div>`;
-      }
-      
-      if (centre.hours && centre.hours.length > 0) {
-        html += '<details style="margin-top:12px"><summary style="cursor:pointer;color:#0B3D91;font-weight:600">Opening Hours</summary><ul style="margin-top:8px;padding-left:20px">';
-        centre.hours.forEach(day => {
-          html += `<li style="color:#64748B;font-size:13px;margin-bottom:4px">${day}</li>`;
-        });
-        html += '</ul></details>';
-      }
-      
-      centreDiv.innerHTML = html;
-      resultsDiv.appendChild(centreDiv);
-    });
-    
-  } catch (error) {
-    loadingDiv.style.display = 'none';
-    searchBtn.disabled = false;
-    searchBtn.textContent = 'Search';
-    errorDiv.textContent = error.message;
-    errorDiv.style.display = 'block';
-  }
-}
-
-// Allow Enter key to search
-document.getElementById('postcode').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') {
-    searchCentres();
-  }
-});
+window.addEventListener('DOMContentLoaded',function(){const t=localStorage.getItem('token');if(!t){document.getElementById('error').textContent='Please sign in to use MOT search';document.getElementById('error').style.display='block';setTimeout(()=>window.location.href='/signin.html?redirect=/mot-search.html',2000)}});async function searchCentres(){const p=document.getElementById('postcode').value.trim().toUpperCase(),e=document.getElementById('error'),l=document.getElementById('loading'),r=document.getElementById('results'),b=document.getElementById('searchBtn');e.style.display='none';r.innerHTML='';if(!p){e.textContent='Please enter a postcode';e.style.display='block';return}const t=localStorage.getItem('token');if(!t){e.textContent='Session expired. Redirecting...';e.style.display='block';setTimeout(()=>window.location.href='/signin.html?redirect=/mot-search.html',2000);return}l.style.display='block';b.disabled=true;b.textContent='Searching...';try{const g=await fetch('/api/geocode?postcode='+encodeURIComponent(p),{headers:{'Authorization':'Bearer '+t}});if(g.status===401||g.status===403){throw new Error('Session expired')}if(!g.ok){const err=await g.json();throw new Error(err.error||'Invalid postcode')}const loc=await g.json();const c=await fetch(`/api/mot-centres?lat=${loc.lat}&lng=${loc.lng}`,{headers:{'Authorization':'Bearer '+t}});if(!c.ok){throw new Error('Failed to find centres')}const d=await c.json();l.style.display='none';b.disabled=false;b.textContent='Search MOT Centres';if(!d.centres||d.centres.length===0){r.innerHTML='<div class="no-results">No MOT centres found near this postcode</div>';return}r.innerHTML='<h2 class="results-header">Found '+d.centres.length+' MOT Centre'+(d.centres.length>1?'s':'')+' Near '+p+'</h2>';d.centres.forEach(c=>{const div=document.createElement('div');div.className='centre';let h=`<h3>${c.name}</h3><div class="centre-info">📍 ${c.address}</div>`;if(c.rating&&c.rating!=='N/A')h+=`<div class="centre-info">⭐ <span class="centre-rating">${c.rating}/5</span></div>`;if(c.phone)h+=`<div class="centre-info">📞 <a href="tel:${c.phone}" class="phone">${c.phone}</a></div>`;if(c.isOpenNow!==undefined)h+=`<div class="centre-info">🕐 <span class="${c.isOpenNow?'open':'closed'}">${c.isOpenNow?'Open Now':'Closed'}</span></div>`;if(c.hours&&c.hours.length>0){h+='<details><summary>Opening Hours</summary><ul class="hours-list">';c.hours.forEach(d=>h+=`<li>${d}</li>`);h+='</ul></details>'}div.innerHTML=h;r.appendChild(div)})}catch(err){l.style.display='none';b.disabled=false;b.textContent='Search MOT Centres';if(err.message.includes('Session')){e.textContent=err.message+'. Redirecting...';e.style.display='block';setTimeout(()=>window.location.href='/signin.html?redirect=/mot-search.html',2000)}else{e.textContent=err.message;e.style.display='block'}}}document.getElementById('postcode').addEventListener('keypress',e=>{if(e.key==='Enter')searchCentres()});
 </script>
-
 </body>
 </html>
