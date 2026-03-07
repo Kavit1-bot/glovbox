@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MOT Search Diagnostic</title>
+<style>
+body{font-family:Arial;padding:20px;max-width:600px;margin:0 auto}
+.status{padding:10px;margin:10px 0;border-radius:5px}
+.success{background:#d4edda;color:#155724}
+.error{background:#f8d7da;color:#721c24}
+.info{background:#d1ecf1;color:#0c5460}
+button{background:#FF6B35;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;margin:5px}
+input{padding:10px;border:2px solid #ddd;border-radius:5px;width:200px}
+</style>
+</head>
+<body>
+<h1>🔧 MOT Search Diagnostic Tool</h1>
+
+<div id="results"></div>
+
+<h2>Step 1: Check Authentication</h2>
+<button onclick="checkAuth()">Test Auth Token</button>
+
+<h2>Step 2: Test Geocoding</h2>
+<input id="postcode" placeholder="Enter postcode" value="HA2 7PE">
+<button onclick="testGeocode()">Test Geocode</button>
+
+<h2>Step 3: Full MOT Search Test</h2>
+<button onclick="fullTest()">Run Full Test</button>
+
+<script>
+const results = document.getElementById('results');
+
+function addResult(message, type) {
+  const div = document.createElement('div');
+  div.className = `status ${type}`;
+  div.textContent = message;
+  results.appendChild(div);
+}
+
+async function checkAuth() {
+  results.innerHTML = '';
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    addResult('❌ NO TOKEN FOUND - Please sign in first!', 'error');
+    return;
+  }
+  
+  addResult('✅ Token found: ' + token.substring(0, 20) + '...', 'success');
+  
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    if (response.ok) {
+      addResult('✅ Token is valid!', 'success');
+    } else {
+      addResult('❌ Token is invalid or expired', 'error');
+    }
+  } catch (error) {
+    addResult('❌ Error: ' + error.message, 'error');
+  }
+}
+
+async function testGeocode() {
+  results.innerHTML = '';
+  const token = localStorage.getItem('token');
+  const postcode = document.getElementById('postcode').value.trim();
+  
+  if (!token) {
+    addResult('❌ NO TOKEN - Please sign in first!', 'error');
+    return;
+  }
+  
+  if (!postcode) {
+    addResult('❌ Please enter a postcode', 'error');
+    return;
+  }
+  
+  addResult('⏳ Testing geocode for: ' + postcode, 'info');
+  
+  try {
+    const response = await fetch('/api/geocode?postcode=' + encodeURIComponent(postcode), {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      addResult('✅ Geocoding SUCCESS!', 'success');
+      addResult('📍 Latitude: ' + data.lat, 'success');
+      addResult('📍 Longitude: ' + data.lng, 'success');
+    } else {
+      addResult('❌ Geocoding FAILED: ' + data.error, 'error');
+    }
+  } catch (error) {
+    addResult('❌ Network Error: ' + error.message, 'error');
+  }
+}
+
+async function fullTest() {
+  results.innerHTML = '';
+  
+  addResult('🔍 Running full MOT search test...', 'info');
+  
+  // Step 1: Check token
+  const token = localStorage.getItem('token');
+  if (!token) {
+    addResult('❌ FAIL - No authentication token', 'error');
+    addResult('➡️ Please sign in at /signin.html', 'info');
+    return;
+  }
+  addResult('✅ Step 1: Auth token found', 'success');
+  
+  // Step 2: Test geocode
+  const postcode = 'HA2 7PE';
+  addResult('⏳ Step 2: Testing geocode...', 'info');
+  
+  try {
+    const geocodeResponse = await fetch('/api/geocode?postcode=' + postcode, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    if (!geocodeResponse.ok) {
+      const error = await geocodeResponse.json();
+      addResult('❌ FAIL - Geocoding failed: ' + error.error, 'error');
+      
+      if (geocodeResponse.status === 401) {
+        addResult('➡️ Token expired - please sign in again', 'info');
+      } else if (geocodeResponse.status === 404) {
+        addResult('➡️ Postcode not found or invalid', 'info');
+      } else if (geocodeResponse.status === 500) {
+        addResult('➡️ Server error - check GOOGLE_MAPS_API_KEY', 'info');
+      }
+      return;
+    }
+    
+    const location = await geocodeResponse.json();
+    addResult('✅ Step 2: Geocoding SUCCESS', 'success');
+    addResult('📍 Location: ' + location.lat + ', ' + location.lng, 'success');
+    
+    // Step 3: Test MOT centres
+    addResult('⏳ Step 3: Searching for MOT centres...', 'info');
+    
+    const motResponse = await fetch(
+      `/api/mot-centres?lat=${location.lat}&lng=${location.lng}`,
+      { headers: { 'Authorization': 'Bearer ' + token } }
+    );
+    
+    if (!motResponse.ok) {
+      const error = await motResponse.json();
+      addResult('❌ FAIL - MOT search failed: ' + error.error, 'error');
+      return;
+    }
+    
+    const centres = await motResponse.json();
+    addResult('✅ Step 3: Found ' + centres.centres.length + ' MOT centres!', 'success');
+    
+    if (centres.centres.length > 0) {
+      addResult('📍 First centre: ' + centres.centres[0].name, 'info');
+    }
+    
+    addResult('🎉 ALL TESTS PASSED - MOT Search is working!', 'success');
+    
+  } catch (error) {
+    addResult('❌ NETWORK ERROR: ' + error.message, 'error');
+    addResult('➡️ Check if server is deployed properly', 'info');
+  }
+}
+</script>
+
+<hr>
+<h3>📋 Checklist:</h3>
+<ul>
+<li>✅ Server deployed with geocode endpoint</li>
+<li>✅ GOOGLE_MAPS_API_KEY set in Railway environment</li>
+<li>✅ User is signed in (has auth token)</li>
+<li>✅ Valid UK postcode entered</li>
+</ul>
+
+<h3>🔑 Expected Environment Variables:</h3>
+<pre>
+DVLA_API_KEY=your_key_here
+GOOGLE_MAPS_API_KEY=AIzaSyBVaYdfL0n2zQ8KOJVWjaTDifEpSXAtjHI
+JWT_SECRET=your_secret
+BREVO_API_KEY=your_key
+</pre>
+
+</body>
+</html>
