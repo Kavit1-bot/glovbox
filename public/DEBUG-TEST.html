@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head><title>Glovbox Debug Test</title></head>
+<body>
+<h1>Glovbox API Debug Test</h1>
+<div id="results"></div>
+
+<script>
+const results = document.getElementById('results');
+
+async function testAll() {
+  results.innerHTML = '<h2>Testing all endpoints...</h2>';
+  
+  // Test 1: Public vehicle endpoint
+  results.innerHTML += '<h3>Test 1: Public Vehicle Endpoint (Homepage)</h3>';
+  try {
+    const res = await fetch('/api/vehicle-public/D11XTK');
+    const data = await res.json();
+    results.innerHTML += `<p style="color:green">✅ Status: ${res.status}</p>`;
+    results.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+  } catch (e) {
+    results.innerHTML += `<p style="color:red">❌ Error: ${e.message}</p>`;
+  }
+  
+  // Test 2: Signin endpoint
+  results.innerHTML += '<h3>Test 2: Signin Endpoint</h3>';
+  try {
+    const res = await fetch('/api/signin', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: 'test@test.com', password: 'test123'})
+    });
+    const data = await res.json();
+    results.innerHTML += `<p style="color:${res.ok ? 'green' : 'orange'}">Status: ${res.status}</p>`;
+    results.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+  } catch (e) {
+    results.innerHTML += `<p style="color:red">❌ Error: ${e.message}</p>`;
+  }
+  
+  // Test 3: Check localStorage
+  results.innerHTML += '<h3>Test 3: LocalStorage Token</h3>';
+  const token = localStorage.getItem('token');
+  results.innerHTML += `<p>Token: ${token ? '✅ EXISTS (length: ' + token.length + ')' : '❌ NOT FOUND'}</p>`;
+  if (token) {
+    results.innerHTML += `<p>Preview: ${token.substring(0, 50)}...</p>`;
+  }
+  
+  // Test 4: Check what files exist
+  results.innerHTML += '<h3>Test 4: File Existence</h3>';
+  const files = ['/signin.html', '/signup.html', '/dashboard.html', '/mot-search.html'];
+  for (const file of files) {
+    try {
+      const res = await fetch(file);
+      results.innerHTML += `<p style="color:${res.ok ? 'green' : 'red'}">${file}: ${res.ok ? '✅ EXISTS' : '❌ NOT FOUND'}</p>`;
+    } catch (e) {
+      results.innerHTML += `<p style="color:red">${file}: ❌ ERROR</p>`;
+    }
+  }
+}
+
+testAll();
+</script>
+</body>
+</html>
