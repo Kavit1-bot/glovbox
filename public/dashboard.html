@@ -6,7 +6,7 @@
 <title>Dashboard - Glovbox</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}.nav-links{display:flex;gap:20px;align-items:center}.nav-link{color:#64748B;text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:6px;transition:all 0.2s}.nav-link:hover{background:#F8FAFC;color:#0B3D91}.nav-link.active{background:#0B3D91;color:white}.btn-signout{background:#DC2626;color:white;padding:8px 16px;border-radius:6px;border:none;font-weight:700;font-size:14px;cursor:pointer}.btn-signout:hover{background:#B91C1C}.container{max-width:1200px;margin:40px auto;padding:0 20px}.welcome{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:32px;border-radius:16px;margin-bottom:32px}.welcome h1{font-size:32px;margin-bottom:8px}.welcome p{font-size:16px;opacity:0.95}.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}.quick-link{background:white;padding:20px;border-radius:12px;border:2px solid #E2E8F0;text-decoration:none;color:inherit;transition:all 0.3s;cursor:pointer}.quick-link:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1);transform:translateY(-2px)}.quick-link-icon{font-size:32px;margin-bottom:12px}.quick-link h3{color:#0B3D91;font-size:16px;margin-bottom:4px}.quick-link p{color:#64748B;font-size:13px}.card{background:white;border-radius:12px;padding:24px;border:1px solid #E2E8F0;margin-bottom:20px}.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.card-header h2{color:#0B3D91;font-size:20px}.btn-primary{background:#FF6B35;color:white;padding:12px 24px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}.btn-primary:hover{background:#E85A2A}.btn-secondary{background:#0B3D91;color:white;padding:10px 20px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;margin-left:8px}.btn-secondary:hover{background:#0A2F6F}.empty-state{text-align:center;padding:60px 20px;color:#64748B}.empty-state-icon{font-size:64px;margin-bottom:16px}.empty-state h3{color:#0B3D91;margin-bottom:8px;font-size:20px}.empty-state p{margin-bottom:24px}.vehicle-card{border:2px solid #E2E8F0;border-radius:12px;padding:20px;margin-bottom:16px;cursor:pointer;transition:all 0.2s}.vehicle-card:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1)}.vehicle-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.vehicle-reg{color:#0B3D91;font-size:20px;font-weight:700}.vehicle-info{color:#64748B;font-size:14px;margin-bottom:12px}.vehicle-status{display:flex;gap:16px;margin-top:12px}.status-badge{padding:6px 12px;border-radius:6px;font-size:13px;font-weight:700}.status-valid{background:#D1FAE5;color:#065F46}.status-expired{background:#FEE2E2;color:#991B1B}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:white;border-radius:16px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.modal-header h2{color:#0B3D91;font-size:24px}.modal-close{background:none;border:none;font-size:28px;color:#64748B;cursor:pointer;line-height:1}.modal-close:hover{color:#0B3D91}.form-group{margin-bottom:20px}.form-group label{display:block;color:#0B3D91;font-weight:600;margin-bottom:8px;font-size:14px}.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:2px solid #E2E8F0;border-radius:8px;font-size:14px;font-family:inherit}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#0B3D91}.form-group textarea{resize:vertical;min-height:100px}.tabs{display:flex;gap:8px;border-bottom:2px solid #E2E8F0;margin-bottom:24px}.tab{padding:12px 24px;border:none;background:none;color:#64748B;font-weight:600;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}.tab:hover{color:#0B3D91}.tab.active{color:#0B3D91;border-bottom-color:#0B3D91}.tab-content{display:none}.tab-content.active{display:block}.expense-item{border-left:4px solid #0B3D91;padding:12px 16px;background:#F8FAFC;border-radius:8px;margin-bottom:12px}.expense-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.expense-amount{color:#0B3D91;font-weight:700;font-size:16px}.expense-category{color:#64748B;font-size:13px}.loading{display:none;text-align:center;padding:40px}.spinner{border:3px solid #E2E8F0;border-top:3px solid #0B3D91;border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.success-msg{background:#D1FAE5;color:#065F46;padding:12px;border-radius:8px;margin-bottom:16px;display:none}.error-msg{background:#FEE2E2;color:#991B1B;padding:12px;border-radius:8px;margin-bottom:16px;display:none}.reminder-item{display:flex;justify-content:space-between;align-items:center;padding:16px;border:1px solid #E2E8F0;border-radius:8px;margin-bottom:12px}.reminder-info h4{color:#0B3D91;font-size:15px;margin-bottom:4px}.reminder-info p{color:#64748B;font-size:13px}.reminder-days{background:#FEF3C7;color:#92400E;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px}.btn-pdf{background:#10B981;color:white;padding:12px 24px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}.btn-pdf:hover{background:#059669}.btn-pdf:disabled{background:#CBD5E1;cursor:not-allowed}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}.logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}.nav-links{display:flex;gap:20px;align-items:center}.nav-link{color:#64748B;text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:6px;transition:all 0.2s}.nav-link:hover{background:#F8FAFC;color:#0B3D91}.nav-link.active{background:#0B3D91;color:white}.btn-signout{background:#DC2626;color:white;padding:8px 16px;border-radius:6px;border:none;font-weight:700;font-size:14px;cursor:pointer}.btn-signout:hover{background:#B91C1C}.container{max-width:1200px;margin:40px auto;padding:0 20px}.welcome{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:32px;border-radius:16px;margin-bottom:32px}.welcome h1{font-size:32px;margin-bottom:8px}.welcome p{font-size:16px;opacity:0.95}.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}.quick-link{background:white;padding:20px;border-radius:12px;border:2px solid #E2E8F0;text-decoration:none;color:inherit;transition:all 0.3s;cursor:pointer}.quick-link:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1);transform:translateY(-2px)}.quick-link-icon{font-size:32px;margin-bottom:12px}.quick-link h3{color:#0B3D91;font-size:16px;margin-bottom:4px}.quick-link p{color:#64748B;font-size:13px}.card{background:white;border-radius:12px;padding:24px;border:1px solid #E2E8F0;margin-bottom:20px}.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.card-header h2{color:#0B3D91;font-size:20px}.btn-primary{background:#FF6B35;color:white;padding:12px 24px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}.btn-primary:hover{background:#E85A2A}.empty-state{text-align:center;padding:60px 20px;color:#64748B}.empty-state-icon{font-size:64px;margin-bottom:16px}.empty-state h3{color:#0B3D91;margin-bottom:8px;font-size:20px}.empty-state p{margin-bottom:24px}.vehicle-card{border:2px solid #E2E8F0;border-radius:12px;padding:20px;margin-bottom:16px;cursor:pointer;transition:all 0.2s}.vehicle-card:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1)}.vehicle-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.vehicle-reg{color:#0B3D91;font-size:20px;font-weight:700}.vehicle-info{color:#64748B;font-size:14px;margin-bottom:12px}.vehicle-status{display:flex;gap:16px;margin-top:12px}.status-badge{padding:6px 12px;border-radius:6px;font-size:13px;font-weight:700}.status-valid{background:#D1FAE5;color:#065F46}.status-expired{background:#FEE2E2;color:#991B1B}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:white;border-radius:16px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.modal-header h2{color:#0B3D91;font-size:24px}.modal-close{background:none;border:none;font-size:28px;color:#64748B;cursor:pointer;line-height:1}.modal-close:hover{color:#0B3D91}.form-group{margin-bottom:20px}.form-group label{display:block;color:#0B3D91;font-weight:600;margin-bottom:8px;font-size:14px}.form-group input{width:100%;padding:12px;border:2px solid #E2E8F0;border-radius:8px;font-size:14px}.form-group input:focus{outline:none;border-color:#0B3D91}.loading{text-align:center;padding:40px;display:none}.spinner{border:3px solid #E2E8F0;border-top:3px solid:#0B3D91;border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.success-msg{background:#D1FAE5;color:#065F46;padding:12px;border-radius:8px;margin-bottom:16px;display:none}.error-msg{background:#FEE2E2;color:#991B1B;padding:12px;border-radius:8px;margin-bottom:16px;display:none}
 </style>
 </head>
 <body>
@@ -18,15 +18,14 @@
 <a href="/mot-search.html" class="nav-link">MOT Search</a>
 <a href="/insurance.html" class="nav-link">Insurance</a>
 <a href="/breakdown.html" class="nav-link">Breakdown</a>
-<a href="#" class="nav-link" onclick="showAccountModal();return false;">My Account</a>
 <button class="btn-signout" onclick="signOut()">Sign Out</button>
 </div>
 </nav>
 
 <div class="container">
 
-<div class="welcome" id="welcome">
-<h1>Welcome back! 👋</h1>
+<div class="welcome">
+<h1 id="welcomeMsg">Welcome back! 👋</h1>
 <p>Manage your vehicles and never miss an important date</p>
 </div>
 
@@ -66,13 +65,6 @@
 </div>
 </div>
 
-<div class="card" id="remindersCard" style="display:none">
-<div class="card-header">
-<h2>🔔 Upcoming Reminders</h2>
-</div>
-<div id="remindersList"></div>
-</div>
-
 </div>
 
 <!-- Add Vehicle Modal -->
@@ -82,15 +74,14 @@
 <h2>Add New Vehicle</h2>
 <button class="modal-close" onclick="closeAddVehicleModal()">×</button>
 </div>
-<div class="success-msg" id="addVehicleSuccess"></div>
-<div class="error-msg" id="addVehicleError"></div>
-<form onsubmit="addVehicle(event)">
+<div class="success-msg" id="addSuccess"></div>
+<div class="error-msg" id="addError"></div>
+<form onsubmit="return addVehicle(event)">
 <div class="form-group">
 <label for="vehicleReg">Registration Number *</label>
 <input type="text" id="vehicleReg" placeholder="e.g. AB12 CDE" maxlength="8" required style="text-transform:uppercase">
-<p style="color:#64748B;font-size:12px;margin-top:4px">We'll automatically fetch vehicle details from DVLA</p>
 </div>
-<div class="loading" id="addVehicleLoading">
+<div class="loading" id="addLoading">
 <div class="spinner"></div>
 <p style="color:#64748B">Adding vehicle...</p>
 </div>
@@ -99,207 +90,39 @@
 </div>
 </div>
 
-<!-- Vehicle Details Modal -->
-<div class="modal" id="vehicleModal">
-<div class="modal-content" style="max-width:800px">
-<div class="modal-header">
-<h2 id="vehicleModalTitle">Vehicle Details</h2>
-<button class="modal-close" onclick="closeVehicleModal()">×</button>
-</div>
-
-<div class="tabs">
-<button class="tab active" onclick="switchTab('overview')">Overview</button>
-<button class="tab" onclick="switchTab('logbook')">Service Logbook</button>
-<button class="tab" onclick="switchTab('expenses')">Expenses</button>
-</div>
-
-<div id="overviewTab" class="tab-content active">
-<div id="vehicleDetails"></div>
-<button class="btn-pdf" onclick="exportPDF()" id="exportPdfBtn">
-<span>📄</span> Export PDF Report
-</button>
-<button class="btn-secondary" onclick="deleteVehicle()" style="background:#DC2626">
-Delete Vehicle
-</button>
-</div>
-
-<div id="logbookTab" class="tab-content">
-<div class="card-header">
-<h3 style="color:#0B3D91">Service History</h3>
-<button class="btn-primary" onclick="showAddServiceModal()">+ Add Service</button>
-</div>
-<div id="serviceList">
-<div class="empty-state">
-<p>No service records yet</p>
-</div>
-</div>
-</div>
-
-<div id="expensesTab" class="tab-content">
-<div class="card-header">
-<h3 style="color:#0B3D91">Vehicle Expenses</h3>
-<button class="btn-primary" onclick="showAddExpenseModal()">+ Add Expense</button>
-</div>
-<div id="expensesList">
-<div class="empty-state">
-<p>No expenses recorded yet</p>
-</div>
-</div>
-<div id="expensesTotal" style="margin-top:20px;padding:16px;background:#F0F9FF;border-radius:8px;display:none">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span style="color:#0B3D91;font-weight:700">Total Expenses:</span>
-<span style="color:#0B3D91;font-size:24px;font-weight:700" id="totalAmount">£0.00</span>
-</div>
-</div>
-</div>
-
-</div>
-</div>
-
-<!-- Add Service Modal -->
-<div class="modal" id="addServiceModal">
-<div class="modal-content">
-<div class="modal-header">
-<h2>Add Service Record</h2>
-<button class="modal-close" onclick="closeAddServiceModal()">×</button>
-</div>
-<form onsubmit="addService(event)">
-<div class="form-group">
-<label for="serviceDate">Date *</label>
-<input type="date" id="serviceDate" required>
-</div>
-<div class="form-group">
-<label for="serviceType">Service Type *</label>
-<select id="serviceType" required>
-<option value="">Select type...</option>
-<option value="Annual Service">Annual Service</option>
-<option value="MOT">MOT Test</option>
-<option value="Oil Change">Oil Change</option>
-<option value="Brake Service">Brake Service</option>
-<option value="Tyre Replacement">Tyre Replacement</option>
-<option value="Other">Other</option>
-</select>
-</div>
-<div class="form-group">
-<label for="serviceMileage">Mileage</label>
-<input type="number" id="serviceMileage" placeholder="e.g. 45000">
-</div>
-<div class="form-group">
-<label for="serviceNotes">Notes</label>
-<textarea id="serviceNotes" placeholder="Any additional details..."></textarea>
-</div>
-<button type="submit" class="btn-primary" style="width:100%">Add Service Record</button>
-</form>
-</div>
-</div>
-
-<!-- Add Expense Modal -->
-<div class="modal" id="addExpenseModal">
-<div class="modal-content">
-<div class="modal-header">
-<h2>Add Expense</h2>
-<button class="modal-close" onclick="closeAddExpenseModal()">×</button>
-</div>
-<form onsubmit="addExpense(event)">
-<div class="form-group">
-<label for="expenseDate">Date *</label>
-<input type="date" id="expenseDate" required>
-</div>
-<div class="form-group">
-<label for="expenseCategory">Category *</label>
-<select id="expenseCategory" required>
-<option value="">Select category...</option>
-<option value="Fuel">Fuel</option>
-<option value="Service">Service</option>
-<option value="Repairs">Repairs</option>
-<option value="Insurance">Insurance</option>
-<option value="Road Tax">Road Tax</option>
-<option value="MOT">MOT</option>
-<option value="Parts">Parts</option>
-<option value="Other">Other</option>
-</select>
-</div>
-<div class="form-group">
-<label for="expenseAmount">Amount (£) *</label>
-<input type="number" id="expenseAmount" step="0.01" placeholder="0.00" required>
-</div>
-<div class="form-group">
-<label for="expenseNotes">Notes</label>
-<textarea id="expenseNotes" placeholder="Optional notes..."></textarea>
-</div>
-<button type="submit" class="btn-primary" style="width:100%">Add Expense</button>
-</form>
-</div>
-</div>
-
-<!-- My Account Modal -->
-<div class="modal" id="accountModal">
-<div class="modal-content">
-<div class="modal-header">
-<h2>My Account</h2>
-<button class="modal-close" onclick="closeAccountModal()">×</button>
-</div>
-<div class="success-msg" id="accountSuccess"></div>
-<div class="error-msg" id="accountError"></div>
-<div class="form-group">
-<label>Name</label>
-<input type="text" id="accountName" readonly style="background:#F8FAFC">
-</div>
-<div class="form-group">
-<label>Email</label>
-<input type="email" id="accountEmail" readonly style="background:#F8FAFC">
-</div>
-<div class="form-group">
-<label>Member Since</label>
-<input type="text" id="accountCreated" readonly style="background:#F8FAFC">
-</div>
-<hr style="margin:24px 0;border:none;border-top:1px solid #E2E8F0">
-<h3 style="color:#0B3D91;margin-bottom:16px">Change Password</h3>
-<form onsubmit="changePassword(event)">
-<div class="form-group">
-<label for="currentPassword">Current Password</label>
-<input type="password" id="currentPassword" placeholder="Enter current password">
-</div>
-<div class="form-group">
-<label for="newPassword">New Password</label>
-<input type="password" id="newPassword" placeholder="Enter new password" minlength="8">
-</div>
-<button type="submit" class="btn-primary" style="width:100%">Update Password</button>
-</form>
-</div>
-</div>
-
 <script>
-let currentVehicle = null;
-let allVehicles = [];
+console.log('🚀 Dashboard loading...');
 
-// Authentication check
+// Check authentication
 window.addEventListener('DOMContentLoaded', function() {
   const token = localStorage.getItem('token');
   const userName = localStorage.getItem('userName');
   
-  console.log('🔐 Dashboard loading...');
   console.log('Token:', token ? 'Present' : 'Missing');
+  console.log('User:', userName || 'Not set');
   
   if (!token) {
-    console.log('❌ No token - redirecting to signin');
+    console.log('No token - redirecting');
     window.location.href = '/signin.html?redirect=/dashboard.html';
     return;
   }
   
   if (userName) {
-    document.querySelector('.welcome h1').textContent = 'Welcome back, ' + userName + '! 👋';
+    document.getElementById('welcomeMsg').textContent = 'Welcome back, ' + userName + '! 👋';
   }
   
   loadVehicles();
-  loadReminders();
 });
 
 async function loadVehicles() {
   const token = localStorage.getItem('token');
-  document.getElementById('vehiclesLoading').style.display = 'block';
+  const loadingDiv = document.getElementById('vehiclesLoading');
+  const listDiv = document.getElementById('vehiclesList');
+  
+  loadingDiv.style.display = 'block';
   
   try {
+    console.log('Loading vehicles...');
     const response = await fetch('/api/user/vehicles', {
       headers: {'Authorization': 'Bearer ' + token}
     });
@@ -311,102 +134,68 @@ async function loadVehicles() {
     }
     
     const data = await response.json();
-    allVehicles = data.vehicles || [];
+    console.log('Vehicles:', data);
     
-    document.getElementById('vehiclesLoading').style.display = 'none';
+    loadingDiv.style.display = 'none';
     
-    if (allVehicles.length === 0) {
-      document.getElementById('vehiclesList').innerHTML = `
+    if (!data.vehicles || data.vehicles.length === 0) {
+      listDiv.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">🚙</div>
           <h3>No vehicles added yet</h3>
-          <p>Add your first vehicle to start tracking MOT, tax, and service history</p>
+          <p>Add your first vehicle to start tracking</p>
           <button class="btn-primary" onclick="showAddVehicleModal()">Add Your First Vehicle</button>
         </div>
       `;
-    } else {
-      displayVehicles(allVehicles);
+      return;
     }
-  } catch (error) {
-    console.error('Error loading vehicles:', error);
-    document.getElementById('vehiclesLoading').style.display = 'none';
-  }
-}
-
-function displayVehicles(vehicles) {
-  const html = vehicles.map(v => `
-    <div class="vehicle-card" onclick="viewVehicle('${v.registration}')">
-      <div class="vehicle-header">
-        <div class="vehicle-reg">${v.registration}</div>
-        <button class="btn-pdf" onclick="event.stopPropagation();exportVehiclePDF('${v.registration'}" style="padding:8px 16px;font-size:12px">
-          📄 Export PDF
-        </button>
-      </div>
-      <div class="vehicle-info">${v.make} ${v.model} (${v.year || 'N/A'})</div>
-      <div class="vehicle-status">
-        <span class="status-badge ${v.motStatus === 'Valid' ? 'status-valid' : 'status-expired'}">
-          MOT: ${v.motStatus || 'Unknown'}
-        </span>
-        <span class="status-badge ${v.taxStatus === 'Taxed' ? 'status-valid' : 'status-expired'}">
-          Tax: ${v.taxStatus || 'Unknown'}
-        </span>
-      </div>
-      ${v.motExpiryDate ? `<div style="color:#64748B;font-size:13px;margin-top:8px">MOT expires: ${v.motExpiryDate}</div>` : ''}
-    </div>
-  `).join('');
-  
-  document.getElementById('vehiclesList').innerHTML = html;
-}
-
-async function loadReminders() {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/notifications', {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
     
-    const data = await response.json();
-    
-    if (data.notifications && data.notifications.length > 0) {
-      document.getElementById('remindersCard').style.display = 'block';
-      
-      const html = data.notifications.slice(0, 5).map(n => `
-        <div class="reminder-item">
-          <div class="reminder-info">
-            <h4>${n.title}</h4>
-            <p>${n.message}</p>
-          </div>
-          <span class="reminder-days">${n.daysUntil} days</span>
+    listDiv.innerHTML = data.vehicles.map(v => `
+      <div class="vehicle-card" onclick="alert('Vehicle details for ${v.registration}')">
+        <div class="vehicle-header">
+          <div class="vehicle-reg">${v.registration}</div>
         </div>
-      `).join('');
-      
-      document.getElementById('remindersList').innerHTML = html;
-    }
+        <div class="vehicle-info">${v.make} ${v.model} ${v.year ? '(' + v.year + ')' : ''}</div>
+        <div class="vehicle-status">
+          <span class="status-badge ${v.motStatus === 'Valid' ? 'status-valid' : 'status-expired'}">
+            MOT: ${v.motStatus || 'Unknown'}
+          </span>
+          <span class="status-badge ${v.taxStatus === 'Taxed' ? 'status-valid' : 'status-expired'}">
+            Tax: ${v.taxStatus || 'Unknown'}
+          </span>
+        </div>
+      </div>
+    `).join('');
+    
   } catch (error) {
-    console.error('Error loading reminders:', error);
+    console.error('Error:', error);
+    loadingDiv.style.display = 'none';
+    listDiv.innerHTML = '<div class="error-msg" style="display:block">Failed to load vehicles</div>';
   }
 }
 
 function showAddVehicleModal() {
+  console.log('Opening add vehicle modal');
   document.getElementById('addVehicleModal').classList.add('active');
   document.getElementById('vehicleReg').value = '';
-  document.getElementById('addVehicleSuccess').style.display = 'none';
-  document.getElementById('addVehicleError').style.display = 'none';
+  document.getElementById('addSuccess').style.display = 'none';
+  document.getElementById('addError').style.display = 'none';
 }
 
 function closeAddVehicleModal() {
+  console.log('Closing modal');
   document.getElementById('addVehicleModal').classList.remove('active');
 }
 
 async function addVehicle(e) {
   e.preventDefault();
+  console.log('Adding vehicle...');
   
   const reg = document.getElementById('vehicleReg').value.toUpperCase().replace(/\s/g, '');
   const token = localStorage.getItem('token');
-  const errorDiv = document.getElementById('addVehicleError');
-  const successDiv = document.getElementById('addVehicleSuccess');
-  const loadingDiv = document.getElementById('addVehicleLoading');
+  const errorDiv = document.getElementById('addError');
+  const successDiv = document.getElementById('addSuccess');
+  const loadingDiv = document.getElementById('addLoading');
   
   errorDiv.style.display = 'none';
   successDiv.style.display = 'none';
@@ -428,10 +217,10 @@ async function addVehicle(e) {
     if (!response.ok) {
       errorDiv.textContent = data.error || 'Failed to add vehicle';
       errorDiv.style.display = 'block';
-      return;
+      return false;
     }
     
-    successDiv.textContent = '✅ Vehicle added successfully!';
+    successDiv.textContent = '✅ Vehicle added!';
     successDiv.style.display = 'block';
     
     setTimeout(() => {
@@ -440,381 +229,29 @@ async function addVehicle(e) {
     }, 1500);
     
   } catch (error) {
-    loadingDiv.style.display = 'none';
-    errorDiv.textContent = 'Error adding vehicle. Please try again.';
-    errorDiv.style.display = 'block';
-  }
-}
-
-async function viewVehicle(reg) {
-  currentVehicle = reg;
-  const vehicle = allVehicles.find(v => v.registration === reg);
-  
-  if (!vehicle) return;
-  
-  document.getElementById('vehicleModalTitle').textContent = reg + ' Details';
-  
-  const detailsHtml = `
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
-      <div>
-        <p style="color:#64748B;font-size:13px">Make</p>
-        <p style="color:#0B3D91;font-weight:700;font-size:16px">${vehicle.make}</p>
-      </div>
-      <div>
-        <p style="color:#64748B;font-size:13px">Model</p>
-        <p style="color:#0B3D91;font-weight:700;font-size:16px">${vehicle.model}</p>
-      </div>
-      <div>
-        <p style="color:#64748B;font-size:13px">Year</p>
-        <p style="color:#0B3D91;font-weight:700;font-size:16px">${vehicle.year || 'N/A'}</p>
-      </div>
-      <div>
-        <p style="color:#64748B;font-size:13px">Colour</p>
-        <p style="color:#0B3D91;font-weight:700;font-size:16px">${vehicle.colour || 'N/A'}</p>
-      </div>
-      <div>
-        <p style="color:#64748B;font-size:13px">MOT Status</p>
-        <p class="${vehicle.motStatus === 'Valid' ? 'status-valid' : 'status-expired'}" style="font-weight:700;font-size:16px">${vehicle.motStatus || 'Unknown'}</p>
-        ${vehicle.motExpiryDate ? `<p style="font-size:12px;color:#64748B">Expires: ${vehicle.motExpiryDate}</p>` : ''}
-      </div>
-      <div>
-        <p style="color:#64748B;font-size:13px">Tax Status</p>
-        <p class="${vehicle.taxStatus === 'Taxed' ? 'status-valid' : 'status-expired'}" style="font-weight:700;font-size:16px">${vehicle.taxStatus || 'Unknown'}</p>
-        ${vehicle.taxDueDate ? `<p style="font-size:12px;color:#64748B">Due: ${vehicle.taxDueDate}</p>` : ''}
-      </div>
-    </div>
-  `;
-  
-  document.getElementById('vehicleDetails').innerHTML = detailsHtml;
-  document.getElementById('vehicleModal').classList.add('active');
-  
-  switchTab('overview');
-  loadServiceRecords(reg);
-  loadExpenses(reg);
-}
-
-function closeVehicleModal() {
-  document.getElementById('vehicleModal').classList.remove('active');
-  currentVehicle = null;
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  
-  document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-  document.getElementById(tab + 'Tab').classList.add('active');
-}
-
-async function loadServiceRecords(reg) {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/user/service-records?registration=' + reg, {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
-    
-    const data = await response.json();
-    
-    if (data.records && data.records.length > 0) {
-      const html = data.records.map(r => `
-        <div class="expense-item">
-          <div class="expense-header">
-            <span style="color:#0B3D91;font-weight:700">${r.type}</span>
-            <span style="color:#64748B;font-size:13px">${r.date}</span>
-          </div>
-          ${r.mileage ? `<p style="color:#64748B;font-size:13px">Mileage: ${r.mileage.toLocaleString()}</p>` : ''}
-          ${r.notes ? `<p style="color:#64748B;font-size:13px;margin-top:4px">${r.notes}</p>` : ''}
-        </div>
-      `).join('');
-      
-      document.getElementById('serviceList').innerHTML = html;
-    }
-  } catch (error) {
-    console.error('Error loading service records:', error);
-  }
-}
-
-async function loadExpenses(reg) {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/user/costs?registration=' + reg, {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
-    
-    const data = await response.json();
-    
-    if (data.costs && data.costs.length > 0) {
-      const html = data.costs.map(c => `
-        <div class="expense-item">
-          <div class="expense-header">
-            <span class="expense-category">${c.category}</span>
-            <span class="expense-amount">£${parseFloat(c.amount).toFixed(2)}</span>
-          </div>
-          <div style="color:#64748B;font-size:13px">${c.date}</div>
-          ${c.notes ? `<p style="color:#64748B;font-size:13px;margin-top:4px">${c.notes}</p>` : ''}
-        </div>
-      `).join('');
-      
-      const total = data.costs.reduce((sum, c) => sum + parseFloat(c.amount), 0);
-      
-      document.getElementById('expensesList').innerHTML = html;
-      document.getElementById('expensesTotal').style.display = 'block';
-      document.getElementById('totalAmount').textContent = '£' + total.toFixed(2);
-    }
-  } catch (error) {
-    console.error('Error loading expenses:', error);
-  }
-}
-
-function showAddServiceModal() {
-  document.getElementById('addServiceModal').classList.add('active');
-  document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
-}
-
-function closeAddServiceModal() {
-  document.getElementById('addServiceModal').classList.remove('active');
-}
-
-async function addService(e) {
-  e.preventDefault();
-  
-  const token = localStorage.getItem('token');
-  const serviceData = {
-    registration: currentVehicle,
-    date: document.getElementById('serviceDate').value,
-    type: document.getElementById('serviceType').value,
-    mileage: document.getElementById('serviceMileage').value || null,
-    notes: document.getElementById('serviceNotes').value || null
-  };
-  
-  try {
-    const response = await fetch('/api/user/service-records', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(serviceData)
-    });
-    
-    if (response.ok) {
-      closeAddServiceModal();
-      loadServiceRecords(currentVehicle);
-      document.getElementById('serviceType').value = '';
-      document.getElementById('serviceMileage').value = '';
-      document.getElementById('serviceNotes').value = '';
-    }
-  } catch (error) {
-    console.error('Error adding service:', error);
-    alert('Failed to add service record');
-  }
-}
-
-function showAddExpenseModal() {
-  document.getElementById('addExpenseModal').classList.add('active');
-  document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
-}
-
-function closeAddExpenseModal() {
-  document.getElementById('addExpenseModal').classList.remove('active');
-}
-
-async function addExpense(e) {
-  e.preventDefault();
-  
-  const token = localStorage.getItem('token');
-  const expenseData = {
-    registration: currentVehicle,
-    date: document.getElementById('expenseDate').value,
-    category: document.getElementById('expenseCategory').value,
-    amount: document.getElementById('expenseAmount').value,
-    notes: document.getElementById('expenseNotes').value || null
-  };
-  
-  try {
-    const response = await fetch('/api/user/costs', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(expenseData)
-    });
-    
-    if (response.ok) {
-      closeAddExpenseModal();
-      loadExpenses(currentVehicle);
-      document.getElementById('expenseCategory').value = '';
-      document.getElementById('expenseAmount').value = '';
-      document.getElementById('expenseNotes').value = '';
-    }
-  } catch (error) {
-    console.error('Error adding expense:', error);
-    alert('Failed to add expense');
-  }
-}
-
-async function exportPDF() {
-  if (!currentVehicle) return;
-  
-  const btn = document.getElementById('exportPdfBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generating PDF...';
-  
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/documents/export-pdf/' + currentVehicle, {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
-    
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = currentVehicle + '_vehicle_report.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } else {
-      alert('Failed to generate PDF');
-    }
-  } catch (error) {
-    console.error('Error exporting PDF:', error);
-    alert('Failed to export PDF');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<span>📄</span> Export PDF Report';
-  }
-}
-
-async function exportVehiclePDF(reg) {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/documents/export-pdf/' + reg, {
-      headers: {'Authorization': 'Bearer ' + token}
-    });
-    
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = reg + '_vehicle_report.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    }
-  } catch (error) {
     console.error('Error:', error);
-  }
-}
-
-async function deleteVehicle() {
-  if (!confirm('Are you sure you want to delete this vehicle? This cannot be undone.')) {
-    return;
-  }
-  
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/user/vehicles/' + currentVehicle, {
-      method: 'DELETE',
-      headers: {'Authorization': 'Bearer ' + token}
-    });
-    
-    if (response.ok) {
-      closeVehicleModal();
-      loadVehicles();
-    }
-  } catch (error) {
-    console.error('Error deleting vehicle:', error);
-    alert('Failed to delete vehicle');
-  }
-}
-
-function showAccountModal() {
-  const userName = localStorage.getItem('userName');
-  const userEmail = localStorage.getItem('userEmail');
-  
-  document.getElementById('accountName').value = userName || 'N/A';
-  document.getElementById('accountEmail').value = userEmail || 'N/A';
-  document.getElementById('accountCreated').value = 'Recently';
-  
-  document.getElementById('accountModal').classList.add('active');
-  document.getElementById('accountSuccess').style.display = 'none';
-  document.getElementById('accountError').style.display = 'none';
-}
-
-function closeAccountModal() {
-  document.getElementById('accountModal').classList.remove('active');
-  document.getElementById('currentPassword').value = '';
-  document.getElementById('newPassword').value = '';
-}
-
-async function changePassword(e) {
-  e.preventDefault();
-  
-  const currentPassword = document.getElementById('currentPassword').value;
-  const newPassword = document.getElementById('newPassword').value;
-  
-  if (!currentPassword || !newPassword) {
-    return;
-  }
-  
-  const successDiv = document.getElementById('accountSuccess');
-  const errorDiv = document.getElementById('accountError');
-  
-  successDiv.style.display = 'none';
-  errorDiv.style.display = 'none';
-  
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/user/change-password', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ currentPassword, newPassword })
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      successDiv.textContent = '✅ Password updated successfully!';
-      successDiv.style.display = 'block';
-      document.getElementById('currentPassword').value = '';
-      document.getElementById('newPassword').value = '';
-    } else {
-      errorDiv.textContent = data.error || 'Failed to update password';
-      errorDiv.style.display = 'block';
-    }
-  } catch (error) {
-    errorDiv.textContent = 'Error updating password';
+    loadingDiv.style.display = 'none';
+    errorDiv.textContent = 'Error adding vehicle';
     errorDiv.style.display = 'block';
   }
+  
+  return false;
 }
 
 function signOut() {
-  console.log('👋 Signing out...');
+  console.log('Signing out');
   localStorage.clear();
   window.location.href = '/';
 }
 
-// Close modals on outside click
+// Close modal on outside click
 window.onclick = function(event) {
   if (event.target.classList.contains('modal')) {
     event.target.classList.remove('active');
   }
 }
+
+console.log('✅ Dashboard JavaScript loaded');
 </script>
 
 </body>
