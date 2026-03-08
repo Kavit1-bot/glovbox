@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Glovbox - MOT, Insurance & Road Tax in One Place</title>
-<meta name="description" content="Never miss your MOT or road tax deadline. Free automated reminders, MOT centre finder, insurance comparison, and digital service logbook.">
+<title>Glovbox - Never Miss Your MOT & Road Tax Again</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}:root{--blue:#0B3D91;--orange:#FF6B35;--green:#10B981;--white:#FFF;--bg:#F8FAFC;--border:#E2E8F0;--text:#1E293B}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}nav{background:rgba(255,255,255,0.98);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:700;font-size:18px;color:var(--blue);text-decoration:none}.hero{padding:24px 20px 16px;text-align:center}.hero h1{font-size:28px;font-weight:700;color:var(--blue);line-height:1.2;margin-bottom:8px}.tagline{font-size:15px;color:#64748B;margin-bottom:4px}.subtitle{font-size:13px;color:#64748B}.check-section{padding:0 20px 24px}.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(11,61,145,0.06)}.card h2{font-size:18px;color:var(--blue);margin-bottom:6px}.card-subtitle{color:#64748B;font-size:13px;margin-bottom:20px}input{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:15px;margin-bottom:12px}input:focus{outline:none;border-color:var(--blue)}.btn-check{width:100%;background:var(--orange);color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:15px;cursor:pointer}.btn-check:hover{background:#E85A2A}.loading{display:none;text-align:center;padding:24px}.spinner{border:3px solid var(--border);border-top:3px solid var(--blue);border-radius:50%;width:32px;height:32px;animation:spin 0.8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.results{display:none;margin-top:16px;padding:16px;background:var(--bg);border-radius:8px}.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}.result-row:last-child{border-bottom:none}.result-label{font-weight:600;color:var(--blue)}.status-valid{color:var(--green);font-weight:600}.status-expired{color:#EF4444;font-weight:600}.trust-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;padding:12px;background:#F1F5F9;border-radius:8px;margin-top:16px;font-size:12px}.trust-badge{display:flex;align-items:center;gap:6px;font-weight:600}.pricing{padding:32px 20px;text-align:center}.section-title{font-size:24px;font-weight:700;color:var(--blue);margin-bottom:8px}.section-subtitle{font-size:14px;color:#64748B;margin-bottom:24px}.pricing-box{background:var(--white);border:2px solid var(--green);border-radius:12px;padding:28px 20px}.price{font-size:48px;font-weight:700;color:var(--green);line-height:1}.price-label{font-size:16px;color:var(--text);margin-bottom:20px}.features-list{text-align:left}.feature-item{font-size:14px;color:var(--text);margin-bottom:10px}.feature-item span{color:var(--green);font-weight:700;margin-right:8px}.products{padding:40px 20px}.products-title{text-align:center;margin-bottom:32px}.products-grid{display:grid;gap:16px;margin-bottom:16px}.product-card{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s}.product-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 4px 12px rgba(11,61,145,0.1)}.product-card:active{transform:scale(0.98)}.product-icon{font-size:36px;margin-bottom:12px}.product-card h3{font-size:17px;color:var(--blue);margin-bottom:8px}.product-card p{color:#64748B;font-size:13px;margin-bottom:16px;line-height:1.5}.product-btn{background:var(--orange);color:white;padding:12px 20px;border-radius:8px;font-weight:700;text-decoration:none;display:inline-block;font-size:14px}.product-btn-secondary{background:var(--blue)}.new-badge{background:#10B981;color:white;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;margin-left:6px}footer{background:var(--blue);color:white;padding:40px 20px 20px;margin-top:60px}.footer-section{margin-bottom:24px}.footer-section h4{margin-bottom:12px;font-size:15px}.footer-links{list-style:none}.footer-links li{margin-bottom:8px;font-size:13px}.footer-links a{color:rgba(255,255,255,0.8);text-decoration:none}@media (min-width:768px){.hero h1{font-size:48px}.check-section{max-width:600px;margin:0 auto}.pricing{max-width:800px;margin:40px auto}.pricing-box{padding:40px;display:flex;align-items:center;gap:40px}.price-col{flex:1;text-align:left}.features-col{flex:2;text-align:left}.features-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}.products{max-width:1280px;margin:0 auto}.products-grid{grid-template-columns:repeat(3,1fr)}}
+:root{--blue:#0B3D91;--orange:#FF6B35;--border:#E2E8F0;--gray:#64748B}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}nav{background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,0.05)}.logo{font-weight:700;font-size:18px;color:var(--blue);text-decoration:none}.hero{background:linear-gradient(135deg,var(--blue) 0%,#1e5cb8 100%);color:white;padding:60px 20px;text-align:center}.hero h1{font-size:42px;font-weight:700;margin-bottom:12px;line-height:1.2}.hero p{font-size:18px;opacity:0.95;max-width:600px;margin:0 auto 32px}.container{max-width:1200px;margin:0 auto;padding:0 20px}.check-section{background:white;border-radius:16px;padding:32px;max-width:600px;margin:-40px auto 40px;box-shadow:0 8px 24px rgba(11,61,145,0.15);position:relative}input{width:100%;padding:16px;border:2px solid var(--border);border-radius:8px;font-size:16px;text-transform:uppercase;letter-spacing:1px;font-weight:600}input:focus{outline:none;border-color:var(--blue)}.btn-check{background:var(--orange);color:white;padding:16px;border:none;border-radius:8px;font-weight:700;font-size:16px;cursor:pointer;width:100%;margin-top:16px;transition:background 0.2s}.btn-check:hover{background:#E85A2A}.loading{display:none;text-align:center;padding:20px}.spinner{border:3px solid var(--border);border-top:3px solid var(--blue);border-radius:50%;width:40px;height:40px;animation:spin 0.8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.results{display:none;margin-top:24px;padding:20px;background:#F8FAFC;border-radius:12px;border:2px solid var(--border)}.result-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}.result-row:last-child{border:none}.result-label{color:var(--gray);font-weight:600;font-size:14px}.status-valid{color:#10B981;font-weight:700}.status-expired{color:#DC2626;font-weight:700}.trust-badges{display:flex;justify-content:center;gap:24px;margin-top:20px;flex-wrap:wrap}.trust-badge{color:var(--gray);font-size:13px}.section-title{font-size:32px;font-weight:700;color:var(--blue);text-align:center;margin-bottom:12px}.section-subtitle{text-align:center;color:var(--gray);margin-bottom:40px;font-size:16px}.pricing{padding:60px 20px}.pricing-box{max-width:900px;margin:0 auto;background:white;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.08)}.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1200px;margin:0 auto;padding:40px 0}.product-card{background:white;padding:28px;border-radius:12px;border:2px solid var(--border);cursor:pointer;transition:all 0.3s;text-decoration:none;color:inherit}.product-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(11,61,145,0.15);transform:translateY(-4px)}.product-icon{font-size:40px;margin-bottom:16px}.product-card h3{color:var(--blue);font-size:20px;margin-bottom:12px}.product-card p{color:var(--gray);font-size:14px;line-height:1.6;margin-bottom:20px}.product-btn{background:var(--orange);color:white;padding:12px 24px;border-radius:6px;font-weight:700;font-size:14px;text-decoration:none;display:inline-block;transition:background 0.2s}.product-btn:hover{background:#E85A2A}.product-btn-secondary{background:var(--blue);color:white}.product-btn-secondary:hover{background:#0A2F6F}.new-badge{background:var(--orange);color:white;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;margin-left:8px}footer{background:white;border-top:1px solid var(--border);padding:40px 20px;margin-top:60px}.footer-section{display:inline-block;vertical-align:top;margin:0 40px 20px 0}.footer-section h4{color:var(--blue);margin-bottom:12px;font-size:16px}.footer-links{list-style:none}.footer-links li{margin-bottom:8px}.footer-links a{color:var(--gray);text-decoration:none;font-size:14px}.footer-links a:hover{color:var(--blue)}
 </style>
 </head>
 <body>
+
 <nav>
 <a href="/" class="logo">Glovbox</a>
 <div style="display:flex;gap:8px;">
@@ -19,16 +19,15 @@
 </div>
 </nav>
 
-<section class="hero">
-<h1>Never Miss Your MOT<br>& Road Tax Again</h1>
-<p class="tagline">Your Digital Vehicle Management Platform</p>
-<p class="subtitle">MOT, Insurance, Road Tax & Service History - All in One Place</p>
-</section>
+<div class="hero">
+<h1>Never Miss Your MOT & Road Tax Again</h1>
+<p>Free vehicle tracking with automatic reminders, service logbook, and market value checks</p>
+</div>
 
+<div class="container">
 <section class="check-section">
-<div class="card">
-<h2>Check Your Vehicle</h2>
-<p class="card-subtitle">Free DVLA lookup - No sign up required</p>
+<h2 style="color:var(--blue);font-size:24px;margin-bottom:8px;text-align:center">Check Your Vehicle</h2>
+<p style="color:var(--gray);text-align:center;margin-bottom:24px;font-size:14px">Enter your registration to see MOT & Tax status</p>
 <input type="text" id="regNumber" placeholder="e.g. AB12 CDE" maxlength="8">
 <button class="btn-check" id="checkBtn">Check Status</button>
 <div class="loading" id="loading"><div class="spinner"></div><p>Checking...</p></div>
@@ -37,7 +36,6 @@
 <div class="trust-badge"><span style="color:#10B981;">🔒</span> 256-bit SSL Encrypted</div>
 <div class="trust-badge"><span style="color:#10B981;">✓</span> Official DVLA Data</div>
 <div class="trust-badge"><span style="color:#10B981;">🇬🇧</span> UK Based</div>
-</div>
 </div>
 </section>
 
@@ -63,11 +61,9 @@
 </div>
 </section>
 
-<section class="products">
-<div class="products-title">
-<h2 class="section-title">Our Services</h2>
+<section style="padding:40px 0">
+<h2 class="section-title">Everything You Need to Manage Your Vehicle</h2>
 <p class="section-subtitle">Everything You Need to Manage Your Vehicle</p>
-</div>
 <div class="products-grid">
 <div class="product-card" onclick="window.location.href='/signin.html'">
 <div class="product-icon">🔧</div>
@@ -107,6 +103,7 @@
 </div>
 </div>
 </section>
+</div>
 
 <footer>
 <div class="footer-section">
@@ -129,14 +126,14 @@
 <div class="footer-section">
 <h4>Support</h4>
 <ul class="footer-links">
-<li><a href="/cdn-cgi/l/email-protection#32414742425d404672555e5d44505d4a1c5c5746"><span class="__cf_email__" data-cfemail="384b4d4848574a4c785f54574e5a574016565d4c">[email&#160;protected]</span></a></li>
+<li><a href="mailto:support@glovbox.net">support@glovbox.net</a></li>
 <li><a href="/contact.html">Contact</a></li>
 </ul>
 </div>
 <p style="text-align:center;margin-top:24px;opacity:0.7;font-size:12px">© 2026 Glovbox</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 document.getElementById('checkBtn').addEventListener('click', async function() {
   const regNumber = document.getElementById('regNumber').value.toUpperCase().replace(/\s/g, '');
   
@@ -148,17 +145,24 @@ document.getElementById('checkBtn').addEventListener('click', async function() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('results').style.display = 'none';
   
+  console.log('🔍 Checking vehicle:', regNumber);
+  
   try {
+    console.log('📤 Fetching:', '/api/vehicle-public/' + regNumber);
     const response = await fetch('/api/vehicle-public/' + regNumber);
+    
+    console.log('📥 Response status:', response.status);
     
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
+      console.error('❌ Server returned non-JSON response');
       document.getElementById('loading').style.display = 'none';
-      alert('Server error - Please try again');
+      alert('Server error - Please try again. Check if server is deployed correctly.');
       return;
     }
     
     const data = await response.json();
+    console.log('📦 Response data:', data);
     
     document.getElementById('loading').style.display = 'none';
     
@@ -198,7 +202,22 @@ document.getElementById('checkBtn').addEventListener('click', async function() {
       </div>
     `;
     resultsDiv.style.display = 'block';
+    console.log('✅ Vehicle check completed successfully!');
+    
   } catch (error) {
     document.getElementById('loading').style.display = 'none';
-    console.error('Error:', error);
-    alert('E
+    console.error('❌ Error:', error);
+    alert('Error checking vehicle. Please try again.');
+  }
+});
+
+// Enter key support
+document.getElementById('regNumber').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    document.getElementById('checkBtn').click();
+  }
+});
+</script>
+
+</body>
+</html>
