@@ -334,15 +334,17 @@ async function loadVehicles() {
 }
 
 function displayVehicles(vehicles) {
-  const html = vehicles.map(v => `
-    <div class="vehicle-card" onclick="viewVehicle('${v.registration}')">
+  const html = vehicles.map(v => {
+    const reg = v.registration || v.registrationNumber;
+    return `
+    <div class="vehicle-card" onclick="viewVehicle('${reg}')">
       <div class="vehicle-header">
-        <div class="vehicle-reg">${v.registration}</div>
-        <button class="btn-pdf" onclick="event.stopPropagation();exportVehiclePDF('${v.registration}')" style="padding:8px 16px;font-size:12px">
+        <div class="vehicle-reg">${reg}</div>
+        <button class="btn-pdf" onclick="event.stopPropagation();exportVehiclePDF('${reg}')" style="padding:8px 16px;font-size:12px">
           📄 Export PDF
         </button>
       </div>
-      <div class="vehicle-info">${v.make} ${v.model} (${v.year || 'N/A'})</div>
+      <div class="vehicle-info">${v.make} ${v.model} (${v.yearOfManufacture || v.year || 'N/A'})</div>
       <div class="vehicle-status">
         <span class="status-badge ${v.motStatus === 'Valid' ? 'status-valid' : 'status-expired'}">
           MOT: ${v.motStatus || 'Unknown'}
@@ -353,7 +355,7 @@ function displayVehicles(vehicles) {
       </div>
       ${v.motExpiryDate ? `<div style="color:#64748B;font-size:13px;margin-top:8px">MOT expires: ${v.motExpiryDate}</div>` : ''}
     </div>
-  `).join('');
+  `}).join('');
   
   document.getElementById('vehiclesList').innerHTML = html;
 }
