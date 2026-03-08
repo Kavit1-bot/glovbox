@@ -419,7 +419,7 @@ async function addVehicle(e) {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ registration: reg })
+      body: JSON.stringify({ registrationNumber: reg })
     });
     
     const data = await response.json();
