@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Logbook - Glovbox</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-white border-b">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl">🚗</span>
+      <span class="text-2xl font-bold text-blue-900">Glovbox</span>
+    </div>
+    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-900 font-semibold">← Back to Dashboard</a>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Service Logbook</h1>
+
+  <!-- ENHANCED: Vehicle Selector -->
+  <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
+    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Vehicle</label>
+    <select id="vehicleSelector" onchange="loadServiceRecords()" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg">
+      <option value="">Loading vehicles...</option>
+    </select>
+    <p class="text-xs text-gray-500 mt-2">💡 Tip: Service records are vehicle-specific</p>
+  </div>
+
+  <div class="flex gap-6">
+    <div class="flex-1">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Service History</h2>
+        <button onclick="showAddRecord()" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600">
+          + Add Service
+        </button>
+      </div>
+
+      <div id="serviceRecords" class="space-y-4">
+        <p class="text-gray-500 text-center py-8">Select a vehicle to view service records</p>
+      </div>
+    </div>
+
+    <div class="w-80 space-y-6">
+      <div class="bg-blue-50 rounded-xl border-2 border-blue-200 p-6">
+        <h3 class="font-bold text-blue-900 mb-3">📖 Service Logbook</h3>
+        <ul class="text-sm text-blue-800 space-y-2">
+          <li>• Track all maintenance</li>
+          <li>• Upload receipts</li>
+          <li>• Improve health score</li>
+          <li>• Export to PDF</li>
+        </ul>
+      </div>
+
+      <div id="statsCard" class="hidden bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Statistics</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-gray-600 text-sm">Total Services:</span>
+            <span id="totalServices" class="font-bold">0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600 text-sm">Total Spent:</span>
+            <span id="totalSpent" class="font-bold text-orange-600">£0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600 text-sm">Last Service:</span>
+            <span id="lastService" class="font-bold text-sm">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Service Modal -->
+<div id="addServiceModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl max-w-lg w-full p-8 max-h-screen overflow-y-auto">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Add Service Record</h2>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Date</label>
+        <input type="date" id="serviceDate" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Mileage</label>
+        <input type="number" id="serviceMileage" placeholder="e.g., 45000" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Service Type</label>
+        <select id="serviceType" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+          <option value="Full Service">Full Service</option>
+          <option value="Interim Service">Interim Service</option>
+          <option value="Oil Change">Oil Change</option>
+          <option value="MOT">MOT</option>
+          <option value="Brake Service">Brake Service</option>
+          <option value="Tire Change">Tire Change</option>
+          <option value="Other Repair">Other Repair</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Cost (£)</label>
+        <input type="number" id="serviceCost" step="0.01" placeholder="e.g., 150.00" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Garage</label>
+        <input type="text" id="serviceGarage" placeholder="e.g., Halfords" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Description (optional)</label>
+        <textarea id="serviceDescription" rows="3" placeholder="e.g., Full service with oil and filter change" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Receipt (optional)</label>
+        <input type="file" id="serviceReceipt" accept="image/*,application/pdf" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg" />
+        <p class="text-xs text-gray-500 mt-1">Upload photo or PDF of receipt</p>
+      </div>
+
+      <p id="serviceError" class="text-red-600 text-sm hidden"></p>
+
+      <div class="flex gap-3 pt-4">
+        <button onclick="saveService()" id="saveServiceBtn" class="flex-1 bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600">
+          Save Service
+        </button>
+        <button onclick="hideAddRecord()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-300">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const token = sessionStorage.getItem('glovbox_token');
+if (!token) {
+  window.location.href = '/signin.html';
+}
+
+let currentVehicleReg = null;
+let uploadedReceiptUrl = null;
+
+// ENHANCED: Load user's vehicles into selector
+async function loadUserVehicles() {
+  try {
+    const response = await fetch('/api/user/vehicles', {
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    const data = await response.json();
+    
+    if (data.vehicles && data.vehicles.length > 0) {
+      const options = data.vehicles.map(v => 
+        `<option value="${v.registrationNumber}">${v.make} ${v.model} (${v.registrationNumber})</option>`
+      ).join('');
+      
+      document.getElementById('vehicleSelector').innerHTML = options;
+      currentVehicleReg = data.vehicles[0].registrationNumber;
+      loadServiceRecords();
+    } else {
+      document.getElementById('vehicleSelector').innerHTML = '<option value="">No vehicles - Add one first</option>';
+      document.getElementById('serviceRecords').innerHTML = '<div class="text-center py-8"><p class="text-gray-600 mb-4">No vehicles added yet</p><a href="/dashboard.html" class="text-blue-600 hover:underline font-semibold">Add a vehicle first →</a></div>';
+    }
+  } catch (error) {
+    console.error('Load vehicles error:', error);
+  }
+}
+
+async function loadServiceRecords() {
+  currentVehicleReg = document.getElementById('vehicleSelector').value;
+  
+  if (!currentVehicleReg) {
+    document.getElementById('serviceRecords').innerHTML = '<p class="text-gray-500 text-center py-8">Select a vehicle</p>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/user/service-records?vehicleReg=${currentVehicleReg}`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    const data = await response.json();
+    
+    if (data.records && data.records.length > 0) {
+      displayServiceRecords(data.records);
+      updateStats(data.records);
+    } else {
+      document.getElementById('serviceRecords').innerHTML = '<div class="bg-white rounded-xl p-8 text-center"><p class="text-gray-600">No service records for this vehicle yet</p></div>';
+      document.getElementById('statsCard').classList.add('hidden');
+    }
+  } catch (error) {
+    console.error('Load records error:', error);
+  }
+}
+
+function displayServiceRecords(records) {
+  const sorted = records.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  const html = sorted.map(record => `
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">${record.type}</h3>
+          <p class="text-sm text-gray-600">${new Date(record.date).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})}</p>
+        </div>
+        <button onclick="deleteService('${record.id}')" class="text-red-600 hover:text-red-800 text-xl">🗑️</button>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-3 text-sm mb-3">
+        ${record.mileage ? `<div><span class="text-gray-600">Mileage:</span> <span class="font-semibold">${record.mileage.toLocaleString()} miles</span></div>` : ''}
+        ${record.cost ? `<div><span class="text-gray-600">Cost:</span> <span class="font-semibold text-orange-600">£${record.cost.toFixed(2)}</span></div>` : ''}
+        ${record.garage ? `<div><span class="text-gray-600">Garage:</span> <span class="font-semibold">${record.garage}</span></div>` : ''}
+      </div>
+      
+      ${record.description ? `<p class="text-sm text-gray-600 mb-3">${record.description}</p>` : ''}
+      
+      ${record.receiptUrl ? `<a href="${record.receiptUrl}" target="_blank" class="text-sm text-blue-600 hover:underline inline-flex items-center gap-1"><span>📎</span>View Receipt</a>` : ''}
+    </div>
+  `).join('');
+  
+  document.getElementById('serviceRecords').innerHTML = html;
+}
+
+function updateStats(records) {
+  document.getElementById('statsCard').classList.remove('hidden');
+  
+  const totalServices = records.length;
+  const totalSpent = records.reduce((sum, r) => sum + (r.cost || 0), 0);
+  const lastServiceDate = records.length > 0 
+    ? new Date(records.sort((a,b) => new Date(b.date) - new Date(a.date))[0].date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})
+    : '-';
+  
+  document.getElementById('totalServices').textContent = totalServices;
+  document.getElementById('totalSpent').textContent = `£${totalSpent.toFixed(0)}`;
+  document.getElementById('lastService').textContent = lastServiceDate;
+}
+
+function showAddRecord() {
+  if (!currentVehicleReg) {
+    alert('Please select a vehicle first');
+    return;
+  }
+  document.getElementById('addServiceModal').classList.remove('hidden');
+  document.getElementById('serviceDate').valueAsDate = new Date();
+}
+
+function hideAddRecord() {
+  document.getElementById('addServiceModal').classList.add('hidden');
+  document.getElementById('serviceDate').value = '';
+  document.getElementById('serviceMileage').value = '';
+  document.getElementById('serviceCost').value = '';
+  document.getElementById('serviceGarage').value = '';
+  document.getElementById('serviceDescription').value = '';
+  document.getElementById('serviceReceipt').value = '';
+  document.getElementById('serviceError').classList.add('hidden');
+  uploadedReceiptUrl = null;
+}
+
+async function uploadReceipt() {
+  const fileInput = document.getElementById('serviceReceipt');
+  if (!fileInput.files[0]) return null;
+
+  const formData = new FormData();
+  formData.append('receipt', fileInput.files[0]);
+
+  try {
+    const response = await fetch('/api/upload-receipt', {
+      method: 'POST',
+      headers: {'Authorization': `Bearer ${token}`},
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.url;
+    }
+  } catch (error) {
+    console.error('Upload error:', error);
+  }
+  return null;
+}
+
+async function saveService() {
+  const date = document.getElementById('serviceDate').value;
+  const mileage = document.getElementById('serviceMileage').value;
+  const type = document.getElementById('serviceType').value;
+  const cost = document.getElementById('serviceCost').value;
+  const garage = document.getElementById('serviceGarage').value;
+  const description = document.getElementById('serviceDescription').value;
+  const error = document.getElementById('serviceError');
+  const btn = document.getElementById('saveServiceBtn');
+
+  if (!date || !type) {
+    error.textContent = 'Please fill in date and service type';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  error.classList.add('hidden');
+
+  try {
+    // Upload receipt if provided
+    if (document.getElementById('serviceReceipt').files[0]) {
+      uploadedReceiptUrl = await uploadReceipt();
+    }
+
+    const response = await fetch('/api/user/service-records', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        vehicleReg: currentVehicleReg,
+        date,
+        mileage: mileage ? parseInt(mileage) : null,
+        type,
+        cost: cost ? parseFloat(cost) : null,
+        garage,
+        description,
+        receiptUrl: uploadedReceiptUrl
+      })
+    });
+
+    if (response.ok) {
+      hideAddRecord();
+      loadServiceRecords();
+      
+      // Show success message
+      const successMsg = document.createElement('div');
+      successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      successMsg.textContent = '✅ Service record added!';
+      document.body.appendChild(successMsg);
+      setTimeout(() => successMsg.remove(), 3000);
+    } else {
+      const data = await response.json();
+      error.textContent = data.error || 'Failed to save';
+      error.classList.remove('hidden');
+    }
+  } catch (err) {
+    error.textContent = 'Network error. Please try again.';
+    error.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Service';
+  }
+}
+
+async function deleteService(id) {
+  if (!confirm('Delete this service record?')) return;
+
+  try {
+    await fetch(`/api/user/service-records/${id}?vehicleReg=${currentVehicleReg}`, {
+      method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`}
+    });
+    loadServiceRecords();
+  } catch (error) {
+    console.error('Delete error:', error);
+  }
+}
+
+// Load vehicles on page load
+loadUserVehicles();
+</script>
+
+</body>
+</html>

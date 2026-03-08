@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Email - Glovbox</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="max-w-md w-full">
+    
+    <!-- Loading State -->
+    <div id="loading" class="bg-white rounded-2xl shadow-lg p-8 text-center">
+      <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Verifying your email...</h2>
+      <p class="text-gray-600">Please wait</p>
+    </div>
+
+    <!-- Success State -->
+    <div id="success" class="hidden bg-white rounded-2xl shadow-lg p-8">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Verified!</h2>
+        <p class="text-gray-600 mb-6">Your account is now active. Redirecting to dashboard...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden bg-white rounded-2xl shadow-lg p-8">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Verification Failed</h2>
+        <p id="errorMessage" class="text-gray-600 mb-6"></p>
+        <a href="/signup.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700">
+          Sign Up Again
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function verifyEmail() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  if (!token) {
+    showError('Invalid verification link');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/verify-email', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({token})
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Save token
+      sessionStorage.setItem('glovbox_token', data.token);
+      sessionStorage.setItem('glovbox_user', JSON.stringify(data.user));
+      
+      // Show success
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('success').classList.remove('hidden');
+      
+      // Redirect to dashboard
+      setTimeout(() => {
+        window.location.href = '/dashboard.html';
+      }, 2000);
+    } else {
+      showError(data.error || 'Verification failed');
+    }
+  } catch (error) {
+    showError('Network error. Please try again.');
+  }
+}
+
+function showError(message) {
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('error').classList.remove('hidden');
+  document.getElementById('errorMessage').textContent = message;
+}
+
+// Start verification
+verifyEmail();
+</script>
+
+</body>
+</html>

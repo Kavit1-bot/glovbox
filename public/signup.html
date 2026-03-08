@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Glovbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.container{max-width:400px;width:100%}.card{background:white;border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}.logo{text-align:center;margin-bottom:32px}.logo h1{color:#0B3D91;font-size:32px;font-weight:700}.form-group{margin-bottom:20px}label{display:block;color:#1E293B;font-weight:600;margin-bottom:8px;font-size:14px}input{width:100%;padding:14px;border:2px solid #E2E8F0;border-radius:8px;font-size:15px}input:focus{outline:none;border-color:#0B3D91}.btn{width:100%;background:#FF6B35;color:white;padding:16px;border-radius:8px;border:none;font-weight:700;font-size:16px;cursor:pointer}.btn:hover{background:#E85A2A}.btn:disabled{background:#CBD5E1;cursor:not-allowed}.error{background:#FEF2F2;color:#DC2626;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #FEE2E2;display:none;font-size:14px}.success{background:#F0FDF4;color:#15803D;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #BBF7D0;display:none;font-size:14px}.links{text-align:center;margin-top:20px;font-size:14px}.links a{color:#0B3D91;text-decoration:none;font-weight:600}.links a:hover{text-decoration:underline}.divider{text-align:center;margin:16px 0;color:#64748B;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+<div class="logo">
+<h1>Glovbox</h1>
+<p style="color:#64748B;font-size:14px;margin-top:8px">Create your account</p>
+</div>
+
+<div id="error" class="error"></div>
+<div id="success" class="success"></div>
+
+<form id="signupForm">
+<div class="form-group">
+<label for="name">Full Name</label>
+<input type="text" id="name" required autocomplete="name">
+</div>
+
+<div class="form-group">
+<label for="email">Email Address</label>
+<input type="email" id="email" required autocomplete="email">
+</div>
+
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" id="password" required autocomplete="new-password" minlength="8">
+<p style="color:#64748B;font-size:12px;margin-top:4px">Minimum 8 characters</p>
+</div>
+
+<button type="submit" class="btn" id="submitBtn">Create Account</button>
+</form>
+
+<div class="divider">Already have an account?</div>
+
+<div class="links">
+<a href="/signin.html">Sign in →</a>
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('error');
+  const successDiv = document.getElementById('success');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+  
+  if (!name || !email || !password) {
+    errorDiv.textContent = 'Please fill in all fields';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (password.length < 8) {
+    errorDiv.textContent = 'Password must be at least 8 characters';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating account...';
+  
+  try {
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, email, password })
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign up failed');
+    }
+    
+    successDiv.textContent = '✅ ' + data.message;
+    successDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      window.location.href = '/signin.html';
+    }, 2000);
+    
+  } catch (error) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create Account';
+    errorDiv.textContent = '❌ ' + error.message;
+    errorDiv.style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>
