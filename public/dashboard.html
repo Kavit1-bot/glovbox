@@ -14,7 +14,6 @@
 <nav>
 <a href="/dashboard.html" class="logo">Glovbox</a>
 <div class="nav-links">
-<a href="/dashboard.html" class="nav-link active">Dashboard</a>
 <a href="/mot-search.html" class="nav-link">MOT Search</a>
 <a href="/insurance.html" class="nav-link">Insurance</a>
 <a href="/breakdown.html" class="nav-link">Breakdown</a>
@@ -436,10 +435,13 @@ async function addVehicle(e) {
     successDiv.textContent = '✅ Vehicle added successfully!';
     successDiv.style.display = 'block';
     
+    // Immediately close modal and refresh list
     setTimeout(() => {
       closeAddVehicleModal();
-      loadVehicles();
-    }, 1500);
+    }, 800);
+    
+    // Refresh vehicle list immediately
+    loadVehicles();
     
   } catch (error) {
     loadingDiv.style.display = 'none';

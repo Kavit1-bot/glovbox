@@ -29,7 +29,7 @@
 <button class="btn-search" id="searchBtn" onclick="searchCentres()">Search MOT Centres</button>
 </div>
 
-<div id="debug" class="debug"></div>
+<div id="debug" class="debug" style="display:none"></div>
 <div id="error" class="error"></div>
 <div id="loading" class="loading">
 <div class="spinner"></div>
@@ -86,13 +86,9 @@ async function searchCentres() {
   searchBtn.disabled = true;
   searchBtn.textContent = 'Searching...';
   
-  debugDiv.innerHTML = `
-    <strong>Debug Info:</strong><br>
-    Postcode: ${postcode}<br>
-    Token: ${token.substring(0, 20)}...<br>
-    Step 1: Geocoding postcode...<br>
-  `;
-  debugDiv.style.display = 'block';
+  // Debug disabled for clean UI
+  // debugDiv.innerHTML = `...`;
+  // debugDiv.style.display = 'block';
   
   try {
     // Step 1: Geocode postcode
@@ -121,7 +117,7 @@ async function searchCentres() {
     const geocodeText = await geocodeResponse.text();
     console.log('📦 Geocode raw response:', geocodeText);
     
-    debugDiv.innerHTML += `Status: ${geocodeResponse.status}<br>Response: ${geocodeText.substring(0, 100)}...<br>`;
+    // debugDiv.innerHTML += `Status: ${geocodeResponse.status}<br>Response: ${geocodeText.substring(0, 100)}...<br>`;
     
     // Try to parse JSON
     let location;
@@ -146,7 +142,7 @@ async function searchCentres() {
     
     console.log('✅ Location found:', location);
     
-    debugDiv.innerHTML += `Coordinates: ${location.lat}, ${location.lng}<br>Step 2: Searching MOT centres...<br>`;
+    // debugDiv.innerHTML += `Coordinates: ${location.lat}, ${location.lng}<br>Step 2: Searching MOT centres...<br>`;
     
     // Step 2: Search for MOT centres
     console.log('🔍 Step 2: Searching MOT centres at:', location.lat, location.lng);
@@ -188,7 +184,7 @@ async function searchCentres() {
     
     // Hide loading
     loadingDiv.style.display = 'none';
-    debugDiv.style.display = 'none';
+    // debugDiv.style.display = 'none';
     searchBtn.disabled = false;
     searchBtn.textContent = 'Search MOT Centres';
     

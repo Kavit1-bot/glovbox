@@ -218,18 +218,114 @@ cron.schedule('0 9 * * *', async () => {
     for (const v of vehicles) {
       const motDays = daysUntilDate(v.motExpiryDate);
       if ([30, 14, 7].includes(motDays)) {
-        await sendEmail(email, `MOT Reminder: ${v.make} ${v.model}`, `
-          <h2>MOT Expiring Soon</h2>
-          <p>Your ${v.make} ${v.model} (${v.registrationNumber}) MOT expires in ${motDays} days.</p>
-          <p><a href="${SITE_URL}/mot-search.html">Book MOT Now</a></p>
+        await sendEmail(email, `🔧 MOT Reminder: ${v.make} ${v.model}`, `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+              .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+              .header { background: linear-gradient(135deg, #0B3D91 0%, #1e5cb8 100%); color: white; padding: 32px; text-align: center; }
+              .header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+              .content { padding: 40px 32px; }
+              .alert-box { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 16px; border-radius: 8px; margin: 24px 0; }
+              .vehicle-info { background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; }
+              .vehicle-info p { margin: 8px 0; color: #475569; font-size: 15px; }
+              .vehicle-info strong { color: #0B3D91; }
+              .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; margin: 24px 0; }
+              .cta-button:hover { background: #E85A2A; }
+              .footer { background: #F8FAFC; padding: 24px; text-align: center; color: #64748B; font-size: 13px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>🔧 MOT Reminder</h1>
+              </div>
+              <div class="content">
+                <div class="alert-box">
+                  <strong style="color:#92400E">⚠️ Action Required:</strong> Your MOT expires in <strong style="color:#92400E">${motDays} days</strong>
+                </div>
+                <div class="vehicle-info">
+                  <p><strong>Vehicle:</strong> ${v.make} ${v.model}</p>
+                  <p><strong>Registration:</strong> ${v.registrationNumber}</p>
+                  <p><strong>MOT Expires:</strong> ${v.motExpiryDate}</p>
+                </div>
+                <p style="font-size:16px; line-height:1.6; color:#475569;">
+                  Don't wait until the last minute! Book your MOT test now to avoid penalties and ensure your vehicle stays roadworthy.
+                </p>
+                <center>
+                  <a href="${SITE_URL}/signin.html?redirect=/mot-search.html" class="cta-button">
+                    Sign In to Find MOT Centres
+                  </a>
+                </center>
+                <p style="font-size:14px; color:#64748B; margin-top:24px;">
+                  After signing in, you'll be redirected to our MOT centre finder to book your test quickly and easily.
+                </p>
+              </div>
+              <div class="footer">
+                <p>Glovbox - Never miss an important vehicle date</p>
+                <p><a href="${SITE_URL}" style="color:#0B3D91">www.glovbox.net</a></p>
+              </div>
+            </div>
+          </body>
+          </html>
         `);
       }
       const taxDays = daysUntilDate(v.taxDueDate);
       if ([30, 14, 7].includes(taxDays)) {
-        await sendEmail(email, `Tax Reminder: ${v.make} ${v.model}`, `
-          <h2>Road Tax Due Soon</h2>
-          <p>Your ${v.make} ${v.model} (${v.registrationNumber}) tax is due in ${taxDays} days.</p>
-          <p><a href="https://www.gov.uk/vehicle-tax">Pay Tax Now</a></p>
+        await sendEmail(email, `💷 Road Tax Reminder: ${v.make} ${v.model}`, `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+              .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+              .header { background: linear-gradient(135deg, #059669 0%, #10B981 100%); color: white; padding: 32px; text-align: center; }
+              .header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+              .content { padding: 40px 32px; }
+              .alert-box { background: #DBEAFE; border-left: 4px solid #3B82F6; padding: 16px; border-radius: 8px; margin: 24px 0; }
+              .vehicle-info { background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; }
+              .vehicle-info p { margin: 8px 0; color: #475569; font-size: 15px; }
+              .vehicle-info strong { color: #0B3D91; }
+              .cta-button { display: inline-block; background: #059669; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; margin: 24px 0; }
+              .cta-button:hover { background: #047857; }
+              .footer { background: #F8FAFC; padding: 24px; text-align: center; color: #64748B; font-size: 13px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>💷 Road Tax Due</h1>
+              </div>
+              <div class="content">
+                <div class="alert-box">
+                  <strong style="color:#1E40AF">⚠️ Payment Required:</strong> Your road tax is due in <strong style="color:#1E40AF">${taxDays} days</strong>
+                </div>
+                <div class="vehicle-info">
+                  <p><strong>Vehicle:</strong> ${v.make} ${v.model}</p>
+                  <p><strong>Registration:</strong> ${v.registrationNumber}</p>
+                  <p><strong>Tax Due:</strong> ${v.taxDueDate}</p>
+                </div>
+                <p style="font-size:16px; line-height:1.6; color:#475569;">
+                  Renew your road tax before it expires to avoid penalties and keep your vehicle legal on UK roads.
+                </p>
+                <center>
+                  <a href="https://www.gov.uk/vehicle-tax" class="cta-button">
+                    Pay Road Tax on GOV.UK
+                  </a>
+                </center>
+                <p style="font-size:14px; color:#64748B; margin-top:24px;">
+                  You can pay your road tax securely through the official GOV.UK website.
+                </p>
+              </div>
+              <div class="footer">
+                <p>Glovbox - Never miss an important vehicle date</p>
+                <p><a href="${SITE_URL}" style="color:#0B3D91">www.glovbox.net</a></p>
+              </div>
+            </div>
+          </body>
+          </html>
         `);
       }
     }
