@@ -27,7 +27,7 @@
           </svg>
         </div>
         <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Verified!</h2>
-        <p class="text-gray-600 mb-6">Your account is now active. Redirecting to dashboard...</p>
+        <p class="text-gray-600 mb-6">Your account is now active. Redirecting to sign in...</p>
       </div>
     </div>
 
@@ -70,17 +70,12 @@ async function verifyEmail() {
     const data = await response.json();
 
     if (response.ok) {
-      // Save token
-      sessionStorage.setItem('glovbox_token', data.token);
-      sessionStorage.setItem('glovbox_user', JSON.stringify(data.user));
-      
-      // Show success
+      // Show success and redirect to signin (user needs to sign in after verification)
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('success').classList.remove('hidden');
       
-      // Redirect to dashboard
       setTimeout(() => {
-        window.location.href = '/dashboard.html';
+        window.location.href = '/signin.html';
       }, 2000);
     } else {
       showError(data.error || 'Verification failed');

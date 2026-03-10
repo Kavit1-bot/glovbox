@@ -112,11 +112,12 @@ function isValidEmail(email) {
 
 async function sendEmail(to, subject, htmlContent) {
   if (!BREVO_API_KEY) {
-    console.log('⚠️ Email not sent (no API key):', subject);
-    return { success: false };
+    console.log('⚠️ BREVO_API_KEY not set — email NOT sent:', subject, '→', to);
+    return { success: false, reason: 'no_api_key' };
   }
   try {
-    await axios.post('https://api.brevo.com/v3/smtp/email', {
+    console.log(`📧 Sending email to ${to}: "${subject}"`);
+    const result = await axios.post('https://api.brevo.com/v3/smtp/email', {
       sender: { name: 'Glovbox', email: 'noreply@glovbox.net' },
       to: [{ email: to }],
       subject,
@@ -124,11 +125,40 @@ async function sendEmail(to, subject, htmlContent) {
     }, {
       headers: { 'api-key': BREVO_API_KEY, 'Content-Type': 'application/json' }
     });
+    console.log(`✅ Email sent to ${to} (messageId: ${result.data && result.data.messageId})`);
     return { success: true };
   } catch (error) {
-    console.error('Email error:', error.message);
-    return { success: false, error: error.message };
+    const detail = error.response && error.response.data ? error.response.data : error.message;
+    console.error('❌ Email FAILED to ' + to + ':', JSON.stringify(detail));
+    return { success: false, error: detail };
   }
+}
+
+function buildVerificationEmail(name, verificationToken) {
+  const link = SITE_URL + '/verify-email.html?token=' + verificationToken;
+  return '<!DOCTYPE html>' +
+    '<html><head><meta charset="UTF-8"></head>' +
+    '<body style="margin:0;padding:0;background:#F8FAFC;font-family:Helvetica,Arial,sans-serif">' +
+    '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;padding:40px 20px"><tr><td align="center">' +
+    '<table width="560" cellpadding="0" cellspacing="0" style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">' +
+    '<tr><td style="background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);padding:32px 40px;text-align:center">' +
+    '<h1 style="color:white;margin:0;font-size:28px;font-weight:700">Glovbox</h1>' +
+    '<p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:14px">Your UK vehicle manager</p>' +
+    '</td></tr>' +
+    '<tr><td style="padding:40px">' +
+    '<h2 style="color:#0B3D91;font-size:22px;margin:0 0 12px">Welcome, ' + name + '! 👋</h2>' +
+    '<p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 24px">Thanks for signing up. Please verify your email address to activate your account and start tracking your vehicles.</p>' +
+    '<div style="text-align:center;margin:32px 0">' +
+    '<a href="' + link + '" style="background:#FF6B35;color:white;padding:16px 40px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;display:inline-block">Verify My Email</a>' +
+    '</div>' +
+    '<p style="color:#94A3B8;font-size:13px;text-align:center;margin:0 0 8px">Or copy this link into your browser:</p>' +
+    '<p style="background:#F1F5F9;padding:12px;border-radius:8px;word-break:break-all;font-size:12px;color:#64748B;margin:0 0 24px">' + link + '</p>' +
+    '<p style="color:#94A3B8;font-size:12px;margin:0">This link expires in <strong>24 hours</strong>. If you did not create a Glovbox account, ignore this email.</p>' +
+    '</td></tr>' +
+    '<tr><td style="background:#F8FAFC;padding:20px 40px;text-align:center;border-top:1px solid #E2E8F0">' +
+    '<p style="color:#94A3B8;font-size:12px;margin:0">&copy; ' + new Date().getFullYear() + ' Glovbox</p>' +
+    '</td></tr>' +
+    '</table></td></tr></table></body></html>';
 }
 
 function logAnalytics(type, data) {
@@ -382,14 +412,16 @@ app.post('/api/signup', async (req, res) => {
   await saveDB(users);
   logAnalytics('signup', { email, name });
   
-  await sendEmail(email, 'Verify Your Glovbox Account', `
-    <h2>Welcome to Glovbox!</h2>
-    <p>Click the link below to verify your email:</p>
-    <p><a href="${SITE_URL}/verify-email.html?token=${verificationToken}">Verify Email</a></p>
-    <p>Link expires in 24 hours.</p>
-  `);
+  const emailResult = await sendEmail(
+    email,
+    'Verify your Glovbox account',
+    buildVerificationEmail(name, verificationToken)
+  );
+  if (!emailResult.success) {
+    console.error('⚠️ Verification email failed for', email, '— reason:', JSON.stringify(emailResult.error || emailResult.reason));
+  }
   
-  res.json({message:'Account created! Check your email to verify.'});
+  res.json({message:'Account created! Check your email to verify.', emailSent: emailResult.success});
 });
 
 app.post('/api/verify-email', async (req, res) => {
@@ -406,6 +438,22 @@ app.post('/api/verify-email', async (req, res) => {
   }
   
   res.status(400).json({error:'Invalid or expired token'});
+});
+
+// Resend verification email
+app.post('/api/resend-verification', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({error:'Email required'});
+  const user = users.get(email);
+  if (!user) return res.json({message:'If that email exists, a new link has been sent.'});
+  if (user.emailVerified) return res.status(400).json({error:'Email already verified. Please sign in.'});
+  const verificationToken = crypto.randomBytes(32).toString('hex');
+  user.verificationToken = verificationToken;
+  user.verificationExpires = Date.now() + 24*60*60*1000;
+  await saveDB(users);
+  const emailResult = await sendEmail(email, 'Verify your Glovbox account', buildVerificationEmail(user.name, verificationToken));
+  console.log('🔁 Resend verification for', email, ':', emailResult.success ? 'sent' : 'failed');
+  res.json({message:'If that email exists, a new link has been sent.', emailSent: emailResult.success});
 });
 
 app.post('/api/signin', async (req, res) => {
@@ -549,8 +597,11 @@ app.get('/api/user/vehicles', authenticateToken, (req, res) => {
 });
 
 app.post('/api/user/vehicles', authenticateToken, async (req, res) => {
-  const { registrationNumber } = req.body;
+  const { registrationNumber: regNum, registration: regAlias } = req.body;
+  const registrationNumber = (regNum || regAlias || '').toUpperCase().replace(/\s/g, '');
   const user = users.get(req.userEmail);
+  
+  if (!registrationNumber) return res.status(400).json({error:'Registration number required'});
   
   if (user.vehicles?.find(v => v.registrationNumber === registrationNumber)) {
     return res.status(400).json({error:'Vehicle already added'});
@@ -617,25 +668,25 @@ app.get('/api/ai/insights', authenticateToken, (req, res) => {
 
 app.get('/api/user/costs', authenticateToken, (req, res) => {
   const user = users.get(req.userEmail);
-  const month = req.query.month || new Date().toISOString().slice(0, 7);
+  const vehicleReg = req.query.registration || req.query.vehicleReg || null;
+  const month = req.query.month || null;
   
-  const costs = (user.costTransactions || []).filter(t => t.date?.startsWith(month));
+  let costs = user.costTransactions || [];
+  if (vehicleReg) costs = costs.filter(t => t.vehicleReg === vehicleReg || t.registration === vehicleReg);
+  if (month) costs = costs.filter(t => t.date && t.date.startsWith(month));
+  
   const total = costs.reduce((sum, t) => sum + (t.amount || 0), 0);
-  
   const breakdown = {};
-  costs.forEach(t => {
-    breakdown[t.category] = (breakdown[t.category] || 0) + t.amount;
-  });
-  
+  costs.forEach(t => { breakdown[t.category] = (breakdown[t.category] || 0) + t.amount; });
   const budget = user.settings?.monthlyBudget || 200;
-  const percentUsed = (total / budget) * 100;
   
-  res.json({ total, breakdown, budget, percentUsed });
+  res.json({ costs, total, breakdown, budget, percentUsed: (total / budget) * 100 });
 });
 
 app.post('/api/user/costs', authenticateToken, async (req, res) => {
   const user = users.get(req.userEmail);
-  const { category, amount, date, description, vehicleReg } = req.body;
+  const { category, amount, date, description, notes, vehicleReg, registration } = req.body;
+  const resolvedVehicleReg = vehicleReg || registration || null;
   
   if (!category || !amount) {
     return res.status(400).json({error:'Category and amount required'});
@@ -648,8 +699,10 @@ app.post('/api/user/costs', authenticateToken, async (req, res) => {
     category,
     amount: parseFloat(amount),
     date: date || new Date().toISOString().split('T')[0],
-    description: description || '',
-    vehicleReg: vehicleReg || null,
+    description: description || notes || '',
+    notes: notes || description || '',
+    vehicleReg: resolvedVehicleReg,
+    registration: resolvedVehicleReg,
     createdAt: new Date().toISOString()
   });
   
@@ -670,6 +723,7 @@ app.get('/api/notifications', authenticateToken, (req, res) => {
         type: motDays < 7 ? 'urgent' : 'warning',
         title: 'MOT Expiring Soon',
         message: `${v.make} ${v.model} - ${motDays} days remaining`,
+        daysUntil: motDays,
         action: '/mot-search.html',
         actionText: 'Book MOT'
       });
@@ -682,6 +736,7 @@ app.get('/api/notifications', authenticateToken, (req, res) => {
         type: taxDays < 7 ? 'urgent' : 'warning',
         title: 'Tax Due Soon',
         message: `${v.make} ${v.model} - ${taxDays} days remaining`,
+        daysUntil: taxDays,
         action: 'https://www.gov.uk/vehicle-tax',
         actionText: 'Pay Tax'
       });
@@ -762,7 +817,7 @@ app.post('/api/upload-receipt', authenticateToken, upload.single('receipt'), (re
 
 app.get('/api/user/service-records', authenticateToken, (req, res) => {
   const user = users.get(req.userEmail);
-  const vehicleReg = req.query.vehicleReg;
+  const vehicleReg = req.query.vehicleReg || req.query.registration;
   
   const records = vehicleReg 
     ? (user.serviceRecords?.[vehicleReg] || [])
@@ -773,7 +828,8 @@ app.get('/api/user/service-records', authenticateToken, (req, res) => {
 
 app.post('/api/user/service-records', authenticateToken, async (req, res) => {
   const user = users.get(req.userEmail);
-  const { vehicleReg, date, mileage, type, cost, garage, description, receiptUrl } = req.body;
+  const { vehicleReg: vr, registration: reg2, date, mileage, type, cost, garage, description, notes, receiptUrl } = req.body;
+  const vehicleReg = vr || reg2;
   
   if (!vehicleReg || !date || !type) {
     return res.status(400).json({error:'Vehicle, date, and type required'});
@@ -814,21 +870,55 @@ app.delete('/api/user/service-records/:id', authenticateToken, async (req, res) 
 app.get('/api/user/settings', authenticateToken, (req, res) => {
   const user = users.get(req.userEmail);
   res.json({ 
+    name: user.name,
+    email: user.email,
     settings: user.settings || { enableReminders: true, monthlyBudget: 200 },
+    reminderSettings: user.settings?.reminderSettings || { mot: true, tax: true, service: false },
+    monthlyBudget: user.settings?.monthlyBudget || 200,
     memberSince: user.createdAt
   });
 });
 
 app.patch('/api/user/settings', authenticateToken, async (req, res) => {
   const user = users.get(req.userEmail);
-  const { enableReminders, monthlyBudget } = req.body;
+  const { enableReminders, monthlyBudget, reminderSettings } = req.body;
   
   if (!user.settings) user.settings = {};
+  
+  // Accept flat enableReminders OR nested reminderSettings object
   if (enableReminders !== undefined) user.settings.enableReminders = enableReminders;
+  if (reminderSettings !== undefined) {
+    user.settings.reminderSettings = reminderSettings;
+    // Also keep flat flag in sync so cron job works
+    user.settings.enableReminders = reminderSettings.mot || reminderSettings.tax || false;
+  }
   if (monthlyBudget !== undefined) user.settings.monthlyBudget = parseFloat(monthlyBudget);
   
   await saveDB(users);
   res.json({ settings: user.settings });
+});
+
+
+// Change password
+app.post('/api/user/change-password', authenticateToken, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = users.get(req.userEmail);
+  
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({error: 'Both current and new password are required'});
+  }
+  if (newPassword.length < 8) {
+    return res.status(400).json({error: 'New password must be at least 8 characters'});
+  }
+  
+  const valid = await bcrypt.compare(currentPassword, user.password);
+  if (!valid) {
+    return res.status(401).json({error: 'Current password is incorrect'});
+  }
+  
+  user.password = await bcrypt.hash(newPassword, 10);
+  await saveDB(users);
+  res.json({message: 'Password updated successfully'});
 });
 
 // GEOCODING (requires login for MOT search)

@@ -8,267 +8,312 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}
-nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
 .logo{font-weight:700;font-size:18px;color:#0B3D91;text-decoration:none}
-.nav-links{display:flex;gap:16px;align-items:center}
-.nav-link{color:#64748B;text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:6px;transition:all 0.2s}
-.nav-link:hover{background:#F8FAFC;color:#0B3D91}
-.btn-signout{background:#DC2626;color:white;padding:8px 16px;border-radius:6px;border:none;font-weight:700;font-size:14px;cursor:pointer}
-.btn-signout:hover{background:#B91C1C}
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
-.welcome{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:28px 32px;border-radius:16px;margin-bottom:28px}
-.welcome h1{font-size:28px;margin-bottom:6px}
-.welcome p{font-size:15px;opacity:0.9}
-.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
-.quick-link{background:white;padding:18px;border-radius:12px;border:2px solid #E2E8F0;text-decoration:none;color:inherit;transition:all 0.2s;cursor:pointer}
-.quick-link:hover{border-color:#0B3D91;box-shadow:0 4px 12px rgba(11,61,145,0.1);transform:translateY(-2px)}
-.quick-link-icon{font-size:28px;margin-bottom:10px}
-.quick-link h3{color:#0B3D91;font-size:15px;margin-bottom:3px}
-.quick-link p{color:#64748B;font-size:12px}
-.card{background:white;border-radius:12px;padding:24px;border:1px solid #E2E8F0;margin-bottom:20px}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.card-header h2{color:#0B3D91;font-size:20px}
-.btn-primary{background:#FF6B35;color:white;padding:11px 22px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.2s}
-.btn-primary:hover{background:#E85A2A}
-.btn-secondary{background:#0B3D91;color:white;padding:10px 18px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.2s}
-.btn-secondary:hover{background:#0A2F6F}
-.btn-danger{background:#DC2626;color:white;padding:10px 18px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.2s}
-.btn-danger:hover{background:#B91C1C}
-.btn-green{background:#10B981;color:white;padding:10px 18px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.2s}
-.btn-green:hover{background:#059669}
-.empty-state{text-align:center;padding:60px 20px;color:#64748B}
-.empty-state-icon{font-size:56px;margin-bottom:14px}
-.empty-state h3{color:#0B3D91;margin-bottom:8px;font-size:20px}
-.empty-state p{margin-bottom:20px}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-link{color:#64748B;text-decoration:none;font-size:13px;font-weight:600;padding:7px 11px;border-radius:6px;transition:all 0.2s}
+.nav-link:hover{background:#F1F5F9;color:#0B3D91}
+.btn-signout{background:#0B3D91;color:white;padding:7px 14px;border-radius:6px;border:none;font-weight:700;font-size:13px;cursor:pointer}
+.btn-signout:hover{background:#0A2F6F}
+.container{max-width:1200px;margin:32px auto;padding:0 20px}
 
-/* Vehicle Cards */
-.vehicle-card{border:2px solid #E2E8F0;border-radius:12px;padding:18px 20px;margin-bottom:14px;cursor:pointer;transition:all 0.2s;position:relative}
-.vehicle-card:hover{border-color:#0B3D91;box-shadow:0 4px 16px rgba(11,61,145,0.12)}
-.vehicle-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.vehicle-reg{color:#0B3D91;font-size:22px;font-weight:700;letter-spacing:1px}
-.vehicle-actions{display:flex;gap:8px;flex-shrink:0}
-.vehicle-info{color:#64748B;font-size:14px;margin-bottom:10px}
-.vehicle-status{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.status-badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:700;white-space:nowrap}
-.status-valid{background:#D1FAE5;color:#065F46}
-.status-expired{background:#FEE2E2;color:#991B1B}
-.status-unknown{background:#F1F5F9;color:#64748B}
-.vehicle-dates{font-size:12px;color:#94A3B8;margin-top:6px}
+/* Welcome banner */
+.welcome{background:linear-gradient(135deg,#0B3D91 0%,#1e5cb8 100%);color:white;padding:24px 28px;border-radius:14px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}
+.welcome h1{font-size:24px;margin-bottom:4px}
+.welcome p{font-size:14px;opacity:0.85}
+.welcome-badge{background:rgba(255,255,255,0.15);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap}
 
-/* Reminder button on each card */
-.btn-bell{background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s}
-.btn-bell:hover{background:#FDE68A}
-.btn-view{background:#EFF6FF;color:#0B3D91;border:1px solid #BFDBFE;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s}
-.btn-view:hover{background:#DBEAFE}
-.btn-delete-card{background:#FEE2E2;color:#DC2626;border:1px solid #FECACA;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s}
-.btn-delete-card:hover{background:#FECACA}
+/* Quick actions grid */
+.quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.quick-card{background:white;border:2px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block}
+.quick-card:hover{border-color:#0B3D91;box-shadow:0 4px 16px rgba(11,61,145,0.12);transform:translateY(-2px)}
+.quick-card-icon{font-size:26px;margin-bottom:8px}
+.quick-card h3{color:#0B3D91;font-size:13px;font-weight:700;margin-bottom:2px}
+.quick-card p{color:#94A3B8;font-size:11px}
 
-/* Modals */
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:20px}
-.modal.active{display:flex}
-.modal-content{background:white;border-radius:16px;padding:28px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
-.modal-content-wide{max-width:760px}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.modal-header h2{color:#0B3D91;font-size:22px}
-.modal-close{background:none;border:none;font-size:28px;color:#94A3B8;cursor:pointer;line-height:1;padding:0 4px}
-.modal-close:hover{color:#0B3D91}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;color:#374151;font-weight:600;margin-bottom:6px;font-size:13px}
-.form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 14px;border:2px solid #E2E8F0;border-radius:8px;font-size:14px;font-family:inherit;transition:border-color 0.2s}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#0B3D91}
-.form-group textarea{resize:vertical;min-height:90px}
+/* Cards */
+.card{background:white;border-radius:12px;padding:22px;border:1px solid #E2E8F0;margin-bottom:18px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.card-header h2{color:#0B3D91;font-size:18px;font-weight:700}
+
+/* Buttons */
+.btn{padding:10px 20px;border-radius:8px;border:none;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;display:inline-block;text-decoration:none}
+.btn-orange{background:#FF6B35;color:white}.btn-orange:hover{background:#E85A2A}
+.btn-blue{background:#0B3D91;color:white}.btn-blue:hover{background:#0A2F6F}
+.btn-red{background:#DC2626;color:white}.btn-red:hover{background:#B91C1C}
+.btn-green{background:#10B981;color:white}.btn-green:hover{background:#059669}
+.btn-ghost-blue{background:#EFF6FF;color:#0B3D91;border:1px solid #BFDBFE}.btn-ghost-blue:hover{background:#DBEAFE}
+.btn-ghost-amber{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}.btn-ghost-amber:hover{background:#FDE68A}
+.btn-ghost-red{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}.btn-ghost-red:hover{background:#FEE2E2}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+/* Vehicle cards */
+.vehicle-card{border:2px solid #E2E8F0;border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:all 0.2s}
+.vehicle-card:hover{border-color:#CBD5E0;box-shadow:0 2px 12px rgba(11,61,145,0.08)}
+.vehicle-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.vehicle-reg{color:#0B3D91;font-size:22px;font-weight:800;letter-spacing:1px;font-family:'Courier New',monospace}
+.vehicle-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.vehicle-name{color:#475569;font-size:14px;margin-bottom:10px;font-weight:500}
+.vehicle-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge{padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.badge-amber{background:#FEF3C7;color:#92400E}
+.badge-gray{background:#F1F5F9;color:#475569}
+.vehicle-dates{font-size:12px;color:#94A3B8}
+
+/* Status strip on urgent vehicles */
+.vehicle-card.urgent-mot{border-left:4px solid #DC2626}
+.vehicle-card.urgent-tax{border-left:4px solid #F59E0B}
+
+/* Notifications strip */
+.notif-strip{display:none;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:12px 16px;margin-bottom:18px}
+.notif-strip h3{color:#92400E;font-size:13px;font-weight:700;margin-bottom:8px}
+.notif-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #FDE68A}
+.notif-item:last-child{border:none}
+.notif-label{color:#78350F;font-size:13px}
+.notif-days{padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;background:#F59E0B;color:white}
+.notif-days.urgent{background:#DC2626}
+.notif-days.ok{background:#10B981}
+
+/* Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:white;border-radius:16px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-box-wide{max-width:720px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h2{color:#0B3D91;font-size:20px;font-weight:700}
+.modal-close{background:none;border:none;font-size:26px;color:#CBD5E1;cursor:pointer;line-height:1;padding:0 2px}
+.modal-close:hover{color:#64748B}
 
 /* Tabs */
-.tabs{display:flex;gap:0;border-bottom:2px solid #E2E8F0;margin-bottom:22px}
-.tab{padding:11px 20px;border:none;background:none;color:#94A3B8;font-weight:600;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;white-space:nowrap}
-.tab:hover{color:#0B3D91}
-.tab.active{color:#0B3D91;border-bottom-color:#0B3D91}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tab-bar{display:flex;border-bottom:2px solid #E2E8F0;margin-bottom:20px;overflow-x:auto}
+.tab-btn{padding:10px 18px;border:none;background:none;color:#94A3B8;font-weight:700;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all 0.2s}
+.tab-btn:hover{color:#0B3D91}
+.tab-btn.on{color:#0B3D91;border-bottom-color:#0B3D91}
+.tab-pane{display:none}.tab-pane.on{display:block}
 
-/* Service / Expense items */
-.record-item{border-left:4px solid #0B3D91;padding:12px 16px;background:#F8FAFC;border-radius:0 8px 8px 0;margin-bottom:10px}
-.record-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+/* Form */
+.fg{margin-bottom:16px}
+.fg label{display:block;font-weight:600;color:#374151;font-size:13px;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;border:2px solid #E2E8F0;border-radius:8px;font-size:14px;font-family:inherit;transition:border-color 0.2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#0B3D91}
+.fg textarea{resize:vertical;min-height:80px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* Messages */
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
+.msg-ok{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
+.msg-err{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA}
+
+/* Records */
+.record{border-left:4px solid #0B3D91;padding:11px 14px;background:#F8FAFC;border-radius:0 8px 8px 0;margin-bottom:9px}
+.record.expense{border-left-color:#FF6B35}
+.record-head{display:flex;justify-content:space-between;align-items:flex-start}
 .record-title{color:#0B3D91;font-weight:700;font-size:14px}
+.record-amount{color:#FF6B35;font-weight:800;font-size:16px}
+.record-meta{color:#64748B;font-size:12px;margin-top:3px}
 .record-date{color:#94A3B8;font-size:12px}
-.record-meta{color:#64748B;font-size:13px}
-.expense-item{border-left:4px solid #FF6B35}
-.expense-amount{color:#FF6B35;font-weight:700;font-size:16px}
 
-/* Reminders notification panel */
-.reminder-panel{background:linear-gradient(135deg,#FFF7ED 0%,#FFFBF0 100%);border:2px solid #FDE68A;border-radius:12px;padding:20px;margin-bottom:16px}
-.reminder-panel h3{color:#92400E;margin-bottom:14px;font-size:15px;display:flex;align-items:center;gap:8px}
-.reminder-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #FDE68A}
-.reminder-row:last-child{border-bottom:none}
-.reminder-label{color:#78350F;font-size:13px;font-weight:600}
-.reminder-days{background:#F59E0B;color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700}
-.reminder-days.urgent{background:#DC2626}
-.reminder-days.ok{background:#10B981}
+/* Overview grid */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.ov-cell{background:#F8FAFC;border-radius:10px;padding:14px}
+.ov-label{color:#94A3B8;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px}
+.ov-value{color:#0B3D91;font-size:17px;font-weight:700}
+.ov-sub{color:#64748B;font-size:12px;margin-top:2px}
 
-/* Reminders card list */
-.reminder-item{display:flex;justify-content:space-between;align-items:center;padding:14px;border:1px solid #E2E8F0;border-radius:8px;margin-bottom:10px}
-.reminder-info h4{color:#0B3D91;font-size:14px;margin-bottom:3px}
-.reminder-info p{color:#64748B;font-size:12px}
+/* Detail actions row */
+.detail-actions{display:flex;gap:8px;flex-wrap:wrap;padding-top:16px;border-top:1px solid #E2E8F0;margin-top:4px}
 
-/* Utility */
-.loading-div{text-align:center;padding:40px;display:none}
-.spinner{border:3px solid #E2E8F0;border-top:3px solid #0B3D91;border-radius:50%;width:36px;height:36px;animation:spin 0.8s linear infinite;margin:0 auto 12px}
+/* Totals box */
+.totals-box{background:#F0F9FF;border:1px solid #BAE6FD;border-radius:10px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.totals-box-label{color:#0B3D91;font-weight:700;font-size:14px}
+.totals-box-amount{color:#FF6B35;font-size:22px;font-weight:800}
+
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:#94A3B8}
+.empty-icon{font-size:44px;margin-bottom:12px}
+
+/* Spinner */
+.spin-wrap{text-align:center;padding:32px;display:none}
+.spinner{border:3px solid #E2E8F0;border-top:3px solid #0B3D91;border-radius:50%;width:34px;height:34px;animation:spin 0.8s linear infinite;margin:0 auto 10px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.success-msg{background:#D1FAE5;color:#065F46;padding:11px 14px;border-radius:8px;margin-bottom:14px;display:none;font-size:14px}
-.error-msg{background:#FEE2E2;color:#991B1B;padding:11px 14px;border-radius:8px;margin-bottom:14px;display:none;font-size:14px}
-.total-box{margin-top:16px;padding:16px;background:#F0F9FF;border-radius:8px}
-.total-box-row{display:flex;justify-content:space-between;align-items:center}
-.divider{border:none;border-top:1px solid #E2E8F0;margin:20px 0}
-@media(max-width:640px){
-  .nav-links{gap:8px}.vehicle-actions{flex-wrap:wrap}
-  .modal-content{padding:20px}.quick-links{grid-template-columns:repeat(2,1fr)}
+
+/* Reminder modal */
+.rmdr-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #FDE68A}
+.rmdr-row:last-child{border:none}
+.rmdr-label{color:#78350F;font-weight:700;font-size:13px}
+.rmdr-sub{color:#92400E;font-size:12px;margin-top:2px}
+.rmdr-badge{padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700;white-space:nowrap;background:#F59E0B;color:white}
+.rmdr-badge.urgent{background:#DC2626}
+.rmdr-badge.ok{background:#10B981}
+.checklist{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:16px;margin-top:16px}
+.checklist h4{color:#166534;font-weight:700;font-size:13px;margin-bottom:10px}
+.checklist-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:12px;color:#166534}
+
+/* Vehicle detail header in modal */
+.veh-modal-head{background:linear-gradient(135deg,#0B3D91,#1e5cb8);color:white;border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-start}
+.veh-modal-reg{font-size:26px;font-weight:800;letter-spacing:2px;font-family:'Courier New',monospace}
+.veh-modal-name{font-size:14px;opacity:0.85;margin-top:3px}
+
+@media(max-width:768px){
+  .quick-grid{grid-template-columns:repeat(3,1fr)}
+  .fg-row{grid-template-columns:1fr}
+  .ov-grid{grid-template-columns:1fr}
+  .welcome{flex-direction:column;gap:10px}
+  .vehicle-actions{justify-content:flex-start}
+  .nav-links .nav-link{display:none}
+}
+@media(max-width:480px){
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="/dashboard.html" class="logo">Glovbox</a>
+  <a href="/dashboard.html" class="logo">🚗 Glovbox</a>
   <div class="nav-links">
-    <a href="/mot-search.html" class="nav-link">MOT Search</a>
-    <a href="/insurance.html" class="nav-link">Insurance</a>
-    <a href="/breakdown.html" class="nav-link">Breakdown</a>
-    <a href="#" class="nav-link" onclick="showAccountModal();return false;">My Account</a>
+    <a href="/mot-search.html" class="nav-link">🔧 MOT Search</a>
+    <a href="/insurance.html" class="nav-link">💰 Insurance</a>
+    <a href="/breakdown.html" class="nav-link">🛡 Breakdown</a>
+    <a href="https://www.gov.uk/vehicle-tax" target="_blank" class="nav-link">💷 Road Tax</a>
+    <button class="btn btn-ghost-blue btn-sm" onclick="openModal('accountModal')">👤 Account</button>
     <button class="btn-signout" onclick="signOut()">Sign Out</button>
   </div>
 </nav>
 
 <div class="container">
 
-  <div class="welcome" id="welcome">
-    <h1>Welcome back! 👋</h1>
-    <p>Manage all your vehicles and never miss an important date</p>
+  <!-- Welcome -->
+  <div class="welcome">
+    <div>
+      <h1 id="welcomeMsg">Welcome back! 👋</h1>
+      <p>Track MOT, road tax, service history and running costs for all your vehicles</p>
+    </div>
+    <div class="welcome-badge" id="vehicleCount">Loading...</div>
   </div>
 
-  <div class="quick-links">
-    <div class="quick-link" onclick="window.location.href='/mot-search.html'">
-      <div class="quick-link-icon">🔧</div>
+  <!-- Urgent notifications strip -->
+  <div class="notif-strip" id="notifStrip">
+    <h3>⚠️ Action Required</h3>
+    <div id="notifList"></div>
+  </div>
+
+  <!-- Quick action cards -->
+  <div class="quick-grid">
+    <a href="/mot-search.html" class="quick-card">
+      <div class="quick-card-icon">🔧</div>
       <h3>Find MOT Centre</h3>
       <p>Search near you</p>
-    </div>
-    <div class="quick-link" onclick="window.location.href='/insurance.html'">
-      <div class="quick-link-icon">💰</div>
-      <h3>Insurance</h3>
-      <p>Compare quotes</p>
-    </div>
-    <div class="quick-link" onclick="window.location.href='/breakdown.html'">
-      <div class="quick-link-icon">🚗</div>
-      <h3>Breakdown Cover</h3>
-      <p>Compare providers</p>
-    </div>
-    <div class="quick-link" onclick="window.open('https://www.gov.uk/vehicle-tax','_blank')">
-      <div class="quick-link-icon">💷</div>
+    </a>
+    <a href="/insurance.html" class="quick-card">
+      <div class="quick-card-icon">💰</div>
+      <h3>Car Insurance</h3>
+      <p>Compare & save</p>
+    </a>
+    <a href="https://www.gov.uk/vehicle-tax" target="_blank" class="quick-card">
+      <div class="quick-card-icon">💷</div>
       <h3>Pay Road Tax</h3>
-      <p>GOV.UK payment</p>
+      <p>GOV.UK direct</p>
+    </a>
+    <a href="/breakdown.html" class="quick-card">
+      <div class="quick-card-icon">🛡</div>
+      <h3>Breakdown Cover</h3>
+      <p>AA, RAC & more</p>
+    </a>
+    <div class="quick-card" onclick="openModal('addVehicleModal')">
+      <div class="quick-card-icon">➕</div>
+      <h3>Add Vehicle</h3>
+      <p>Track a new car</p>
     </div>
   </div>
 
-  <!-- Vehicles -->
+  <!-- Vehicles list -->
   <div class="card">
     <div class="card-header">
       <h2>🚙 My Vehicles</h2>
-      <button class="btn-primary" onclick="showAddVehicleModal()">+ Add Vehicle</button>
+      <button class="btn btn-orange" onclick="openModal('addVehicleModal')">+ Add Vehicle</button>
     </div>
-    <div id="vehiclesList">
-      <div class="loading-div" id="vehiclesLoading" style="display:block">
-        <div class="spinner"></div>
-        <p style="color:#64748B;font-size:14px">Loading vehicles...</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Upcoming Reminders -->
-  <div class="card" id="remindersCard" style="display:none">
-    <div class="card-header">
-      <h2>🔔 Upcoming Reminders</h2>
-    </div>
-    <div id="remindersList"></div>
-  </div>
-
-</div>
-
-
-<!-- ===================== ADD VEHICLE MODAL ===================== -->
-<div class="modal" id="addVehicleModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Add New Vehicle</h2>
-      <button class="modal-close" onclick="closeAddVehicleModal()">×</button>
-    </div>
-    <div class="success-msg" id="addVehicleSuccess"></div>
-    <div class="error-msg" id="addVehicleError"></div>
-    <div class="form-group">
-      <label for="vehicleReg">Registration Number *</label>
-      <input type="text" id="vehicleReg" placeholder="e.g. AB12 CDE" maxlength="8" style="text-transform:uppercase">
-      <p style="color:#94A3B8;font-size:12px;margin-top:5px">We'll automatically fetch vehicle details from DVLA</p>
-    </div>
-    <div class="loading-div" id="addVehicleLoading">
+    <div class="spin-wrap" id="vehiclesSpinner" style="display:block">
       <div class="spinner"></div>
-      <p style="color:#64748B;font-size:14px">Adding vehicle & fetching DVLA data...</p>
+      <p style="color:#94A3B8;font-size:13px">Loading your vehicles...</p>
     </div>
-    <button onclick="submitAddVehicle()" class="btn-primary" style="width:100%" id="addVehicleBtn">Add Vehicle</button>
+    <div id="vehiclesList"></div>
+  </div>
+
+</div><!-- /container -->
+
+
+<!-- ═══════════════════ ADD VEHICLE MODAL ═══════════════════ -->
+<div class="modal" id="addVehicleModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>➕ Add a Vehicle</h2>
+      <button class="modal-close" onclick="closeModal('addVehicleModal')">×</button>
+    </div>
+    <div class="msg msg-err" id="addErr"></div>
+    <div class="msg msg-ok" id="addOk"></div>
+    <div class="fg">
+      <label for="regInput">Registration Number</label>
+      <input type="text" id="regInput" placeholder="e.g. AB12 CDE" maxlength="8" style="text-transform:uppercase;font-size:18px;font-weight:700;letter-spacing:2px">
+      <p style="color:#94A3B8;font-size:12px;margin-top:5px">Vehicle details are fetched automatically from DVLA</p>
+    </div>
+    <div class="spin-wrap" id="addSpinner"><div class="spinner"></div><p style="color:#94A3B8;font-size:13px">Fetching from DVLA...</p></div>
+    <button class="btn btn-orange" style="width:100%" id="addBtn" onclick="submitAddVehicle()">Add Vehicle</button>
   </div>
 </div>
 
 
-<!-- ===================== VEHICLE DETAILS MODAL ===================== -->
+<!-- ═══════════════════ VEHICLE DETAIL MODAL ═══════════════════ -->
 <div class="modal" id="vehicleModal">
-  <div class="modal-content modal-content-wide">
-    <div class="modal-header">
-      <h2 id="vehicleModalTitle">Vehicle Details</h2>
-      <button class="modal-close" onclick="closeVehicleModal()">×</button>
+  <div class="modal-box modal-box-wide">
+    <div class="modal-head">
+      <h2 id="vModalTitle">Vehicle</h2>
+      <button class="modal-close" onclick="closeModal('vehicleModal')">×</button>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('overview')">📋 Overview</button>
-      <button class="tab" onclick="switchTab('logbook')">📖 Service Logbook</button>
-      <button class="tab" onclick="switchTab('expenses')">💸 Expenses</button>
+    <div id="vModalHeader"></div>
+
+    <div class="tab-bar">
+      <button class="tab-btn on" data-tab="ovTab">📋 Overview</button>
+      <button class="tab-btn" data-tab="logTab">📖 Service Logbook</button>
+      <button class="tab-btn" data-tab="expTab">💸 Expenses</button>
     </div>
 
-    <!-- Overview Tab -->
-    <div id="overviewTab" class="tab-content active">
-      <div id="vehicleDetails"></div>
-      <hr class="divider">
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn-primary" onclick="exportVehiclePDF(currentVehicleReg)" id="exportPdfBtn">📄 Export PDF Report</button>
-        <button class="btn-danger" onclick="confirmDeleteVehicle()">🗑 Delete Vehicle</button>
-      </div>
-    </div>
-
-    <!-- Service Logbook Tab -->
-    <div id="logbookTab" class="tab-content">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="color:#0B3D91">Service History</h3>
-        <button class="btn-primary" onclick="showAddServiceModal()">+ Add Service</button>
-      </div>
-      <div id="serviceList">
-        <div class="empty-state" style="padding:30px 0">
-          <p style="color:#94A3B8">No service records yet. Add your first one!</p>
-        </div>
+    <!-- OVERVIEW -->
+    <div class="tab-pane on" id="ovTab">
+      <div class="ov-grid" id="ovGrid"></div>
+      <div class="detail-actions">
+        <button class="btn btn-blue" onclick="exportPDF()">📄 Download Service History PDF</button>
+        <a href="/mot-search.html" class="btn btn-ghost-blue">🔧 Find MOT Centre</a>
+        <a href="https://www.gov.uk/vehicle-tax" target="_blank" class="btn btn-ghost-blue">💷 Renew Road Tax</a>
+        <a href="/insurance.html" class="btn btn-ghost-blue">💰 Compare Insurance</a>
+        <a href="/breakdown.html" class="btn btn-ghost-blue">🛡 Breakdown Cover</a>
+        <button class="btn btn-ghost-red" onclick="deleteCurrentVehicle()">🗑 Remove Vehicle</button>
       </div>
     </div>
 
-    <!-- Expenses Tab -->
-    <div id="expensesTab" class="tab-content">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="color:#0B3D91">Vehicle Expenses</h3>
-        <button class="btn-primary" onclick="showAddExpenseModal()">+ Add Expense</button>
+    <!-- SERVICE LOGBOOK -->
+    <div class="tab-pane" id="logTab">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <p style="color:#64748B;font-size:13px">Full maintenance history for this vehicle</p>
+        <button class="btn btn-orange btn-sm" onclick="openModal('addServiceModal')">+ Add Service</button>
       </div>
-      <div id="expensesList">
-        <div class="empty-state" style="padding:30px 0">
-          <p style="color:#94A3B8">No expenses recorded yet.</p>
-        </div>
+      <div id="serviceList"><div class="empty"><div class="empty-icon">🔧</div><p>No service records yet</p></div></div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="tab-pane" id="expTab">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <p style="color:#64748B;font-size:13px">Track all running costs for this vehicle</p>
+        <button class="btn btn-orange btn-sm" onclick="openModal('addExpenseModal')">+ Add Expense</button>
       </div>
-      <div id="expensesTotal" style="display:none" class="total-box">
-        <div class="total-box-row">
-          <span style="color:#0B3D91;font-weight:700;font-size:15px">Total Expenses:</span>
-          <span style="color:#FF6B35;font-size:24px;font-weight:700" id="totalAmount">£0.00</span>
-        </div>
+      <div id="expenseList"><div class="empty"><div class="empty-icon">💸</div><p>No expenses recorded yet</p></div></div>
+      <div id="expTotals" style="display:none" class="totals-box">
+        <span class="totals-box-label">Total Expenses</span>
+        <span class="totals-box-amount" id="expTotal">£0.00</span>
       </div>
     </div>
 
@@ -276,841 +321,719 @@ nav{background:white;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:f
 </div>
 
 
-<!-- ===================== REMINDER NOTIFICATION MODAL ===================== -->
+<!-- ═══════════════════ REMINDER MODAL ═══════════════════ -->
 <div class="modal" id="reminderModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="reminderModalTitle">🔔 Vehicle Reminders</h2>
-      <button class="modal-close" onclick="closeReminderModal()">×</button>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="rmdrTitle">🔔 Reminders</h2>
+      <button class="modal-close" onclick="closeModal('reminderModal')">×</button>
     </div>
-    <div id="reminderModalContent"></div>
+    <div id="rmdrContent"></div>
   </div>
 </div>
 
 
-<!-- ===================== ADD SERVICE MODAL ===================== -->
+<!-- ═══════════════════ ADD SERVICE MODAL ═══════════════════ -->
 <div class="modal" id="addServiceModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Add Service Record</h2>
-      <button class="modal-close" onclick="closeAddServiceModal()">×</button>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>📖 Add Service Record</h2>
+      <button class="modal-close" onclick="closeModal('addServiceModal')">×</button>
     </div>
-    <div class="success-msg" id="serviceSuccess"></div>
-    <div class="error-msg" id="serviceError"></div>
-    <div class="form-group">
-      <label for="serviceDate">Date *</label>
-      <input type="date" id="serviceDate" required>
+    <div class="msg msg-err" id="svcErr"></div>
+    <div class="msg msg-ok"  id="svcOk"></div>
+    <div class="fg">
+      <label>Date *</label>
+      <input type="date" id="svcDate">
     </div>
-    <div class="form-group">
-      <label for="serviceType">Service Type *</label>
-      <select id="serviceType" required>
+    <div class="fg">
+      <label>Service Type *</label>
+      <select id="svcType">
         <option value="">Select type...</option>
-        <option value="Annual Service">Annual Service</option>
-        <option value="MOT">MOT Test</option>
-        <option value="Oil Change">Oil Change</option>
-        <option value="Brake Service">Brake Service</option>
-        <option value="Tyre Replacement">Tyre Replacement</option>
-        <option value="Battery Replacement">Battery Replacement</option>
-        <option value="Air Filter">Air Filter</option>
-        <option value="Wheel Alignment">Wheel Alignment</option>
-        <option value="Other">Other</option>
+        <option>Annual Service</option>
+        <option>MOT Test</option>
+        <option>Oil Change</option>
+        <option>Brake Service</option>
+        <option>Tyre Replacement</option>
+        <option>Battery Replacement</option>
+        <option>Cambelt / Timing Chain</option>
+        <option>Air Filter</option>
+        <option>Wheel Alignment</option>
+        <option>Clutch Replacement</option>
+        <option>Exhaust Repair</option>
+        <option>Windscreen Repair</option>
+        <option>Other</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="serviceMileage">Mileage (optional)</label>
-      <input type="number" id="serviceMileage" placeholder="e.g. 45000">
+    <div class="fg-row">
+      <div class="fg">
+        <label>Mileage (optional)</label>
+        <input type="number" id="svcMileage" placeholder="e.g. 45000">
+      </div>
+      <div class="fg">
+        <label>Cost £ (optional)</label>
+        <input type="number" id="svcCost" step="0.01" placeholder="e.g. 150.00">
+      </div>
     </div>
-    <div class="form-group">
-      <label for="serviceGarage">Garage / Location (optional)</label>
-      <input type="text" id="serviceGarage" placeholder="e.g. Kwik Fit, Harrow">
+    <div class="fg">
+      <label>Garage / Location (optional)</label>
+      <input type="text" id="svcGarage" placeholder="e.g. Kwik Fit, Harrow">
     </div>
-    <div class="form-group">
-      <label for="serviceNotes">Notes (optional)</label>
-      <textarea id="serviceNotes" placeholder="Any additional details..."></textarea>
+    <div class="fg">
+      <label>Notes (optional)</label>
+      <textarea id="svcNotes" placeholder="e.g. Oil and filter replaced, all checks passed"></textarea>
     </div>
-    <button onclick="submitAddService()" class="btn-primary" style="width:100%">Save Service Record</button>
+    <button class="btn btn-orange" style="width:100%" onclick="submitService()">Save Service Record</button>
   </div>
 </div>
 
 
-<!-- ===================== ADD EXPENSE MODAL ===================== -->
+<!-- ═══════════════════ ADD EXPENSE MODAL ═══════════════════ -->
 <div class="modal" id="addExpenseModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Add Expense</h2>
-      <button class="modal-close" onclick="closeAddExpenseModal()">×</button>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>💸 Add Expense</h2>
+      <button class="modal-close" onclick="closeModal('addExpenseModal')">×</button>
     </div>
-    <div class="success-msg" id="expenseSuccess"></div>
-    <div class="error-msg" id="expenseError"></div>
-    <div class="form-group">
-      <label for="expenseDate">Date *</label>
-      <input type="date" id="expenseDate" required>
+    <div class="msg msg-err" id="expErr"></div>
+    <div class="msg msg-ok"  id="expOk"></div>
+    <div class="fg-row">
+      <div class="fg">
+        <label>Date *</label>
+        <input type="date" id="expDate">
+      </div>
+      <div class="fg">
+        <label>Amount £ *</label>
+        <input type="number" id="expAmount" step="0.01" min="0" placeholder="0.00">
+      </div>
     </div>
-    <div class="form-group">
-      <label for="expenseCategory">Category *</label>
-      <select id="expenseCategory" required>
+    <div class="fg">
+      <label>Category *</label>
+      <select id="expCategory">
         <option value="">Select category...</option>
-        <option value="Fuel">Fuel</option>
-        <option value="Service">Service</option>
-        <option value="MOT">MOT</option>
-        <option value="Road Tax">Road Tax</option>
-        <option value="Insurance">Insurance</option>
-        <option value="Repairs">Repairs</option>
-        <option value="Tyres">Tyres</option>
-        <option value="Parts">Parts</option>
-        <option value="Breakdown Cover">Breakdown Cover</option>
-        <option value="Parking">Parking</option>
-        <option value="Other">Other</option>
+        <option>Fuel</option>
+        <option>Service</option>
+        <option>MOT</option>
+        <option>Road Tax</option>
+        <option>Insurance</option>
+        <option>Repairs</option>
+        <option>Tyres</option>
+        <option>Parts</option>
+        <option>Breakdown Cover</option>
+        <option>Parking / Fines</option>
+        <option>Car Wash</option>
+        <option>Other</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="expenseAmount">Amount (£) *</label>
-      <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00" required>
+    <div class="fg">
+      <label>Notes (optional)</label>
+      <textarea id="expNotes" style="min-height:70px" placeholder="Any additional details..."></textarea>
     </div>
-    <div class="form-group">
-      <label for="expenseNotes">Notes (optional)</label>
-      <textarea id="expenseNotes" placeholder="Optional notes..." style="min-height:70px"></textarea>
-    </div>
-    <button onclick="submitAddExpense()" class="btn-primary" style="width:100%">Save Expense</button>
+    <button class="btn btn-orange" style="width:100%" onclick="submitExpense()">Save Expense</button>
   </div>
 </div>
 
 
-<!-- ===================== MY ACCOUNT MODAL ===================== -->
+<!-- ═══════════════════ MY ACCOUNT MODAL ═══════════════════ -->
 <div class="modal" id="accountModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>My Account</h2>
-      <button class="modal-close" onclick="closeAccountModal()">×</button>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>👤 My Account</h2>
+      <button class="modal-close" onclick="closeModal('accountModal')">×</button>
     </div>
-    <div class="success-msg" id="accountSuccess"></div>
-    <div class="error-msg" id="accountError"></div>
-    <div class="form-group">
+    <div class="msg msg-err" id="accErr"></div>
+    <div class="msg msg-ok"  id="accOk"></div>
+    <div class="fg">
       <label>Name</label>
-      <input type="text" id="accountName" readonly style="background:#F8FAFC;cursor:not-allowed">
+      <input type="text" id="accName" readonly style="background:#F8FAFC;cursor:default">
     </div>
-    <div class="form-group">
+    <div class="fg">
       <label>Email</label>
-      <input type="email" id="accountEmail" readonly style="background:#F8FAFC;cursor:not-allowed">
+      <input type="email" id="accEmail" readonly style="background:#F8FAFC;cursor:default">
     </div>
-    <hr class="divider">
-    <h3 style="color:#0B3D91;margin-bottom:16px;font-size:16px">Change Password</h3>
-    <div class="form-group">
-      <label for="currentPassword">Current Password</label>
-      <input type="password" id="currentPassword" placeholder="Enter current password">
+    <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0">
+    <h3 style="color:#0B3D91;font-size:15px;font-weight:700;margin-bottom:14px">Change Password</h3>
+    <div class="fg">
+      <label>Current Password</label>
+      <input type="password" id="pwCurrent" placeholder="Enter current password">
     </div>
-    <div class="form-group">
-      <label for="newPassword">New Password</label>
-      <input type="password" id="newPassword" placeholder="Enter new password (min 8 chars)" minlength="8">
+    <div class="fg">
+      <label>New Password</label>
+      <input type="password" id="pwNew" placeholder="Min 8 characters">
     </div>
-    <button onclick="submitChangePassword()" class="btn-primary" style="width:100%">Update Password</button>
+    <button class="btn btn-orange" style="width:100%;margin-bottom:12px" onclick="changePassword()">Update Password</button>
+    <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0">
+    <a href="/my-account.html" class="btn btn-ghost-blue" style="width:100%;text-align:center;display:block">⚙️ Full Account Settings →</a>
   </div>
 </div>
 
 
 <script>
-// ===================== STATE =====================
-let currentVehicleReg = null;
-let allVehicles = [];
+// ─────────────────────── STATE ───────────────────────
+const TOKEN = () => localStorage.getItem('token');
+let vehicles = [];
+let activeVehicleReg = null;
 
-// ===================== INIT =====================
-window.addEventListener('DOMContentLoaded', function() {
-  const token = localStorage.getItem('token');
-  const userName = localStorage.getItem('userName');
+// ─────────────────────── INIT ───────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!TOKEN()) { window.location.href = '/signin.html?redirect=/dashboard.html'; return; }
 
-  if (!token) {
-    window.location.href = '/signin.html?redirect=/dashboard.html';
-    return;
-  }
-
-  if (userName) {
-    document.querySelector('.welcome h1').textContent = 'Welcome back, ' + userName + '! 👋';
-  }
+  const name = localStorage.getItem('userName');
+  if (name) document.getElementById('welcomeMsg').textContent = 'Welcome back, ' + name + '! 👋';
 
   loadVehicles();
-  loadReminders();
+  loadNotifications();
+  initTabs();
+  initModalClose();
+
+  document.getElementById('regInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitAddVehicle(); });
 });
 
-// ===================== VEHICLES =====================
-async function loadVehicles() {
-  const token = localStorage.getItem('token');
-  document.getElementById('vehiclesLoading').style.display = 'block';
-
-  try {
-    const response = await fetch('/api/user/vehicles', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-
-    if (response.status === 401) {
-      localStorage.clear();
-      window.location.href = '/signin.html';
-      return;
-    }
-
-    const data = await response.json();
-    allVehicles = data.vehicles || [];
-    document.getElementById('vehiclesLoading').style.display = 'none';
-    renderVehicles();
-
-  } catch (error) {
-    console.error('Error loading vehicles:', error);
-    document.getElementById('vehiclesLoading').style.display = 'none';
-    document.getElementById('vehiclesList').innerHTML = '<p style="color:#94A3B8;text-align:center;padding:30px">Could not load vehicles. Please refresh.</p>';
-  }
+// ─────────────────────── MODALS ───────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function initModalClose() {
+  document.querySelectorAll('.modal').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
 }
 
-function renderVehicles() {
-  if (allVehicles.length === 0) {
+// ─────────────────────── TABS ───────────────────────
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bar = btn.closest('.tab-bar');
+      const modal = btn.closest('.modal-box');
+      bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const paneId = btn.dataset.tab;
+      modal.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+      document.getElementById(paneId).classList.add('on');
+    });
+  });
+}
+
+// ─────────────────────── HELPERS ───────────────────────
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((d - today) / 86400000);
+}
+
+function fmtDate(str) {
+  if (!str) return 'N/A';
+  try { return new Date(str).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}); }
+  catch(e) { return str; }
+}
+
+function regFromVehicle(v) {
+  return v.registrationNumber || v.registration || v.reg || '';
+}
+
+function showMsg(id, text, isErr) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'msg ' + (isErr ? 'msg-err' : 'msg-ok');
+  el.style.display = 'block';
+}
+
+function hideMsg(id) { document.getElementById(id).style.display = 'none'; }
+
+// ─────────────────────── LOAD VEHICLES ───────────────────────
+async function loadVehicles() {
+  document.getElementById('vehiclesSpinner').style.display = 'block';
+  document.getElementById('vehiclesList').innerHTML = '';
+
+  try {
+    const res = await fetch('/api/user/vehicles', { headers: { Authorization: 'Bearer ' + TOKEN() } });
+    if (res.status === 401) { localStorage.clear(); window.location.href = '/signin.html'; return; }
+    const data = await res.json();
+    vehicles = data.vehicles || [];
+  } catch(e) {
+    vehicles = [];
+  }
+
+  document.getElementById('vehiclesSpinner').style.display = 'none';
+
+  const count = vehicles.length;
+  document.getElementById('vehicleCount').textContent = count + ' vehicle' + (count !== 1 ? 's' : '');
+
+  if (count === 0) {
     document.getElementById('vehiclesList').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">🚙</div>
-        <h3>No vehicles added yet</h3>
-        <p>Add your first vehicle to track MOT, tax, and service history</p>
-        <button class="btn-primary" onclick="showAddVehicleModal()">+ Add Your First Vehicle</button>
+      <div class="empty">
+        <div class="empty-icon">🚙</div>
+        <p style="font-size:16px;font-weight:700;color:#0B3D91;margin-bottom:6px">No vehicles added yet</p>
+        <p style="margin-bottom:16px">Add your first vehicle to start tracking MOT, tax & costs</p>
+        <button class="btn btn-orange" onclick="openModal('addVehicleModal')">+ Add Your First Vehicle</button>
       </div>`;
     return;
   }
 
-  const html = allVehicles.map(v => {
-    const reg = v.registration || v.reg || '';
+  document.getElementById('vehiclesList').innerHTML = vehicles.map(v => {
+    const reg = regFromVehicle(v);
     const make = v.make || '';
     const model = v.model || '';
-    const year = v.year || v.yearOfManufacture || '';
-    const motStatus = v.motStatus || 'Unknown';
-    const taxStatus = v.taxStatus || 'Unknown';
-    const motExpiry = v.motExpiryDate || '';
-    const taxDue = v.taxDueDate || '';
-    const motClass = motStatus === 'Valid' ? 'status-valid' : (motStatus === 'Unknown' ? 'status-unknown' : 'status-expired');
-    const taxClass = taxStatus === 'Taxed' ? 'status-valid' : (taxStatus === 'Unknown' ? 'status-unknown' : 'status-expired');
-    const daysToMot = motExpiry ? daysUntil(motExpiry) : null;
-    const daysToTax = taxDue ? daysUntil(taxDue) : null;
+    const year = v.yearOfManufacture || v.year || '';
+    const mot = v.motStatus || 'Unknown';
+    const tax = v.taxStatus || 'Unknown';
+    const motDays = daysUntil(v.motExpiryDate);
+    const taxDays = daysUntil(v.taxDueDate);
+
+    const motBadge = mot === 'Valid' ? 'badge-green' : mot === 'No MOT' || mot === 'Expired' ? 'badge-red' : 'badge-gray';
+    const taxBadge = tax === 'Taxed' ? 'badge-green' : tax === 'SORN' ? 'badge-amber' : (tax === 'Untaxed' ? 'badge-red' : 'badge-gray');
+
+    const urgentClass = (motDays !== null && motDays < 30 && motDays >= 0) ? 'urgent-mot'
+                      : (taxDays !== null && taxDays < 14 && taxDays >= 0) ? 'urgent-tax' : '';
+
+    const motStr = v.motExpiryDate
+      ? (motDays === null ? v.motExpiryDate : motDays < 0 ? `EXPIRED ${Math.abs(motDays)} days ago` : `${v.motExpiryDate} (${motDays}d)`)
+      : '';
+    const taxStr = v.taxDueDate
+      ? (taxDays === null ? v.taxDueDate : taxDays < 0 ? `OVERDUE ${Math.abs(taxDays)} days ago` : `${v.taxDueDate} (${taxDays}d)`)
+      : '';
 
     return `
-      <div class="vehicle-card" id="card-${reg}">
-        <div class="vehicle-header">
-          <div class="vehicle-reg">${reg}</div>
-          <div class="vehicle-actions">
-            <button class="btn-bell" onclick="event.stopPropagation(); showReminderModal('${reg}')">🔔 Reminders</button>
-            <button class="btn-view" onclick="event.stopPropagation(); viewVehicle('${reg}')">📋 Details</button>
-            <button class="btn-delete-card" onclick="event.stopPropagation(); deleteVehicleByReg('${reg}')">🗑</button>
-          </div>
+    <div class="vehicle-card ${urgentClass}">
+      <div class="vehicle-top">
+        <div class="vehicle-reg">${reg}</div>
+        <div class="vehicle-actions">
+          <button class="btn btn-ghost-amber btn-xs" onclick="openReminderModal('${reg}')">🔔 Reminders</button>
+          <button class="btn btn-ghost-blue btn-xs" onclick="openVehicleModal('${reg}')">📋 Details</button>
+          <button class="btn btn-ghost-red btn-xs" onclick="deleteVehicle('${reg}')">🗑</button>
         </div>
-        <div class="vehicle-info">${make} ${model} ${year ? '(' + year + ')' : ''}</div>
-        <div class="vehicle-status">
-          <span class="status-badge ${motClass}">🔧 MOT: ${motStatus}</span>
-          <span class="status-badge ${taxClass}">💷 Tax: ${taxStatus}</span>
-        </div>
-        <div class="vehicle-dates">
-          ${motExpiry ? `MOT expires: ${motExpiry}${daysToMot !== null ? ' (' + (daysToMot >= 0 ? daysToMot + ' days' : 'EXPIRED') + ')' : ''}` : ''}
-          ${motExpiry && taxDue ? ' &nbsp;|&nbsp; ' : ''}
-          ${taxDue ? `Tax due: ${taxDue}${daysToTax !== null ? ' (' + (daysToTax >= 0 ? daysToTax + ' days' : 'OVERDUE') + ')' : ''}` : ''}
-        </div>
-      </div>`;
+      </div>
+      <div class="vehicle-name">${[make, model, year ? '(' + year + ')' : ''].filter(Boolean).join(' ')}</div>
+      <div class="vehicle-badges">
+        <span class="badge ${motBadge}">🔧 MOT: ${mot}</span>
+        <span class="badge ${taxBadge}">💷 Tax: ${tax}</span>
+      </div>
+      <div class="vehicle-dates">
+        ${motStr ? '🔧 ' + motStr : ''}
+        ${motStr && taxStr ? '&nbsp; | &nbsp;' : ''}
+        ${taxStr ? '💷 ' + taxStr : ''}
+      </div>
+    </div>`;
   }).join('');
-
-  document.getElementById('vehiclesList').innerHTML = html;
 }
 
-function daysUntil(dateStr) {
-  if (!dateStr) return null;
-  try {
-    const target = new Date(dateStr);
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    return Math.round((target - today) / (1000 * 60 * 60 * 24));
-  } catch(e) { return null; }
-}
-
-// ===================== ADD VEHICLE =====================
-function showAddVehicleModal() {
-  document.getElementById('addVehicleModal').classList.add('active');
-  document.getElementById('vehicleReg').value = '';
-  document.getElementById('addVehicleSuccess').style.display = 'none';
-  document.getElementById('addVehicleError').style.display = 'none';
-  document.getElementById('addVehicleLoading').style.display = 'none';
-  document.getElementById('addVehicleBtn').style.display = 'block';
-  setTimeout(() => document.getElementById('vehicleReg').focus(), 100);
-}
-
-function closeAddVehicleModal() {
-  document.getElementById('addVehicleModal').classList.remove('active');
+// ─────────────────────── ADD VEHICLE ───────────────────────
+function openAddVehicleModal() {
+  document.getElementById('regInput').value = '';
+  hideMsg('addErr'); hideMsg('addOk');
+  document.getElementById('addSpinner').style.display = 'none';
+  document.getElementById('addBtn').style.display = 'block';
+  openModal('addVehicleModal');
+  setTimeout(() => document.getElementById('regInput').focus(), 100);
 }
 
 async function submitAddVehicle() {
-  const reg = document.getElementById('vehicleReg').value.toUpperCase().replace(/\s/g, '');
-  const token = localStorage.getItem('token');
-  const errorDiv = document.getElementById('addVehicleError');
-  const successDiv = document.getElementById('addVehicleSuccess');
-  const loadingDiv = document.getElementById('addVehicleLoading');
-  const btn = document.getElementById('addVehicleBtn');
+  const reg = document.getElementById('regInput').value.toUpperCase().replace(/\s/g,'');
+  hideMsg('addErr'); hideMsg('addOk');
+  if (!reg || reg.length < 2) { showMsg('addErr','Please enter a valid registration number.',true); return; }
 
-  if (!reg || reg.length < 2) {
-    errorDiv.textContent = 'Please enter a valid registration number.';
-    errorDiv.style.display = 'block';
-    return;
-  }
-
-  errorDiv.style.display = 'none';
-  successDiv.style.display = 'none';
-  loadingDiv.style.display = 'block';
-  btn.style.display = 'none';
+  document.getElementById('addSpinner').style.display = 'block';
+  document.getElementById('addBtn').style.display = 'none';
 
   try {
-    const response = await fetch('/api/user/vehicles', {
+    const res = await fetch('/api/user/vehicles', {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ registration: reg })
+      headers: { Authorization: 'Bearer '+TOKEN(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ registration: reg, registrationNumber: reg })
     });
+    const data = await res.json();
+    document.getElementById('addSpinner').style.display = 'none';
+    document.getElementById('addBtn').style.display = 'block';
 
-    const data = await response.json();
-    loadingDiv.style.display = 'none';
-    btn.style.display = 'block';
+    if (!res.ok) { showMsg('addErr', data.error || 'Could not add vehicle — check the registration.', true); return; }
 
-    if (!response.ok) {
-      errorDiv.textContent = data.error || 'Failed to add vehicle. Check the registration number.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    successDiv.textContent = '✅ ' + reg + ' added successfully!';
-    successDiv.style.display = 'block';
-
-    // ✅ FIX 1: Immediately reload the vehicles list without waiting
+    showMsg('addOk', '✅ ' + reg + ' added!', false);
     await loadVehicles();
-
-    setTimeout(() => {
-      closeAddVehicleModal();
-    }, 1200);
-
-  } catch (error) {
-    loadingDiv.style.display = 'none';
-    btn.style.display = 'block';
-    errorDiv.textContent = 'Error adding vehicle. Please try again.';
-    errorDiv.style.display = 'block';
+    await loadNotifications();
+    setTimeout(() => closeModal('addVehicleModal'), 1200);
+  } catch(e) {
+    document.getElementById('addSpinner').style.display = 'none';
+    document.getElementById('addBtn').style.display = 'block';
+    showMsg('addErr', 'Network error. Please try again.', true);
   }
 }
 
-// Support Enter key in reg field
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('vehicleReg').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') submitAddVehicle();
-  });
-});
-
-// ===================== DELETE VEHICLE =====================
-async function deleteVehicleByReg(reg) {
-  if (!confirm('Delete ' + reg + ' from your garage? This will also delete all service records and expenses for this vehicle.')) return;
-
-  const token = localStorage.getItem('token');
+// ─────────────────────── DELETE VEHICLE ───────────────────────
+async function deleteVehicle(reg) {
+  if (!confirm('Remove ' + reg + ' from your garage?\n\nThis will also delete all service records and expenses for this vehicle.')) return;
   try {
-    const response = await fetch('/api/user/vehicles/' + reg, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + token }
+    await fetch('/api/user/vehicles/' + reg, {
+      method: 'DELETE', headers: { Authorization: 'Bearer '+TOKEN() }
     });
-
-    if (response.ok) {
-      // ✅ FIX 2: Immediately remove card and reload
-      await loadVehicles();
-    } else {
-      alert('Failed to delete vehicle. Please try again.');
-    }
-  } catch (error) {
-    console.error('Delete error:', error);
-    alert('Error deleting vehicle.');
-  }
+    await loadVehicles();
+    await loadNotifications();
+  } catch(e) { alert('Error deleting vehicle.'); }
 }
 
-function confirmDeleteVehicle() {
-  closeVehicleModal();
-  setTimeout(() => deleteVehicleByReg(currentVehicleReg), 200);
+function deleteCurrentVehicle() {
+  closeModal('vehicleModal');
+  setTimeout(() => deleteVehicle(activeVehicleReg), 200);
 }
 
-// ===================== VIEW VEHICLE DETAILS =====================
-// ✅ FIX 3: Proper viewVehicle that opens the modal and loads all data
-async function viewVehicle(reg) {
-  currentVehicleReg = reg;
+// ─────────────────────── VEHICLE DETAIL MODAL ───────────────────────
+async function openVehicleModal(reg) {
+  activeVehicleReg = reg;
+  const v = vehicles.find(x => regFromVehicle(x) === reg) || {};
+  const make = v.make || '';
+  const model = v.model || '';
+  const year = v.yearOfManufacture || v.year || '';
+  const colour = v.colour || v.color || '';
+  const mot = v.motStatus || 'Unknown';
+  const tax = v.taxStatus || 'Unknown';
+  const motDays = daysUntil(v.motExpiryDate);
+  const taxDays = daysUntil(v.taxDueDate);
 
-  // Try to find vehicle in already-loaded list first
-  let vehicle = allVehicles.find(v => (v.registration || v.reg) === reg);
+  document.getElementById('vModalTitle').textContent = reg;
 
-  // Fallback: find by either field name
-  if (!vehicle) {
-    vehicle = allVehicles.find(v => v.registration === reg || v.reg === reg);
-  }
+  document.getElementById('vModalHeader').innerHTML = `
+    <div class="veh-modal-head">
+      <div>
+        <div class="veh-modal-reg">${reg}</div>
+        <div class="veh-modal-name">${[make, model, year ? '('+year+')' : '', colour].filter(Boolean).join(' ')}</div>
+      </div>
+      <div style="text-align:right;font-size:13px;opacity:0.85">
+        ${v.fuelType ? v.fuelType + '<br>' : ''}
+        ${v.engineCapacity ? v.engineCapacity + 'cc' : ''}
+      </div>
+    </div>`;
 
-  document.getElementById('vehicleModalTitle').textContent = reg + ' — Vehicle Details';
+  const motBadge = mot === 'Valid' ? 'badge-green' : 'badge-red';
+  const taxBadge = tax === 'Taxed' ? 'badge-green' : (tax === 'SORN' ? 'badge-amber' : 'badge-red');
 
-  if (vehicle) {
-    const make = vehicle.make || '';
-    const model = vehicle.model || '';
-    const year = vehicle.year || vehicle.yearOfManufacture || 'N/A';
-    const colour = vehicle.colour || vehicle.color || 'N/A';
-    const motStatus = vehicle.motStatus || 'Unknown';
-    const taxStatus = vehicle.taxStatus || 'Unknown';
-    const motExpiry = vehicle.motExpiryDate || 'N/A';
-    const taxDue = vehicle.taxDueDate || 'N/A';
-    const motClass = motStatus === 'Valid' ? 'status-valid' : (motStatus === 'Unknown' ? 'status-unknown' : 'status-expired');
-    const taxClass = taxStatus === 'Taxed' ? 'status-valid' : (taxStatus === 'Unknown' ? 'status-unknown' : 'status-expired');
-    const daysToMot = daysUntil(vehicle.motExpiryDate);
-    const daysToTax = daysUntil(vehicle.taxDueDate);
+  document.getElementById('ovGrid').innerHTML = `
+    <div class="ov-cell">
+      <div class="ov-label">🔧 MOT Status</div>
+      <div class="ov-value"><span class="badge ${motBadge}">${mot}</span></div>
+      <div class="ov-sub">Expires: ${fmtDate(v.motExpiryDate)}${motDays !== null ? ' · ' + (motDays >= 0 ? motDays + ' days left' : Math.abs(motDays) + ' days EXPIRED') : ''}</div>
+    </div>
+    <div class="ov-cell">
+      <div class="ov-label">💷 Road Tax</div>
+      <div class="ov-value"><span class="badge ${taxBadge}">${tax}</span></div>
+      <div class="ov-sub">Due: ${fmtDate(v.taxDueDate)}${taxDays !== null ? ' · ' + (taxDays >= 0 ? taxDays + ' days' : Math.abs(taxDays) + ' days OVERDUE') : ''}</div>
+    </div>
+    <div class="ov-cell">
+      <div class="ov-label">📅 Year</div>
+      <div class="ov-value">${year || 'N/A'}</div>
+    </div>
+    <div class="ov-cell">
+      <div class="ov-label">🎨 Colour</div>
+      <div class="ov-value">${colour || 'N/A'}</div>
+    </div>
+    <div class="ov-cell">
+      <div class="ov-label">⛽ Fuel</div>
+      <div class="ov-value">${v.fuelType || 'N/A'}</div>
+    </div>
+    <div class="ov-cell">
+      <div class="ov-label">🔩 Engine</div>
+      <div class="ov-value">${v.engineCapacity ? v.engineCapacity + 'cc' : 'N/A'}</div>
+    </div>`;
 
-    document.getElementById('vehicleDetails').innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:8px">
-        <div><p style="color:#94A3B8;font-size:12px;margin-bottom:4px">Make</p><p style="color:#0B3D91;font-weight:700;font-size:16px">${make}</p></div>
-        <div><p style="color:#94A3B8;font-size:12px;margin-bottom:4px">Model</p><p style="color:#0B3D91;font-weight:700;font-size:16px">${model}</p></div>
-        <div><p style="color:#94A3B8;font-size:12px;margin-bottom:4px">Year</p><p style="color:#0B3D91;font-weight:700;font-size:16px">${year}</p></div>
-        <div><p style="color:#94A3B8;font-size:12px;margin-bottom:4px">Colour</p><p style="color:#0B3D91;font-weight:700;font-size:16px">${colour}</p></div>
-        <div>
-          <p style="color:#94A3B8;font-size:12px;margin-bottom:4px">🔧 MOT Status</p>
-          <span class="status-badge ${motClass}" style="font-size:14px">${motStatus}</span>
-          <p style="color:#94A3B8;font-size:12px;margin-top:4px">Expires: ${motExpiry}${daysToMot !== null ? ' <strong>(' + (daysToMot >= 0 ? daysToMot + ' days)' : 'EXPIRED)') + '</strong>' : ''}</p>
-        </div>
-        <div>
-          <p style="color:#94A3B8;font-size:12px;margin-bottom:4px">💷 Tax Status</p>
-          <span class="status-badge ${taxClass}" style="font-size:14px">${taxStatus}</span>
-          <p style="color:#94A3B8;font-size:12px;margin-top:4px">Due: ${taxDue}${daysToTax !== null ? ' <strong>(' + (daysToTax >= 0 ? daysToTax + ' days)' : 'OVERDUE)') + '</strong>' : ''}</p>
-        </div>
-      </div>`;
-  } else {
-    document.getElementById('vehicleDetails').innerHTML = `<p style="color:#94A3B8">Vehicle data not available. <a href="#" onclick="loadVehicles()">Refresh</a></p>`;
-  }
+  // Reset tabs to overview
+  document.querySelectorAll('#vehicleModal .tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#vehicleModal .tab-pane').forEach(p => p.classList.remove('on'));
+  document.querySelector('#vehicleModal .tab-btn[data-tab="ovTab"]').classList.add('on');
+  document.getElementById('ovTab').classList.add('on');
 
-  // Open modal
-  document.getElementById('vehicleModal').classList.add('active');
-  switchTab('overview');
-
-  // Load service records and expenses
+  openModal('vehicleModal');
   loadServiceRecords(reg);
   loadExpenses(reg);
 }
 
-function closeVehicleModal() {
-  document.getElementById('vehicleModal').classList.remove('active');
-  currentVehicleReg = null;
-}
+// ─────────────────────── REMINDER MODAL ───────────────────────
+function openReminderModal(reg) {
+  const v = vehicles.find(x => regFromVehicle(x) === reg) || {};
+  const make = v.make || '';
+  const model = v.model || '';
+  document.getElementById('rmdrTitle').textContent = '🔔 ' + reg + ' — ' + [make, model].filter(Boolean).join(' ');
 
-// ===================== REMINDER NOTIFICATION MODAL =====================
-// ✅ FIX 4: Bell button shows breakdown of what's due for that vehicle
-function showReminderModal(reg) {
-  const vehicle = allVehicles.find(v => (v.registration || v.reg) === reg);
-  if (!vehicle) return;
+  const motDays = daysUntil(v.motExpiryDate);
+  const taxDays = daysUntil(v.taxDueDate);
 
-  const make = vehicle.make || '';
-  const model = vehicle.model || '';
-  document.getElementById('reminderModalTitle').textContent = '🔔 ' + reg + ' — ' + make + ' ' + model;
+  const rows = [];
 
-  const motExpiry = vehicle.motExpiryDate;
-  const taxDue = vehicle.taxDueDate;
-  const daysToMot = daysUntil(motExpiry);
-  const daysToTax = daysUntil(taxDue);
-
-  let rows = [];
-
-  // MOT row
-  if (motExpiry) {
-    const urgent = daysToMot !== null && daysToMot <= 30;
-    const expired = daysToMot !== null && daysToMot < 0;
-    let label, advice, badgeClass;
-    if (expired) {
-      label = '🚨 MOT EXPIRED';
-      advice = 'Your MOT has expired! You cannot legally drive this vehicle. Book urgently.';
-      badgeClass = 'reminder-days urgent';
-    } else if (daysToMot <= 7) {
-      label = '🚨 MOT Due Very Soon';
-      advice = 'Book your MOT immediately — less than a week to go.';
-      badgeClass = 'reminder-days urgent';
-    } else if (daysToMot <= 30) {
-      label = '⚠️ MOT Due Soon';
-      advice = 'Book your MOT in the next few weeks to avoid rushing.';
-      badgeClass = 'reminder-days';
-    } else {
-      label = '✅ MOT OK';
-      advice = 'MOT is valid and not due soon.';
-      badgeClass = 'reminder-days ok';
-    }
+  if (v.motExpiryDate) {
+    const exp = motDays < 0;
+    const soon = motDays !== null && motDays <= 30;
+    const badge = exp ? 'urgent' : soon ? '' : 'ok';
+    const label = exp ? '🚨 MOT EXPIRED' : motDays <= 7 ? '🚨 MOT Due Very Soon' : soon ? '⚠️ MOT Due Soon' : '✅ MOT Valid';
+    const sub = exp ? 'MOT has expired — you cannot legally drive. Book urgently!'
+               : motDays <= 7 ? 'Book your MOT immediately. Less than a week remaining.'
+               : soon ? 'Book your MOT in the next few weeks to avoid rushing.'
+               : 'No action needed right now.';
     rows.push(`
-      <div class="reminder-row">
+      <div class="rmdr-row">
         <div>
-          <div class="reminder-label">${label}</div>
-          <div style="color:#92400E;font-size:12px;margin-top:3px">${advice}</div>
-          ${motExpiry ? `<div style="color:#B45309;font-size:12px;margin-top:2px">Expires: ${motExpiry}</div>` : ''}
+          <div class="rmdr-label">${label}</div>
+          <div class="rmdr-sub">${sub}<br>Expiry: ${fmtDate(v.motExpiryDate)}</div>
         </div>
-        <span class="${badgeClass}">${daysToMot !== null ? (daysToMot < 0 ? Math.abs(daysToMot) + ' days ago' : daysToMot + ' days') : 'N/A'}</span>
+        <span class="rmdr-badge ${badge}">${motDays === null ? 'N/A' : motDays < 0 ? Math.abs(motDays)+'d ago' : motDays+'d'}</span>
       </div>`);
   }
 
-  // Tax row
-  if (taxDue) {
-    const expired = daysToTax !== null && daysToTax < 0;
-    let label, advice, badgeClass;
-    if (expired) {
-      label = '🚨 ROAD TAX OVERDUE';
-      advice = 'Road tax has expired. Pay on GOV.UK now to avoid fines.';
-      badgeClass = 'reminder-days urgent';
-    } else if (daysToTax <= 14) {
-      label = '⚠️ Road Tax Due Soon';
-      advice = 'Road tax is due soon. Pay at GOV.UK to stay legal.';
-      badgeClass = 'reminder-days';
-    } else {
-      label = '✅ Road Tax OK';
-      advice = 'Road tax is up to date.';
-      badgeClass = 'reminder-days ok';
-    }
+  if (v.taxDueDate) {
+    const exp = taxDays < 0;
+    const soon = taxDays !== null && taxDays <= 14;
+    const badge = exp ? 'urgent' : soon ? '' : 'ok';
+    const label = exp ? '🚨 ROAD TAX OVERDUE' : soon ? '⚠️ Road Tax Due Soon' : '✅ Road Tax Valid';
+    const sub = exp ? 'Pay your road tax now on GOV.UK to avoid fines.'
+               : soon ? 'Road tax due soon — renew at GOV.UK before it expires.'
+               : 'No action needed right now.';
     rows.push(`
-      <div class="reminder-row">
+      <div class="rmdr-row">
         <div>
-          <div class="reminder-label">${label}</div>
-          <div style="color:#92400E;font-size:12px;margin-top:3px">${advice}</div>
-          ${taxDue ? `<div style="color:#B45309;font-size:12px;margin-top:2px">Due: ${taxDue}</div>` : ''}
+          <div class="rmdr-label">${label}</div>
+          <div class="rmdr-sub">${sub}<br>Due: ${fmtDate(v.taxDueDate)}</div>
         </div>
-        <span class="${badgeClass}">${daysToTax !== null ? (daysToTax < 0 ? Math.abs(daysToTax) + ' days ago' : daysToTax + ' days') : 'N/A'}</span>
+        <span class="rmdr-badge ${badge}">${taxDays === null ? 'N/A' : taxDays < 0 ? Math.abs(taxDays)+'d ago' : taxDays+'d'}</span>
       </div>`);
   }
 
-  // MOT checklist
-  const checklist = `
-    <div style="margin-top:20px;padding:16px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0">
-      <p style="color:#166534;font-weight:700;margin-bottom:10px;font-size:14px">✅ Pre-MOT Checklist</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:#166534">
+  if (rows.length === 0) rows.push('<p style="color:#94A3B8;text-align:center;padding:16px">No reminder data available — DVLA data may be missing.</p>');
+
+  document.getElementById('rmdrContent').innerHTML = `
+    <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:16px;margin-bottom:16px">
+      ${rows.join('')}
+    </div>
+    <div class="checklist">
+      <h4>✅ Pre-MOT Checklist</h4>
+      <div class="checklist-grid">
         <div>☑ All lights working</div>
         <div>☑ Windscreen wiper blades</div>
-        <div>☑ Tyre tread depth (1.6mm+)</div>
+        <div>☑ Tyre tread (1.6mm min)</div>
         <div>☑ Horn working</div>
         <div>☑ Brakes not squealing</div>
-        <div>☑ No warning lights on dash</div>
-        <div>☑ Number plates visible</div>
-        <div>☑ Seatbelts working</div>
+        <div>☑ No dashboard warning lights</div>
+        <div>☑ Number plates clean & visible</div>
+        <div>☑ Seatbelts functioning</div>
       </div>
-      <div style="margin-top:14px;text-align:center">
-        <a href="/mot-search.html" style="display:inline-block;background:#10B981;color:white;padding:10px 24px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none">🔧 Find MOT Centre Near Me</a>
+      <div style="text-align:center;margin-top:14px">
+        <a href="/mot-search.html" class="btn btn-green btn-sm">🔧 Find MOT Centre Near Me</a>
       </div>
     </div>`;
 
-  const empty = rows.length === 0 ? '<p style="color:#94A3B8;text-align:center;padding:20px">No reminder data available. Check DVLA data is loaded.</p>' : '';
-
-  document.getElementById('reminderModalContent').innerHTML = `
-    <div class="reminder-panel">
-      <h3>📅 Upcoming Deadlines</h3>
-      ${rows.join('') || empty}
-    </div>
-    ${checklist}`;
-
-  document.getElementById('reminderModal').classList.add('active');
+  openModal('reminderModal');
 }
 
-function closeReminderModal() {
-  document.getElementById('reminderModal').classList.remove('active');
-}
-
-// ===================== TABS =====================
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  const tabBtn = document.querySelector(`[onclick="switchTab('${tab}')"]`);
-  if (tabBtn) tabBtn.classList.add('active');
-  const tabContent = document.getElementById(tab + 'Tab');
-  if (tabContent) tabContent.classList.add('active');
-}
-
-// ===================== SERVICE LOGBOOK =====================
-// ✅ FIX 5: Full service logbook with proper API calls
-async function loadServiceRecords(reg) {
-  const token = localStorage.getItem('token');
-  document.getElementById('serviceList').innerHTML = '<p style="color:#94A3B8;font-size:13px">Loading...</p>';
-
+// ─────────────────────── NOTIFICATIONS STRIP ───────────────────────
+async function loadNotifications() {
   try {
-    const response = await fetch('/api/user/service-records?registration=' + reg, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch('/api/notifications', { headers: { Authorization: 'Bearer '+TOKEN() } });
+    const data = await res.json();
+    const notifs = data.notifications || [];
+    if (notifs.length === 0) return;
 
-    const data = await response.json();
-    const records = data.records || data || [];
+    document.getElementById('notifStrip').style.display = 'block';
+    document.getElementById('notifList').innerHTML = notifs.slice(0,5).map(n => `
+      <div class="notif-item">
+        <span class="notif-label">${n.title} — ${n.message}</span>
+        <span class="notif-days ${n.daysUntil <= 7 ? 'urgent' : ''}">${n.daysUntil}d</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+// ─────────────────────── SERVICE LOGBOOK ───────────────────────
+async function loadServiceRecords(reg) {
+  document.getElementById('serviceList').innerHTML = '<p style="color:#94A3B8;font-size:13px;padding:10px 0">Loading...</p>';
+  try {
+    const res = await fetch('/api/user/service-records?registration=' + reg, {
+      headers: { Authorization: 'Bearer '+TOKEN() }
+    });
+    const data = await res.json();
+    const records = data.records || [];
 
     if (records.length === 0) {
-      document.getElementById('serviceList').innerHTML = '<div class="empty-state" style="padding:24px 0"><p style="color:#94A3B8">No service records yet. Add your first one!</p></div>';
+      document.getElementById('serviceList').innerHTML = '<div class="empty"><div class="empty-icon">📖</div><p>No service records yet — add your first one</p></div>';
       return;
     }
 
-    document.getElementById('serviceList').innerHTML = records.map(r => `
-      <div class="record-item">
-        <div class="record-header">
+    const sorted = [...records].sort((a,b) => new Date(b.date) - new Date(a.date));
+    document.getElementById('serviceList').innerHTML = sorted.map(r => `
+      <div class="record">
+        <div class="record-head">
           <span class="record-title">${r.type || r.serviceType || 'Service'}</span>
-          <span class="record-date">${r.date || ''}</span>
+          <span class="record-date">${fmtDate(r.date)}</span>
         </div>
-        ${r.mileage ? `<div class="record-meta">📏 Mileage: ${parseInt(r.mileage).toLocaleString()} miles</div>` : ''}
-        ${r.garage ? `<div class="record-meta">🏪 ${r.garage}</div>` : ''}
-        ${r.notes ? `<div class="record-meta" style="margin-top:4px;font-style:italic">${r.notes}</div>` : ''}
+        <div class="record-meta">
+          ${r.mileage ? '📏 ' + parseInt(r.mileage).toLocaleString() + ' miles' : ''}
+          ${r.mileage && (r.garage || r.cost) ? ' · ' : ''}
+          ${r.garage ? '🏪 ' + r.garage : ''}
+          ${r.cost ? ' · 💷 £' + parseFloat(r.cost).toFixed(2) : ''}
+        </div>
+        ${r.notes || r.description ? `<div class="record-meta" style="font-style:italic;margin-top:3px">${r.notes || r.description}</div>` : ''}
       </div>`).join('');
-
-  } catch (error) {
-    document.getElementById('serviceList').innerHTML = '<p style="color:#94A3B8;font-size:13px">Could not load service records.</p>';
+  } catch(e) {
+    document.getElementById('serviceList').innerHTML = '<p style="color:#DC2626;font-size:13px">Could not load records.</p>';
   }
 }
 
-function showAddServiceModal() {
-  document.getElementById('addServiceModal').classList.add('active');
-  document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('serviceSuccess').style.display = 'none';
-  document.getElementById('serviceError').style.display = 'none';
-}
+async function submitService() {
+  hideMsg('svcErr'); hideMsg('svcOk');
+  const type = document.getElementById('svcType').value;
+  if (!type) { showMsg('svcErr','Please select a service type.',true); return; }
 
-function closeAddServiceModal() {
-  document.getElementById('addServiceModal').classList.remove('active');
-}
-
-async function submitAddService() {
-  const token = localStorage.getItem('token');
-  const successDiv = document.getElementById('serviceSuccess');
-  const errorDiv = document.getElementById('serviceError');
-  successDiv.style.display = 'none';
-  errorDiv.style.display = 'none';
-
-  const serviceData = {
-    registration: currentVehicleReg,
-    date: document.getElementById('serviceDate').value,
-    type: document.getElementById('serviceType').value,
-    mileage: document.getElementById('serviceMileage').value || null,
-    garage: document.getElementById('serviceGarage').value || null,
-    notes: document.getElementById('serviceNotes').value || null
+  const payload = {
+    registration: activeVehicleReg,
+    vehicleReg: activeVehicleReg,
+    date: document.getElementById('svcDate').value || new Date().toISOString().split('T')[0],
+    type,
+    mileage: document.getElementById('svcMileage').value || null,
+    cost: document.getElementById('svcCost').value || null,
+    garage: document.getElementById('svcGarage').value || null,
+    notes: document.getElementById('svcNotes').value || null
   };
 
-  if (!serviceData.type) { errorDiv.textContent = 'Please select a service type.'; errorDiv.style.display = 'block'; return; }
-
   try {
-    const response = await fetch('/api/user/service-records', {
+    const res = await fetch('/api/user/service-records', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify(serviceData)
+      headers: { Authorization: 'Bearer '+TOKEN(), 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
     });
-
-    if (response.ok) {
-      successDiv.textContent = '✅ Service record saved!';
-      successDiv.style.display = 'block';
-      document.getElementById('serviceType').value = '';
-      document.getElementById('serviceMileage').value = '';
-      document.getElementById('serviceGarage').value = '';
-      document.getElementById('serviceNotes').value = '';
-      await loadServiceRecords(currentVehicleReg);
-      setTimeout(() => closeAddServiceModal(), 1200);
+    if (res.ok) {
+      showMsg('svcOk','✅ Service record saved!',false);
+      ['svcType','svcMileage','svcCost','svcGarage','svcNotes'].forEach(id => document.getElementById(id).value = '');
+      await loadServiceRecords(activeVehicleReg);
+      setTimeout(() => closeModal('addServiceModal'), 1200);
     } else {
-      const d = await response.json();
-      errorDiv.textContent = d.error || 'Failed to save service record.';
-      errorDiv.style.display = 'block';
+      const d = await res.json();
+      showMsg('svcErr', d.error || 'Failed to save.',true);
     }
-  } catch(e) {
-    errorDiv.textContent = 'Error saving record.';
-    errorDiv.style.display = 'block';
-  }
+  } catch(e) { showMsg('svcErr','Network error.',true); }
 }
 
-// ===================== EXPENSES =====================
+// ─────────────────────── EXPENSES ───────────────────────
 async function loadExpenses(reg) {
-  const token = localStorage.getItem('token');
-  document.getElementById('expensesList').innerHTML = '<p style="color:#94A3B8;font-size:13px">Loading...</p>';
-  document.getElementById('expensesTotal').style.display = 'none';
-
+  document.getElementById('expenseList').innerHTML = '<p style="color:#94A3B8;font-size:13px;padding:10px 0">Loading...</p>';
+  document.getElementById('expTotals').style.display = 'none';
   try {
-    const response = await fetch('/api/user/costs?registration=' + reg, {
-      headers: { 'Authorization': 'Bearer ' + token }
+    const res = await fetch('/api/user/costs?registration=' + reg, {
+      headers: { Authorization: 'Bearer '+TOKEN() }
     });
-
-    const data = await response.json();
-    const costs = data.costs || data || [];
+    const data = await res.json();
+    const costs = data.costs || [];
 
     if (costs.length === 0) {
-      document.getElementById('expensesList').innerHTML = '<div class="empty-state" style="padding:24px 0"><p style="color:#94A3B8">No expenses recorded yet.</p></div>';
+      document.getElementById('expenseList').innerHTML = '<div class="empty"><div class="empty-icon">💸</div><p>No expenses recorded yet</p></div>';
       return;
     }
 
-    const total = costs.reduce((sum, c) => sum + parseFloat(c.amount || 0), 0);
+    const total = costs.reduce((s,c) => s + parseFloat(c.amount || 0), 0);
+    const sorted = [...costs].sort((a,b) => new Date(b.date) - new Date(a.date));
 
-    document.getElementById('expensesList').innerHTML = costs.map(c => `
-      <div class="record-item expense-item">
-        <div class="record-header">
+    document.getElementById('expenseList').innerHTML = sorted.map(c => `
+      <div class="record expense">
+        <div class="record-head">
           <span class="record-title">${c.category || 'Expense'}</span>
-          <span class="expense-amount">£${parseFloat(c.amount).toFixed(2)}</span>
+          <span class="record-amount">£${parseFloat(c.amount).toFixed(2)}</span>
         </div>
-        <div class="record-date">${c.date || ''}</div>
-        ${c.notes ? `<div class="record-meta" style="margin-top:4px;font-style:italic">${c.notes}</div>` : ''}
+        <div class="record-meta">${fmtDate(c.date)}</div>
+        ${c.notes || c.description ? `<div class="record-meta" style="font-style:italic;margin-top:3px">${c.notes || c.description}</div>` : ''}
       </div>`).join('');
 
-    document.getElementById('expensesTotal').style.display = 'block';
-    document.getElementById('totalAmount').textContent = '£' + total.toFixed(2);
-
-  } catch (error) {
-    document.getElementById('expensesList').innerHTML = '<p style="color:#94A3B8;font-size:13px">Could not load expenses.</p>';
+    document.getElementById('expTotals').style.display = 'flex';
+    document.getElementById('expTotal').textContent = '£' + total.toFixed(2);
+  } catch(e) {
+    document.getElementById('expenseList').innerHTML = '<p style="color:#DC2626;font-size:13px">Could not load expenses.</p>';
   }
 }
 
-function showAddExpenseModal() {
-  document.getElementById('addExpenseModal').classList.add('active');
-  document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('expenseSuccess').style.display = 'none';
-  document.getElementById('expenseError').style.display = 'none';
-}
+async function submitExpense() {
+  hideMsg('expErr'); hideMsg('expOk');
+  const cat = document.getElementById('expCategory').value;
+  const amount = parseFloat(document.getElementById('expAmount').value);
+  if (!cat) { showMsg('expErr','Please select a category.',true); return; }
+  if (!amount || amount <= 0) { showMsg('expErr','Please enter a valid amount.',true); return; }
 
-function closeAddExpenseModal() {
-  document.getElementById('addExpenseModal').classList.remove('active');
-}
-
-async function submitAddExpense() {
-  const token = localStorage.getItem('token');
-  const successDiv = document.getElementById('expenseSuccess');
-  const errorDiv = document.getElementById('expenseError');
-  successDiv.style.display = 'none';
-  errorDiv.style.display = 'none';
-
-  const amount = parseFloat(document.getElementById('expenseAmount').value);
-  if (!document.getElementById('expenseCategory').value) { errorDiv.textContent = 'Please select a category.'; errorDiv.style.display = 'block'; return; }
-  if (!amount || amount <= 0) { errorDiv.textContent = 'Please enter a valid amount.'; errorDiv.style.display = 'block'; return; }
-
-  const expenseData = {
-    registration: currentVehicleReg,
-    date: document.getElementById('expenseDate').value,
-    category: document.getElementById('expenseCategory').value,
-    amount: amount,
-    notes: document.getElementById('expenseNotes').value || null
+  const payload = {
+    registration: activeVehicleReg,
+    vehicleReg: activeVehicleReg,
+    date: document.getElementById('expDate').value || new Date().toISOString().split('T')[0],
+    category: cat,
+    amount,
+    notes: document.getElementById('expNotes').value || null
   };
 
   try {
-    const response = await fetch('/api/user/costs', {
+    const res = await fetch('/api/user/costs', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify(expenseData)
+      headers: { Authorization: 'Bearer '+TOKEN(), 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
     });
-
-    if (response.ok) {
-      successDiv.textContent = '✅ Expense saved!';
-      successDiv.style.display = 'block';
-      document.getElementById('expenseCategory').value = '';
-      document.getElementById('expenseAmount').value = '';
-      document.getElementById('expenseNotes').value = '';
-      await loadExpenses(currentVehicleReg);
-      setTimeout(() => closeAddExpenseModal(), 1200);
+    if (res.ok) {
+      showMsg('expOk','✅ Expense saved!',false);
+      ['expCategory','expAmount','expNotes'].forEach(id => document.getElementById(id).value = '');
+      await loadExpenses(activeVehicleReg);
+      setTimeout(() => closeModal('addExpenseModal'), 1200);
     } else {
-      const d = await response.json();
-      errorDiv.textContent = d.error || 'Failed to save expense.';
-      errorDiv.style.display = 'block';
+      const d = await res.json();
+      showMsg('expErr', d.error || 'Failed to save.',true);
     }
-  } catch(e) {
-    errorDiv.textContent = 'Error saving expense.';
-    errorDiv.style.display = 'block';
-  }
+  } catch(e) { showMsg('expErr','Network error.',true); }
 }
 
-// ===================== REMINDERS CARD =====================
-async function loadReminders() {
-  const token = localStorage.getItem('token');
+// ─────────────────────── PDF EXPORT ───────────────────────
+async function exportPDF() {
+  if (!activeVehicleReg) return;
   try {
-    const response = await fetch('/api/notifications', {
-      headers: { 'Authorization': 'Bearer ' + token }
+    const res = await fetch('/api/documents/export-pdf/' + activeVehicleReg, {
+      headers: { Authorization: 'Bearer '+TOKEN() }
     });
-    const data = await response.json();
-    const notifications = data.notifications || [];
-    if (notifications.length > 0) {
-      document.getElementById('remindersCard').style.display = 'block';
-      document.getElementById('remindersList').innerHTML = notifications.slice(0, 6).map(n => `
-        <div class="reminder-item">
-          <div class="reminder-info">
-            <h4>${n.title || ''}</h4>
-            <p>${n.message || ''}</p>
-          </div>
-          <span class="reminder-days ${n.daysUntil <= 7 ? 'urgent' : ''}">${n.daysUntil} days</span>
-        </div>`).join('');
-    }
-  } catch(e) { /* Reminders not critical */ }
-}
-
-// ===================== PDF EXPORT =====================
-async function exportVehiclePDF(reg) {
-  if (!reg) return;
-  const token = localStorage.getItem('token');
-  try {
-    const response = await fetch('/api/documents/export-pdf/' + reg, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = reg + '_vehicle_report.pdf';
-      document.body.appendChild(a); a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } else {
-      alert('PDF export not available. Ensure server has PDF support enabled.');
-    }
+    if (!res.ok) { alert('PDF export failed. Please try again.'); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = activeVehicleReg + '_service_history.pdf';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   } catch(e) { alert('Error exporting PDF.'); }
 }
 
-// ===================== MY ACCOUNT =====================
-function showAccountModal() {
-  document.getElementById('accountName').value = localStorage.getItem('userName') || 'N/A';
-  document.getElementById('accountEmail').value = localStorage.getItem('userEmail') || 'N/A';
-  document.getElementById('accountModal').classList.add('active');
-  document.getElementById('accountSuccess').style.display = 'none';
-  document.getElementById('accountError').style.display = 'none';
-  document.getElementById('currentPassword').value = '';
-  document.getElementById('newPassword').value = '';
+// ─────────────────────── ACCOUNT ───────────────────────
+function openAccountModal() {
+  document.getElementById('accName').value = localStorage.getItem('userName') || '';
+  document.getElementById('accEmail').value = localStorage.getItem('userEmail') || '';
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  hideMsg('accErr'); hideMsg('accOk');
+  openModal('accountModal');
 }
 
-function closeAccountModal() {
-  document.getElementById('accountModal').classList.remove('active');
-}
+async function changePassword() {
+  hideMsg('accErr'); hideMsg('accOk');
+  const currentPassword = document.getElementById('pwCurrent').value;
+  const newPassword = document.getElementById('pwNew').value;
+  if (!currentPassword || !newPassword) { showMsg('accErr','Please fill in both password fields.',true); return; }
+  if (newPassword.length < 8) { showMsg('accErr','New password must be at least 8 characters.',true); return; }
 
-async function submitChangePassword() {
-  const currentPassword = document.getElementById('currentPassword').value;
-  const newPassword = document.getElementById('newPassword').value;
-  const successDiv = document.getElementById('accountSuccess');
-  const errorDiv = document.getElementById('accountError');
-  successDiv.style.display = 'none';
-  errorDiv.style.display = 'none';
-
-  if (!currentPassword || !newPassword) {
-    errorDiv.textContent = 'Please fill in both password fields.';
-    errorDiv.style.display = 'block';
-    return;
-  }
-
-  const token = localStorage.getItem('token');
   try {
-    const response = await fetch('/api/user/change-password', {
+    const res = await fetch('/api/user/change-password', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      headers: { Authorization: 'Bearer '+TOKEN(), 'Content-Type':'application/json' },
       body: JSON.stringify({ currentPassword, newPassword })
     });
-    const data = await response.json();
-    if (response.ok) {
-      successDiv.textContent = '✅ Password updated successfully!';
-      successDiv.style.display = 'block';
-      document.getElementById('currentPassword').value = '';
-      document.getElementById('newPassword').value = '';
+    const d = await res.json();
+    if (res.ok) {
+      showMsg('accOk','✅ Password updated successfully!',false);
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value = '';
     } else {
-      errorDiv.textContent = data.error || 'Failed to update password.';
-      errorDiv.style.display = 'block';
+      showMsg('accErr', d.error || 'Failed to update password.',true);
     }
-  } catch(e) {
-    errorDiv.textContent = 'Error updating password.';
-    errorDiv.style.display = 'block';
-  }
+  } catch(e) { showMsg('accErr','Network error.',true); }
 }
 
-// ===================== SIGN OUT =====================
+// ─────────────────────── SIGN OUT ───────────────────────
 function signOut() {
   localStorage.clear();
   window.location.href = '/';
 }
-
-// ===================== CLOSE MODALS ON OUTSIDE CLICK =====================
-window.onclick = function(event) {
-  if (event.target.classList.contains('modal')) {
-    event.target.classList.remove('active');
-  }
-};
 </script>
-
 </body>
 </html>

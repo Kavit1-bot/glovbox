@@ -141,9 +141,9 @@
 </div>
 
 <script>
-const token = sessionStorage.getItem('glovbox_token');
+const token = localStorage.getItem('token');
 if (!token) {
-  window.location.href = '/signin.html';
+  window.location.href = '/signin.html?redirect=/service-logbook.html';
 }
 
 let currentVehicleReg = null;
@@ -159,11 +159,11 @@ async function loadUserVehicles() {
     
     if (data.vehicles && data.vehicles.length > 0) {
       const options = data.vehicles.map(v => 
-        `<option value="${v.registrationNumber}">${v.make} ${v.model} (${v.registrationNumber})</option>`
+        `<option value="${v.registrationNumber || v.registration}">${v.make || ''} ${v.model || ''} (${v.registrationNumber || v.registration})</option>`
       ).join('');
       
       document.getElementById('vehicleSelector').innerHTML = options;
-      currentVehicleReg = data.vehicles[0].registrationNumber;
+      currentVehicleReg = data.vehicles[0].registrationNumber || data.vehicles[0].registration;
       loadServiceRecords();
     } else {
       document.getElementById('vehicleSelector').innerHTML = '<option value="">No vehicles - Add one first</option>';
@@ -183,7 +183,7 @@ async function loadServiceRecords() {
   }
 
   try {
-    const response = await fetch(`/api/user/service-records?vehicleReg=${currentVehicleReg}`, {
+    const response = await fetch(`/api/user/service-records?registration=${currentVehicleReg}`, {
       headers: {'Authorization': `Bearer ${token}`}
     });
     const data = await response.json();
@@ -321,6 +321,7 @@ async function saveService() {
       },
       body: JSON.stringify({
         vehicleReg: currentVehicleReg,
+        registration: currentVehicleReg,
         date,
         mileage: mileage ? parseInt(mileage) : null,
         type,
@@ -359,7 +360,7 @@ async function deleteService(id) {
   if (!confirm('Delete this service record?')) return;
 
   try {
-    await fetch(`/api/user/service-records/${id}?vehicleReg=${currentVehicleReg}`, {
+    await fetch(`/api/user/service-records/${id}?registration=${currentVehicleReg}`, {
       method: 'DELETE',
       headers: {'Authorization': `Bearer ${token}`}
     });

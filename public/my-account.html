@@ -143,7 +143,7 @@
 
 <script>
 async function loadAccount() {
-  const token = sessionStorage.getItem('glovbox_token');
+  const token = localStorage.getItem('token');
   if (!token) {
     window.location.href = '/signin.html';
     return;
@@ -162,7 +162,7 @@ async function loadAccount() {
     document.getElementById('userEmail').textContent = data.email;
     
     // Get user object from storage for createdAt
-    const user = JSON.parse(sessionStorage.getItem('glovbox_user') || '{}');
+    const user = JSON.parse(localStorage.getItem('glovbox_user') || '{}');
     if (user.createdAt) {
       const memberSince = new Date(user.createdAt).toLocaleDateString('en-GB', {
         year: 'numeric',
@@ -191,7 +191,7 @@ async function loadAccount() {
 }
 
 async function saveSettings() {
-  const token = sessionStorage.getItem('glovbox_token');
+  const token = localStorage.getItem('token');
   
   const settings = {
     reminderSettings: {
@@ -253,7 +253,7 @@ async function deleteAccount() {
   btn.textContent = 'Deleting...';
 
   try {
-    const token = sessionStorage.getItem('glovbox_token');
+    const token = localStorage.getItem('token');
     const response = await fetch('/api/user/account', {
       method: 'DELETE',
       headers: {
@@ -266,7 +266,7 @@ async function deleteAccount() {
     const data = await response.json();
 
     if (response.ok) {
-      sessionStorage.clear();
+      localStorage.clear();
       alert('Account deleted successfully');
       window.location.href = '/';
     } else {
