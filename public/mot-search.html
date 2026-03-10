@@ -23,7 +23,7 @@
 <div class="card">
 <div class="input-group">
 <label for="postcode">Enter Your Postcode</label>
-<input type="text" id="postcode" placeholder="e.g. HA2 7PE" maxlength="10">
+<input type="text" id="postcode" placeholder="e.g. SW11AA" maxlength="10">
 <p style="color:#64748B;font-size:12px;margin-top:4px">Enter a UK postcode to find nearby MOT centres</p>
 </div>
 <button class="btn-search" id="searchBtn" onclick="searchCentres()">Search MOT Centres</button>
@@ -63,7 +63,7 @@ async function searchCentres() {
   // UK postcode regex
   const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
   if (!postcodeRegex.test(postcode)) {
-    errorDiv.textContent = 'Please enter a valid UK postcode (e.g. HA2 7PE, SW1A 1AA)';
+    errorDiv.textContent = 'Please enter a valid UK postcode (e.g. SW1A 1AA)';
     errorDiv.style.display = 'block';
     return;
   }
